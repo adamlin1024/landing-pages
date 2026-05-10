@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蔡依林 × HiSKIO 課程提案</title>
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPCEtLSBjYW5kbGVzIC0tPgogIDxyZWN0IHg9IjEwIiB5PSI0IiB3aWR0aD0iMi41IiBoZWlnaHQ9IjYiIHJ4PSIxIiBmaWxsPSIjZDQ4MDlhIi8+CiAgPHJlY3QgeD0iMTkuNSIgeT0iNCIgd2lkdGg9IjIuNSIgaGVpZ2h0PSI2IiByeD0iMSIgZmlsbD0iI2Q0ODA5YSIvPgogIDwhLS0gZmxhbWVzIC0tPgogIDxlbGxpcHNlIGN4PSIxMS4yNSIgY3k9IjMuNSIgcng9IjEuNSIgcnk9IjIiIGZpbGw9IiNmNWE2MjMiLz4KICA8ZWxsaXBzZSBjeD0iMjAuNzUiIGN5PSIzLjUiIHJ4PSIxLjUiIHJ5PSIyIiBmaWxsPSIjZjVhNjIzIi8+CiAgPCEtLSB0b3AgdGllciAtLT4KICA8cmVjdCB4PSI4IiB5PSIxMCIgd2lkdGg9IjE2IiBoZWlnaHQ9IjciIHJ4PSIyIiBmaWxsPSIjZjJlMGU2Ii8+CiAgPHJlY3QgeD0iOCIgeT0iMTUiIHdpZHRoPSIxNiIgaGVpZ2h0PSIyIiBmaWxsPSIjZDQ4MDlhIi8+CiAgPCEtLSBib3R0b20gdGllciAtLT4KICA8cmVjdCB4PSI0IiB5PSIxNyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjkiIHJ4PSIyIiBmaWxsPSIjZjVmMmViIi8+CiAgPHJlY3QgeD0iNCIgeT0iMjMiIHdpZHRoPSIyNCIgaGVpZ2h0PSIzIiByeD0iMSIgZmlsbD0iI2I4NTU3MCIvPgogIDwhLS0gZGVjb3JhdGlvbnMgLS0+CiAgPGNpcmNsZSBjeD0iMTAiIGN5PSIyMCIgcj0iMS41IiBmaWxsPSIjOWE3YzJhIi8+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIyMCIgcj0iMS41IiBmaWxsPSIjOWE3YzJhIi8+CiAgPGNpcmNsZSBjeD0iMjIiIGN5PSIyMCIgcj0iMS41IiBmaWxsPSIjOWE3YzJhIi8+CiAgPCEtLSBiYXNlIC0tPgogIDxyZWN0IHg9IjMiIHk9IjI2IiB3aWR0aD0iMjYiIGhlaWdodD0iMiIgcng9IjEiIGZpbGw9IiNiZmI4YjAiLz4KPC9zdmc+">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1814;--ink2:#46423c;--ink3:#8a8480;--ink4:#bfb8b0;
+  --paper:#f5f2eb;--paper2:#ece8df;--paper3:#ddd8ce;
+  --pink:#b85570;--pink-light:#f2e0e6;--pink-mid:#d4809a;
+  --gold:#9a7c2a;--gold-bg:#f5edcf;--gold-border:#d4b86a;
+  --serif:'Noto Serif TC',serif;--sans:'Noto Sans TC',sans-serif;
+  --max:860px;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background-color:var(--paper);
+  background-image:radial-gradient(circle,rgba(0,0,0,.055) 1px,transparent 1px);
+  background-size:18px 18px;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  zoom:1.25;
+}
+
+/* ── HEADER ── */
+.hdr{background:var(--paper);border-bottom:1px solid var(--paper3);position:sticky;top:0;z-index:200}
+.hdr-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:stretch}
+.hdr-bar{width:4px;background:var(--pink);flex-shrink:0}
+.hdr-body{padding:1.2rem 1.75rem 1rem;flex:1;display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap}
+.hdr-kicker{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:.3rem}
+.hdr-title{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--ink);line-height:1.35}
+.hdr-title span{color:var(--pink)}
+.hdr-right{font-size:.72rem;color:var(--ink3);text-align:right;line-height:1.9}
+
+/* ── WRAP ── */
+.wrap{max-width:var(--max);margin:0 auto;padding:2.25rem 1.75rem 6rem}
+.section{margin-bottom:2.75rem}
+.eyebrow{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-bottom:.5rem}
+
+/* ── HERO ── */
+.hero{padding-bottom:1.75rem;margin-bottom:2.25rem;border-bottom:1px solid var(--paper3)}
+.hero-kicker{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-bottom:.4rem}
+.hero-title{font-family:var(--serif);font-size:1.8rem;font-weight:500;color:var(--ink);line-height:1.35;margin-bottom:.4rem}
+.hero-desc{font-size:.9rem;line-height:1.9;color:var(--ink2);margin-bottom:1.2rem;max-width:600px}
+.spec-chips{display:flex;gap:7px;flex-wrap:wrap}
+.spec-chip{font-size:.75rem;color:var(--ink2);background:var(--paper2);border:1px solid var(--paper3);padding:4px 13px;border-radius:20px;line-height:1.5}
+
+/* ── POS GRID ── */
+.pos-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--paper3);border:1px solid var(--paper3);border-radius:8px;overflow:hidden;margin-bottom:1.75rem}
+.pos-cell{background:var(--paper);padding:1rem 1.1rem}
+.pos-cell:nth-child(1){background:var(--ink)}
+.pos-label{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:.28rem}
+.pos-cell:nth-child(1) .pos-label{color:var(--ink4)}
+.pos-val{font-size:.9rem;font-weight:500;margin-bottom:.22rem;line-height:1.4;color:var(--ink)}
+.pos-cell:nth-child(1) .pos-val{color:var(--paper)}
+.pos-sub{font-size:.82rem;color:var(--ink2);line-height:1.6}
+.pos-cell:nth-child(1) .pos-sub{color:var(--ink4)}
+.pos-cell.pink-accent{border-left:3px solid var(--pink)}
+
+/* ── CHAIN ── */
+.chain-wrap{margin-bottom:1.75rem;overflow:hidden}
+.chain{display:flex;align-items:stretch;width:100%;min-width:0}
+.cn{
+  background:var(--paper2);
+  border:1px solid var(--paper3);
+  border-right:none;
+  padding:.5rem .6rem;
+  font-size:.8rem;
+  font-weight:500;
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  text-align:center;
+  white-space:nowrap;
+}
+.cn:first-child{border-radius:6px 0 0 6px}
+.cn:last-child{
+  border-radius:0 6px 6px 0;
+  border-right:1px solid var(--pink);
+  background:var(--pink);
+  border-color:var(--pink);
+  color:#fff;
+  flex:1.3;
+}
+.cn-main{font-size:.8rem;font-weight:500;white-space:nowrap}
+.cn-lbl{font-size:.62rem;font-weight:400;color:var(--ink3);white-space:nowrap}
+.cn:last-child .cn-lbl{color:rgba(255,255,255,.8)}
+.ca{color:var(--ink4);font-size:.75rem;display:flex;align-items:center;flex-shrink:0;padding:0 1px}
+
+/* ── ENTRY ── */
+.entry-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.75rem}
+.entry-card{background:var(--paper2);border:1px solid var(--paper3);border-radius:8px;padding:.9rem 1rem;position:relative;overflow:hidden}
+.entry-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--paper3)}
+.entry-card.e1::before{background:var(--pink)}
+.entry-num{font-size:1.6rem;font-weight:700;color:var(--ink4);font-family:var(--serif);line-height:1;margin-bottom:.32rem}
+.entry-card.e1 .entry-num{color:var(--pink-mid)}
+.entry-t{font-size:.85rem;font-weight:500;color:var(--ink);margin-bottom:.25rem;line-height:1.4}
+.entry-d{font-size:.78rem;color:var(--ink2);line-height:1.65;margin-bottom:.32rem}
+.entry-ch{font-size:.67rem;color:var(--ink3)}
+
+/* ── OBJECTIVES ── */
+.obj-list{display:flex;flex-direction:column;gap:1px;background:var(--paper3);border:1px solid var(--paper3);border-radius:8px;overflow:hidden;margin-bottom:1.75rem}
+.obj-item{background:var(--paper);display:flex;gap:.9rem;padding:.88rem 1rem;align-items:flex-start}
+.obj-item.highlight{background:var(--pink-light)}
+.obj-n{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink4);line-height:1;flex-shrink:0;width:26px}
+.obj-item.highlight .obj-n{color:var(--pink-mid)}
+.obj-t{font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:.16rem;line-height:1.4}
+.obj-d{font-size:.8rem;color:var(--ink2);line-height:1.65}
+
+/* ── AUDIENCE ── */
+.aud-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.75rem}
+.aud-card{background:var(--paper2);border:1px solid var(--paper3);border-radius:6px;padding:.85rem .95rem}
+.aud-card.prime{
+  background-color:var(--paper);
+  background-image:repeating-linear-gradient(-45deg,transparent,transparent 5px,rgba(184,85,112,.06) 5px,rgba(184,85,112,.06) 6px);
+  border-color:var(--pink-mid);
+  border-top:2px solid var(--pink);
+}
+.aud-badge{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--pink);margin-bottom:.26rem;display:block}
+.aud-name{font-size:.85rem;font-weight:500;color:var(--ink);margin-bottom:.26rem;line-height:1.4}
+.aud-desc{font-size:.78rem;color:var(--ink2);line-height:1.6}
+
+/* ── SYLLABUS ── */
+.ch-item{margin-bottom:.85rem;border:1px solid var(--paper3);border-radius:8px;overflow:hidden}
+.ch-hd{padding:.85rem 1rem;background:var(--paper2);display:grid;grid-template-columns:30px 1fr auto;gap:.65rem;align-items:start;cursor:pointer;user-select:none}
+.ch-hd:hover{background:var(--paper3)}
+.ch-num{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--ink4);line-height:1;padding-top:2px}
+.ch-hd.open .ch-num{color:var(--pink-mid)}
+.ch-tag{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:.16rem}
+.ch-title{font-size:.92rem;font-weight:500;color:var(--ink);line-height:1.4;margin-bottom:.16rem}
+.ch-desc{font-size:.8rem;color:var(--ink2);line-height:1.6}
+.ch-meta{text-align:right;flex-shrink:0}
+.ch-dur{font-size:.7rem;color:var(--ink3)}
+.ch-cnt{font-size:.7rem;color:var(--ink3)}
+.ch-toggle{font-size:.7rem;color:var(--ink4);margin-top:3px}
+.ch-body{display:none;border-top:1px solid var(--paper3)}
+.ch-body.open{display:block}
+.ur{display:grid;grid-template-columns:36px 1fr auto;padding:.62rem 1rem;border-bottom:1px solid var(--paper3);align-items:start}
+.ur:last-of-type{border-bottom:none}
+.un{font-size:.68rem;color:var(--ink3);padding-top:2px}
+.ut{font-size:.85rem;font-weight:500;margin-bottom:.14rem;line-height:1.4;color:var(--ink)}
+.ud{font-size:.78rem;color:var(--ink2);line-height:1.6}
+.utime{font-size:.68rem;color:var(--ink3);padding-top:2px;white-space:nowrap;padding-left:8px}
+.hw{display:flex;gap:.65rem;padding:.7rem 1rem;background:var(--paper2);border-left:3px solid var(--pink);align-items:flex-start}
+.hw-lbl{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--pink);white-space:nowrap;padding-top:2px;min-width:36px}
+.hw-txt{font-size:.78rem;color:var(--ink2);line-height:1.7}
+.bonus-tag{display:inline-block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-border);padding:2px 8px;border-radius:20px;margin-bottom:.32rem}
+
+/* ── TABLET 481–768px ── */
+@media(max-width:768px) and (min-width:481px){
+  body{zoom:1}
+  :root{--max:100%}
+  .wrap{padding:2rem 1.5rem 5rem}
+  .pos-grid{grid-template-columns:1fr 1fr}
+  .entry-grid{grid-template-columns:1fr 1fr}
+  .aud-grid{grid-template-columns:1fr 1fr}
+  .chain{flex-wrap:wrap;gap:5px}
+  .cn{flex:0 0 auto;border-radius:6px !important;border-right:1px solid var(--paper3);white-space:nowrap}
+  .cn:last-child{flex:0 0 auto;border-right:1px solid var(--pink)}
+  .ca{display:none}
+}
+
+/* ── MOBILE ≤480px ── */
+@media(max-width:480px){
+  body{zoom:1}
+  :root{--max:100%}
+  html{font-size:15px}
+  .hdr-body{padding:.95rem 1rem .85rem}
+  .hdr-title{font-size:1rem}
+  .hdr-right{display:none}
+  .wrap{padding:1.25rem 1rem 4rem}
+  .hero-title{font-size:1.6rem;font-weight:500}
+  .hero-desc{font-size:.92rem}
+  .spec-chip{font-size:.78rem}
+  .pos-grid{grid-template-columns:1fr}
+  .entry-grid{grid-template-columns:1fr}
+  .aud-grid{grid-template-columns:1fr}
+  .chain{flex-wrap:wrap;gap:5px}
+  .cn{flex:0 0 auto;border-radius:6px !important;border-right:1px solid var(--paper3);padding:.45rem .7rem;font-size:.84rem;white-space:nowrap}
+  .cn:last-child{flex:0 0 auto;border-right:1px solid var(--pink)}
+  .ca{display:none}
+  .obj-t{font-size:.92rem}
+  .obj-d{font-size:.84rem}
+  .aud-name{font-size:.88rem}
+  .aud-desc{font-size:.82rem}
+  .ut{font-size:.88rem}
+  .ud{font-size:.82rem}
+  .ch-title{font-size:.92rem}
+  .ch-desc{font-size:.82rem}
+  .pos-val{font-size:.92rem}
+  .pos-sub{font-size:.84rem}
+  .hw-txt{font-size:.82rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-bar"></div>
+    <div class="hdr-body">
+      <div>
+        <p class="hdr-kicker">HiSKIO × 蔡依林 — 課程合作提案</p>
+        <h1 class="hdr-title">一份買不到的心意，<span>一個記住一輩子的蛋糕</span></h1>
+      </div>
+      <div class="hdr-right">Draft for discussion<br>2025 · Confidential</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="hero">
+  <p class="hero-kicker">課程提案</p>
+  <h2 class="hero-title">Jolin 蔡依林的翻糖蛋糕冠軍課</h2>
+  <p class="hero-desc">一堂以心意為出發點的翻糖入門課。從認識翻糖、備料準備、蛋糕體製作，到翻糖操作、造型設計、完整實作，帶你從零完成一個值得送出去的蛋糕。</p>
+  <div class="spec-chips">
+    <span class="spec-chip">6 章節・21 個單元</span>
+    <span class="spec-chip">約 7 小時</span>
+    <span class="spec-chip">6 份章節作業</span>
+    <span class="spec-chip">定價目標 NT$3,000–5,000</span>
+  </div>
+</div>
+
+<section class="section">
+  <p class="eyebrow">課程定位</p>
+  <div class="pos-grid">
+    <div class="pos-cell">
+      <p class="pos-label">這堂課是什麼</p>
+      <p class="pos-val">以心意為出發點的翻糖入門課</p>
+      <p class="pos-sub">技術是工具，讓某個人感受到「他在你心裡很重要」才是核心。不需要任何烘焙背景，只需要有一個想認真對待的人。</p>
+    </div>
+    <div class="pos-cell">
+      <p class="pos-label">這堂課不是什麼</p>
+      <p class="pos-val">不是專業甜點課，不是創業課</p>
+      <p class="pos-sub">市面上的翻糖課教你「做得漂亮」，這堂課教你「做得有意義」——差別不在技術的深度，而在出發點：你為什麼做這個蛋糕。</p>
+    </div>
+    <div class="pos-cell pink-accent">
+      <p class="pos-label">不可替代性</p>
+      <p class="pos-val">從心意出發，不是從技術出發</p>
+      <p class="pos-sub">蔡依林做翻糖的起點，是為了讓外甥在生日那天驚喜。她只上了四天正式課程，其餘全靠自學，最後拿下英國國際翻糖大賽金牌。沒有任何一個專業甜點老師的故事，能比她的更直接回答「為什麼要親手做一個蛋糕送人」這個問題。</p>
+    </div>
+    <div class="pos-cell">
+      <p class="pos-label">時代定位</p>
+      <p class="pos-val">有些心意，買不到，但做得出來</p>
+      <p class="pos-sub">在一個什麼都可以外送的時代，「你花了這些時間為我做這個」比任何禮物都珍貴。翻糖蛋糕是極少數讓對方一眼看出你付出了多少的禮物——你做得越認真，對方感受到的就越深。</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <p class="eyebrow" style="margin-bottom:.7rem">課程核心邏輯鏈</p>
+  <div class="chain-wrap">
+    <div class="chain">
+      <div class="cn"><span class="cn-main">一份心意</span><span class="cn-lbl">出發點</span></div>
+      <span class="ca">›</span>
+      <div class="cn"><span class="cn-main">一個想法</span><span class="cn-lbl">構思</span></div>
+      <span class="ca">›</span>
+      <div class="cn"><span class="cn-main">一份設計</span><span class="cn-lbl">規劃</span></div>
+      <span class="ca">›</span>
+      <div class="cn"><span class="cn-main">一套技術</span><span class="cn-lbl">製作</span></div>
+      <span class="ca">›</span>
+      <div class="cn"><span class="cn-main">一個作品</span><span class="cn-lbl">完成</span></div>
+      <span class="ca">›</span>
+      <div class="cn"><span class="cn-main">一個值得的瞬間</span><span class="cn-lbl">結果</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <p class="eyebrow">三種切入點</p>
+  <p style="font-size:.8rem;color:var(--ink2);margin-bottom:1rem;line-height:1.8">同一堂課，三種說法。不論從哪個角度進來，學到的是同一件事。</p>
+  <div class="entry-grid">
+    <div class="entry-card e1">
+      <p class="entry-num">01</p>
+      <p class="entry-t">把心意做進蛋糕裡</p>
+      <p class="entry-d">有些話說不出口，但可以做進一個蛋糕裡。翻糖讓你把在乎做成看得見的東西。</p>
+      <p class="entry-ch">情侶・閨蜜・親子・送禮類 KOL</p>
+    </div>
+    <div class="entry-card">
+      <p class="entry-num">02</p>
+      <p class="entry-t">一個讓彼此更靠近的理由</p>
+      <p class="entry-d">有些關係，需要一個特別的時刻才能說清楚你有多在意。當你親手做了一個蛋糕送出去，你們之間就多了一個只屬於你們的記憶。</p>
+      <p class="entry-ch">家庭・親子・婚禮・節慶類 KOL</p>
+    </div>
+    <div class="entry-card">
+      <p class="entry-num">03</p>
+      <p class="entry-t">一個值得的瞬間</p>
+      <p class="entry-d">你花了這些時間，換來的是他打開盒子那一秒的表情。那一秒，什麼都值了。</p>
+      <p class="entry-ch">生活風格・手作體驗・自我成長類 KOL</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <p class="eyebrow">課程目標</p>
+  <div class="obj-list">
+    <div class="obj-item"><span class="obj-n">01</span><div><p class="obj-t">能從零完成一個可以送出去的翻糖蛋糕</p><p class="obj-d">不需要任何烘焙背景，從工具選擇、蛋糕體準備到翻糖覆蓋與造型，完整走一次流程，做出一個有質感、可以直接送出去的成品。</p></div></div>
+    <div class="obj-item"><span class="obj-n">02</span><div><p class="obj-t">能根據對象設計屬於他的蛋糕</p><p class="obj-d">學會從「這個人是誰、他喜歡什麼」出發，把這些想法轉化成造型、顏色、細節，讓蛋糕說出你說不出來的話。</p></div></div>
+    <div class="obj-item highlight"><span class="obj-n">03</span><div><p class="obj-t">能克服門檻，安全不失敗地完成作品</p><p class="obj-d">知道新手最容易卡住的地方在哪裡，以及怎麼在每一個關鍵步驟做出正確判斷。</p></div></div>
+    <div class="obj-item"><span class="obj-n">04</span><div><p class="obj-t">能在重要的節慶與場合實際應用</p><p class="obj-d">無論是生日、母親節、情人節、求婚，還是孩子的特別日子，都有能力在重要時刻端出驚喜。</p></div></div>
+    <div class="obj-item"><span class="obj-n">05</span><div><p class="obj-t">能完成並送出你的第一個翻糖蛋糕，親眼看到對方的反應</p><p class="obj-d">這堂課的終點不是一份作業，而是一個真實的場合、一個真實的人、以及他打開盒子那一刻的表情。</p></div></div>
+  </div>
+</section>
+
+<section class="section">
+  <p class="eyebrow">目標受眾</p>
+  <div class="aud-grid">
+    <div class="aud-card prime"><span class="aud-badge">主力受眾</span><p class="aud-name">有明確送禮場合的人</p><p class="aud-desc">25–40 歲，有明確的對象和場合，想給對方不是隨便買來的東西，但擔心自己做不好。購買動機最直接，轉換率最高。</p></div>
+    <div class="aud-card prime"><span class="aud-badge">主力受眾</span><p class="aud-name">蔡依林的歌迷與品牌支持者</p><p class="aud-desc">對她的翻糖品牌「皇后陛下」有認識，本來就相信她在這件事上的眼光與投入，購買阻力最低。</p></div>
+    <div class="aud-card prime"><span class="aud-badge">主力受眾</span><p class="aud-name">想在重要時刻端出驚喜的人</p><p class="aud-desc">不論是孩子的生日、伴侶的紀念日、父母的節日，還是好友的特別場合，讓對方打開盒子的那一刻，感受到用心。</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <p class="eyebrow" style="margin-bottom:1rem">課程大綱</p>
+
+  <div class="ch-item">
+    <div class="ch-hd" onclick="toggle(this)">
+      <span class="ch-num">1</span>
+      <div><p class="ch-tag">第一章</p><p class="ch-title">認識翻糖</p><p class="ch-desc">動手之前先建立正確的認識，避免做到一半才發現方向錯了。</p></div>
+      <div class="ch-meta"><p class="ch-dur">約 45 分鐘</p><p class="ch-cnt">3 個單元</p><p class="ch-toggle">▲</p></div>
+    </div>
+    <div class="ch-body">
+      <div class="ur"><span class="un">1-1</span><div><p class="ut">翻糖是什麼</p><p class="ud">成分、口感、跟奶油霜的差異、為什麼翻糖適合做客製化蛋糕。</p></div><span class="utime">約 15 分鐘</span></div>
+      <div class="ur"><span class="un">1-2</span><div><p class="ut">翻糖的應用與限制</p><p class="ud">能做哪些造型、溫度與濕度怎麼影響翻糖、什麼情況不適合用翻糖。</p></div><span class="utime">約 15 分鐘</span></div>
+      <div class="ur"><span class="un">1-3</span><div><p class="ut">一個翻糖蛋糕是怎麼完成的</p><p class="ud">蛋糕體、打底、翻糖覆蓋、造型裝飾——四個階段的順序與每個階段要做什麼。</p></div><span class="utime">約 15 分鐘</span></div>
+    </div>
+  </div>
+
+  <div class="ch-item">
+    <div class="ch-hd" onclick="toggle(this)">
+      <span class="ch-num">2</span>
+      <div><p class="ch-tag">第二章</p><p class="ch-title">開始之前的準備</p><p class="ch-desc">在家做翻糖蛋糕需要什麼條件、怎麼準備，以及怎麼避開新手最容易踩的坑。</p></div>
+      <div class="ch-meta"><p class="ch-dur">約 50 分鐘</p><p class="ch-cnt">3 個單元</p><p class="ch-toggle">▲</p></div>
+    </div>
+    <div class="ch-body">
+      <div class="ur"><span class="un">2-1</span><div><p class="ut">在家能做的翻糖準備</p><p class="ud">需要什麼空間與環境條件、溫度與濕度怎麼控制、哪些專業工具可以用家用替代品取代。</p></div><span class="utime">約 18 分鐘</span></div>
+      <div class="ur"><span class="un">2-2</span><div><p class="ut">材料與工具清單</p><p class="ud">要買什麼、在哪裡買、怎麼避免買錯。</p></div><span class="utime">約 15 分鐘</span></div>
+      <div class="ur"><span class="un">2-3</span><div><p class="ut">安全不失敗的策略</p><p class="ud">第一次做怎麼選適合的難度、哪些操作容易出錯要提前避開、時間不夠時怎麼取捨讓成品還是可以送出去。</p></div><span class="utime">約 17 分鐘</span></div>
+    </div>
+  </div>
+
+  <div class="ch-item">
+    <div class="ch-hd" onclick="toggle(this)">
+      <span class="ch-num">3</span>
+      <div><p class="ch-tag">第三章</p><p class="ch-title">把蛋糕做好</p><p class="ch-desc">翻糖是蛋糕的外層，底做不好翻糖撐不住。這章把蛋糕體、夾餡、打底每個步驟說清楚。</p></div>
+      <div class="ch-meta"><p class="ch-dur">約 55 分鐘</p><p class="ch-cnt">3 個單元</p><p class="ch-toggle">▲</p></div>
+    </div>
+    <div class="ch-body">
+      <div class="ur"><span class="un">3-1</span><div><p class="ut">適合包翻糖的蛋糕體</p><p class="ud">配方選擇、烤好後的靜置邏輯、為什麼不能用剛出爐的、市售蛋糕體哪些可以用哪些不行。</p></div><span class="utime">約 20 分鐘</span></div>
+      <div class="ur"><span class="un">3-2</span><div><p class="ut">夾餡與打底</p><p class="ud">奶油霜怎麼抹才平、打底的目的、打底不平整翻糖會出現什麼問題。</p></div><span class="utime">約 20 分鐘</span></div>
+      <div class="ur"><span class="un">3-3</span><div><p class="ut">整形與冷藏</p><p class="ud">打好底之後怎麼讓蛋糕定型、冷藏多久才能開始包翻糖。</p></div><span class="utime">約 15 分鐘</span></div>
+      <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">完成一個打底蛋糕，拍照記錄側面與頂面，說明你用了哪種蛋糕體、遇到什麼問題、怎麼解決的。</span></div>
+    </div>
+  </div>
+
+  <div class="ch-item">
+    <div class="ch-hd" onclick="toggle(this)">
+      <span class="ch-num">4</span>
+      <div><p class="ch-tag">第四章</p><p class="ch-title">翻糖基本操作</p><p class="ch-desc">從揉翻糖到完整覆蓋，每個步驟拆開說清楚。這章結束時完成第一次蛋糕體與翻糖的整合。</p></div>
+      <div class="ch-meta"><p class="ch-dur">約 75 分鐘</p><p class="ch-cnt">4 個單元</p><p class="ch-toggle">▲</p></div>
+    </div>
+    <div class="ch-body">
+      <div class="ur"><span class="un">4-1</span><div><p class="ut">揉與擀</p><p class="ud">揉翻糖的手法與判斷標準、擀平時怎麼避免破裂、厚度怎麼控制。</p></div><span class="utime">約 20 分鐘</span></div>
+      <div class="ur"><span class="un">4-2</span><div><p class="ut">覆蓋與收邊</p><p class="ud">蓋上去之後怎麼推平、皺褶怎麼處理、底部怎麼收乾淨、出問題怎麼救。</p></div><span class="utime">約 25 分鐘</span></div>
+      <div class="ur"><span class="un">4-3</span><div><p class="ut">調色</p><p class="ud">翻糖調色的操作方式、顏色調出來跟預期不同的常見原因、不容易出錯的配色邏輯。</p></div><span class="utime">約 15 分鐘</span></div>
+      <div class="ur"><span class="un">4-4</span><div><p class="ut">造型裝飾的基礎</p><p class="ud">翻糖怎麼捏出簡單的立體造型、放上蛋糕時怎麼固定。</p></div><span class="utime">約 15 分鐘</span></div>
+      <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">把翻糖蓋到你第三章做好的蛋糕體上，完成第一次完整覆蓋，拍照提交，說明哪個步驟最難、怎麼解決的。</span></div>
+    </div>
+  </div>
+
+  <div class="ch-item">
+    <div class="ch-hd" onclick="toggle(this)">
+      <span class="ch-num">5</span>
+      <div><p class="ch-tag">第五章</p><p class="ch-title">讓蛋糕有你的樣子</p><p class="ch-desc">從對象和場合出發，決定造型、配色、細節，並在動手之前先把你想做的樣子畫出來。</p></div>
+      <div class="ch-meta"><p class="ch-dur">約 70 分鐘</p><p class="ch-cnt">4 個單元</p><p class="ch-toggle">▲</p></div>
+    </div>
+    <div class="ch-body">
+      <div class="ur"><span class="un">5-1</span><div><p class="ut">造型決策</p><p class="ud">從對象的個性、喜好、場合的氛圍，推導出造型方向——不是靠感覺，而是有依據的選擇。</p></div><span class="utime">約 15 分鐘</span></div>
+      <div class="ur"><span class="un">5-2</span><div><p class="ut">如何決定細節（案例探討）</p><p class="ud">怎麼判斷要加什麼細節、怎麼想出有意義的細節、什麼情況下加太多會讓成品變亂——蔡依林帶三個真實案例說明判斷方式。</p></div><span class="utime">約 25 分鐘</span></div>
+      <div class="ur"><span class="un">5-3</span><div><p class="ut">蔡依林的設計流程</p><p class="ud">從想法到草圖到成品的完整過程——展示真實手稿，說明構思階段的決策方式。</p></div><span class="utime">約 20 分鐘</span></div>
+      <div class="ur"><span class="un">5-4</span><div><p class="ut">你的設計草圖怎麼畫</p><p class="ud">沒有設計背景的人怎麼把想法畫出來、讓自己在操作時有依據。</p></div><span class="utime">約 10 分鐘</span></div>
+      <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">為你要送的對象完成一份設計草圖，包含造型、配色、你決定加進去的細節，說明每個決定的理由。</span></div>
+    </div>
+  </div>
+
+  <div class="ch-item">
+    <div class="ch-hd" onclick="toggle(this)">
+      <span class="ch-num">6</span>
+      <div><p class="ch-tag">第六章</p><p class="ch-title">完整做一個蛋糕</p><p class="ch-desc">把前五章學到的全部整合。從設計草圖出發，完整做完一個蛋糕——蛋糕體、打底、翻糖覆蓋、調色、造型裝飾，每個步驟依序完成。</p></div>
+      <div class="ch-meta"><p class="ch-dur">約 80 分鐘</p><p class="ch-cnt">3 個單元</p><p class="ch-toggle">▲</p></div>
+    </div>
+    <div class="ch-body">
+      <div class="ur"><span class="un">6-1</span><div><p class="ut">從草圖到實作</p><p class="ud">確認設計草圖、準備材料、確認每個步驟的順序與時間分配。</p></div><span class="utime">約 20 分鐘</span></div>
+      <div class="ur"><span class="un">6-2</span><div><p class="ut">覆蓋、調色、組合</p><p class="ud">蛋糕體打底、翻糖覆蓋、調色——按照設計草圖逐步完成。</p></div><span class="utime">約 35 分鐘</span></div>
+      <div class="ur"><span class="un">6-3</span><div><p class="ut">加上造型裝飾</p><p class="ud">依照草圖完成細節，蔡依林說明她在這個階段怎麼判斷「做完了」。</p></div><span class="utime">約 25 分鐘</span></div>
+      <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">完成你的完整蛋糕，拍照記錄每個階段，說明哪個步驟跟草圖不一樣、你怎麼調整的。</span></div>
+    </div>
+  </div>
+
+  <div class="ch-item">
+    <div class="ch-hd" onclick="toggle(this)">
+      <span class="ch-num">7</span>
+      <div><p class="ch-tag">第七章</p><p class="ch-title">讓蛋糕順利送到他手上</p><p class="ch-desc">保存時間、溫度、包裝方式——確保蛋糕在送到對方手上之前都是最好的狀態。</p></div>
+      <div class="ch-meta"><p class="ch-dur">約 35 分鐘</p><p class="ch-cnt">2 個單元</p><p class="ch-toggle">▲</p></div>
+    </div>
+    <div class="ch-body">
+      <div class="ur"><span class="un">7-1</span><div><p class="ut">保存</p><p class="ud">翻糖蛋糕能放幾天、適合的溫度與環境、冰箱能不能放、做好多久前送出去最好、出狀況怎麼補救。</p></div><span class="utime">約 15 分鐘</span></div>
+      <div class="ur"><span class="un">7-2</span><div><p class="ut">包裝</p><p class="ud">包裝盒怎麼選尺寸、三種萬用包裝組合讓整體有質感——沒有想法照這套走就對了。</p></div><span class="utime">約 20 分鐘</span></div>
+      <div class="hw"><span class="hw-lbl">結業作業</span><span class="hw-txt">完成你的第一個翻糖蛋糕，拍下完成照與包裝照，寫下這個蛋糕是為誰做的、你加進去的細節是什麼，以及他打開盒子時的反應。</span></div>
+    </div>
+  </div>
+
+  <div class="ch-item">
+    <div class="ch-hd" onclick="toggle(this)">
+      <span class="ch-num" style="font-size:1rem;padding-top:4px">A</span>
+      <div><span class="bonus-tag">加映單元一</span><p class="ch-title">為這個場合做對的翻糖蛋糕</p><p class="ch-desc">蔡依林帶三個她自己做過的真實作品，從接到需求、構思到完成，還原完整決策過程，包含手稿與修改過程。</p></div>
+      <div class="ch-meta"><p class="ch-dur">約 65 分鐘</p><p class="ch-cnt">3 個單元</p><p class="ch-toggle">▲</p></div>
+    </div>
+    <div class="ch-body">
+      <div class="ur"><span class="un">A-1</span><div><p class="ut">生日蛋糕</p><p class="ud">從對象的個性與喜好出發做設計決定——蔡依林示範一個真實生日蛋糕的構思與製作過程。</p></div><span class="utime">約 22 分鐘</span></div>
+      <div class="ur"><span class="un">A-2</span><div><p class="ut">節慶蛋糕</p><p class="ud">母親節、父親節——在傳統節日框架裡做出有個人特色的蛋糕，蔡依林說明她的設計原則。</p></div><span class="utime">約 22 分鐘</span></div>
+      <div class="ur"><span class="un">A-3</span><div><p class="ut">告白與求婚蛋糕</p><p class="ud">這類蛋糕的設計重點與常見錯誤——蔡依林示範一個真實案例的完整構思過程。</p></div><span class="utime">約 21 分鐘</span></div>
+    </div>
+  </div>
+
+  <div class="ch-item">
+    <div class="ch-hd" onclick="toggle(this)">
+      <span class="ch-num" style="font-size:1rem;padding-top:4px">B</span>
+      <div><span class="bonus-tag">加映單元二</span><p class="ch-title">皇后陛下的工作室</p><p class="ch-desc">不談技術，只談她做翻糖這件事的真實樣子——從接到需求到完成作品，她的工作方式與在意的那些細節。</p></div>
+      <div class="ch-meta"><p class="ch-dur">約 12 分鐘</p><p class="ch-cnt">1 個單元</p><p class="ch-toggle">▲</p></div>
+    </div>
+    <div class="ch-body">
+      <div class="ur"><span class="un">B-1</span><div><p class="ut">她的工作方式：從第一個想法到最後一個細節</p><p class="ud">從溝通、草圖到成品的完整工作方式。</p></div><span class="utime">約 12 分鐘</span></div>
+    </div>
+  </div>
+
+</section>
+</div>
+
+<script>
+document.querySelectorAll('.ch-hd').forEach(hd=>{
+  hd.classList.add('open');
+  hd.nextElementSibling.classList.add('open');
+  hd.querySelector('.ch-toggle').textContent='▲';
+});
+function toggle(hd){
+  const body=hd.nextElementSibling;
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  hd.classList.toggle('open',!isOpen);
+  hd.querySelector('.ch-toggle').textContent=isOpen?'▼':'▲';
+}
+</script>
+</body>
+</html>

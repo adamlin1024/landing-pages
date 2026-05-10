@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>唐綺陽 × HiSKIO 課程提案</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1f2238;--ink2:#454a64;--ink3:#828598;--ink4:#bdc0d0;
+  --paper:#faf6ec;--paper2:#f1ecde;--paper3:#e2ddc9;
+  --gold:#b48838;--gold2:#9a7530;--gold-bg:#f6efd5;--gold-border:#d6bd76;
+  --night:#141832;--night2:#1d233e;--night3:#2c3358;
+  --serif:'Noto Serif TC',serif;--sans:'Noto Sans TC',sans-serif;
+  --display:'Cormorant Garamond',serif;
+  --r:7px;--rlg:12px;
+}
+html{font-size:17px;scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.7}
+
+/* Header (V1 style with V3 content) */
+/* ============= TOPBAR (頂部 metadata 列) ============= */
+.topbar{
+  background:var(--night);
+  position:relative;
+  z-index:201;
+  padding:.85rem 0 1.05rem;
+  border-bottom:1px solid rgba(180,136,56,.22)
+}
+.topbar-inner{
+  max-width:1080px;margin:0 auto;padding:0 2.5rem;
+  position:relative;z-index:1
+}
+
+/* 第一行:Brand 在左,metadata 在右 */
+.topbar-row-meta{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:1.5rem;flex-wrap:wrap;
+  margin-bottom:.5rem
+}
+.topbar-brand{
+  font-family:var(--display);
+  font-size:11.5px;letter-spacing:.32em;
+  text-transform:uppercase;
+  color:var(--ink4);
+  font-style:italic;font-weight:400;
+  opacity:.75
+}
+.topbar-brand .brand-x{
+  margin:0 .25em;
+  opacity:.7
+}
+.topbar-brand .brand-name{
+  color:#c4b885;
+  font-style:normal;
+  letter-spacing:.2em;
+  margin-left:.05em
+}
+.topbar-meta{
+  font-family:var(--display);
+  font-size:10.5px;letter-spacing:.24em;
+  text-transform:uppercase;
+  color:var(--ink4);
+  font-style:italic;
+  opacity:.65
+}
+
+/* 第二行:核心 promise */
+.topbar-promise{
+  font-family:var(--serif);
+  font-size:15px;font-weight:500;
+  color:#e8d6a8;
+  letter-spacing:.18em;
+  display:flex;align-items:center;
+  flex-wrap:wrap;gap:0
+}
+.topbar-promise .accent{
+  color:#f0dba8;letter-spacing:.18em
+}
+.topbar-promise .dot{
+  color:var(--gold);
+  margin:0 .85em;font-weight:300;opacity:.6
+}
+.topbar-right{
+  font-family:var(--display);
+  font-size:10.5px;letter-spacing:.18em;
+  color:var(--ink4);
+  font-style:italic;
+  text-align:right;line-height:1.6
+}
+
+/* ============= HERO (大深藍主視覺) ============= */
+.hero-zone{
+  background:var(--night);
+  position:relative;
+  overflow:hidden
+}
+/* 星空感:多層 radial-gradient 製造星點 */
+.hero-zone::before{
+  content:"";
+  position:absolute;inset:0;
+  background-image:
+    radial-gradient(circle at 12% 18%,rgba(255,255,255,.6) 1px,transparent 1.5px),
+    radial-gradient(circle at 82% 28%,rgba(255,255,255,.5) 1.2px,transparent 1.8px),
+    radial-gradient(circle at 28% 72%,rgba(255,255,255,.4) 1px,transparent 1.5px),
+    radial-gradient(circle at 65% 55%,rgba(255,255,255,.55) 1.1px,transparent 1.6px),
+    radial-gradient(circle at 92% 82%,rgba(255,255,255,.4) 1px,transparent 1.5px),
+    radial-gradient(circle at 45% 12%,rgba(255,255,255,.35) .9px,transparent 1.3px),
+    radial-gradient(circle at 8% 88%,rgba(255,255,255,.5) 1.1px,transparent 1.6px),
+    radial-gradient(circle at 72% 90%,rgba(255,255,255,.3) .8px,transparent 1.2px),
+    radial-gradient(circle at 38% 42%,rgba(255,255,255,.5) 1px,transparent 1.5px);
+  background-size:600px 500px,720px 580px,540px 460px,640px 540px,820px 620px,500px 420px,680px 560px,580px 480px,720px 600px;
+  opacity:.5;
+  pointer-events:none;
+  z-index:0
+}
+.hero-zone::after{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 75% 30%,rgba(160,122,58,.12) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 40% at 15% 75%,rgba(160,122,58,.06) 0%,transparent 55%);
+  pointer-events:none;
+  z-index:0
+}
+
+.hero-inner{
+  max-width:1080px;margin:0 auto;padding:0 2.5rem;
+  position:relative;z-index:1
+}
+
+/* Tabs(深藍背景,不再是獨立黑底) */
+
+/* ============= TABS (獨立 sticky 列,在 hero 之後) ============= */
+.tabs{
+  background:var(--night2);
+  border-top:1px solid rgba(180,136,56,.18);
+  border-bottom:1px solid rgba(180,136,56,.22);
+  position:sticky;top:0;z-index:200;
+  overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  -webkit-overflow-scrolling:touch
+}
+.tabs::-webkit-scrollbar{display:none;width:0;height:0}
+.tabs-inner{
+  max-width:1080px;margin:0 auto;padding:0 2.5rem;
+  display:flex;flex-wrap:nowrap;
+  min-width:max-content
+}
+.tab{
+  font-family:var(--sans);
+  font-size:14px;color:var(--ink4);
+  background:none;border:none;
+  border-bottom:2px solid transparent;
+  padding:1rem 1.5rem .9rem;cursor:pointer;
+  letter-spacing:.04em;transition:all .18s;
+  white-space:nowrap;font-weight:400;
+  flex-shrink:0
+}
+.tab:hover{color:var(--paper)}
+.tab.on{color:var(--paper);border-bottom-color:var(--gold)}
+.tab.feat{color:var(--gold);font-weight:500}
+.tab.feat::before{content:"◆";font-size:7px;margin-right:7px;vertical-align:middle;position:relative;top:-2px}
+.tab.feat.on{color:var(--paper)}
+
+.hero-stage{
+  padding:4rem 0 4.5rem;
+  text-align:left
+}
+.hero-eyebrow{
+  font-family:var(--display);
+  font-size:13px;letter-spacing:.32em;
+  text-transform:uppercase;
+  color:var(--gold);
+  font-style:italic;font-weight:500;
+  margin-bottom:1.5rem
+}
+.hero-title{
+  font-family:var(--serif);
+  font-size:54px;font-weight:600;
+  color:var(--paper);
+  line-height:1.2;
+  letter-spacing:-0.005em;
+  margin-bottom:1.75rem
+}
+.hero-quote{
+  border-left:2px solid var(--gold);
+  padding:.6rem 0 .6rem 1.5rem;
+  max-width:720px
+}
+.hero-quote-text{
+  font-family:var(--serif);
+  font-size:18px;line-height:1.85;
+  color:#e0d0a0;
+  letter-spacing:.04em;
+  margin:0;
+  font-weight:400
+}
+.hero-quote-text .accent{
+  color:var(--paper);
+  font-weight:500
+}
+.hero-subtitle .accent{
+  color:#f0dba8;
+  font-weight:500
+}/* Tab below header */
+.tab{font-family:var(--sans);font-size:14px;color:var(--ink4);background:none;border:none;border-bottom:2px solid transparent;padding:1.05rem 1.6rem .95rem;cursor:pointer;letter-spacing:.04em;transition:all .18s;white-space:nowrap;font-weight:400}
+.tab:hover{color:var(--paper)}
+.tab.on{color:var(--paper);border-bottom-color:var(--gold)}
+.tab.feat{color:var(--gold);font-weight:500}
+.tab.feat::before{content:"◆";font-size:7px;margin-right:7px;vertical-align:middle;position:relative;top:-2px}
+.tab.feat.on{color:var(--paper)}
+
+.panel{display:none}
+.panel.on{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 2.5rem 5rem}
+
+/* ==================== Page Header (other panels) ==================== */
+.ph{padding:3rem 0 2.25rem;margin-bottom:2.5rem;border-bottom:1px solid var(--paper3)}
+.ph-kicker{font-family:var(--display);font-size:13.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem;font-style:italic}
+.ph-title{font-family:var(--serif);font-size:32px;font-weight:600;line-height:1.32;margin-bottom:1rem;letter-spacing:-0.005em}
+.ph-subtitle{font-family:var(--serif);font-size:18px;font-weight:400;line-height:1.55;color:var(--ink2);margin-bottom:1.4rem;letter-spacing:.01em}
+.ph-desc{font-size:15px;line-height:2;color:var(--ink2);max-width:760px;margin-bottom:1.5rem}
+.chips{display:flex;gap:9px;flex-wrap:wrap}
+.chip{font-size:12.5px;color:var(--ink2);background:var(--paper2);border:1px solid var(--paper3);padding:5px 14px;border-radius:20px;letter-spacing:.02em}
+.chip.feat{background:var(--gold-bg);border-color:var(--gold-border);color:var(--gold2)}
+
+/* Section spacing for flagship intro */
+.flagship-intro{padding:3.25rem 0 2.5rem;border-bottom:1px solid var(--paper3);margin-bottom:2.75rem}
+.flagship-intro-kicker{font-family:var(--display);font-size:13.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;font-style:italic}
+.flagship-intro-title{font-family:var(--serif);font-size:28px;font-weight:600;line-height:1.4;margin-bottom:1.6rem;letter-spacing:-0.005em;color:var(--ink)}
+.flagship-intro-desc{font-size:15.5px;line-height:2;color:var(--ink2);margin:0 0 1.75rem}
+.flagship-chips{display:flex;gap:9px;flex-wrap:wrap}
+
+/* ==================== Logic Chain (重新設計) ==================== */
+.chain-section{margin:0 0 2.5rem}
+.chain-title{
+  font-family:var(--display);
+  font-size:13px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  margin-bottom:1.4rem;
+  font-style:italic;
+  text-align:center
+}
+.chain-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  position:relative
+}
+.chain-card{
+  background:#fcfaf3;
+  border:1px solid var(--paper3);
+  border-radius:var(--rlg);
+  padding:1.4rem 1.2rem 1.2rem;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:.7rem
+}
+.chain-card.gold{
+  background:var(--gold-bg);
+  border-color:var(--gold-border)
+}
+.chain-card-step{
+  font-family:var(--display);
+  font-size:11.5px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--gold);
+  font-style:italic;
+  font-weight:500;
+  margin-bottom:-.2rem
+}
+.chain-card-title{
+  font-family:var(--serif);
+  font-size:18px;
+  font-weight:600;
+  color:var(--ink);
+  line-height:1.4
+}
+.chain-card-desc{
+  font-size:13px;
+  line-height:1.85;
+  color:var(--ink2);
+  flex:1
+}
+.chain-card-foot{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-top:.7rem;
+  border-top:1px dashed var(--paper3);
+  margin-top:.4rem
+}
+.chain-card-link{
+  font-size:11.5px;
+  color:var(--gold);
+  font-weight:500;
+  letter-spacing:.04em
+}
+.chain-card-en{
+  font-family:var(--display);
+  font-size:11.5px;
+  color:var(--ink3);
+  letter-spacing:.1em;
+  font-style:italic
+}
+.chain-card-arrow{
+  position:absolute;
+  right:-9px;
+  top:50%;
+  transform:translateY(-50%);
+  font-family:var(--display);
+  color:var(--ink4);
+  font-size:18px;
+  z-index:2;
+  background:var(--paper);
+  width:18px;text-align:center;
+  font-weight:300
+}
+
+/* ==================== Other components (kept from v2) ==================== */
+.diff{background:var(--paper2);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0;padding:1.1rem 1.25rem;margin-bottom:2rem;font-size:14px;color:var(--ink2);line-height:1.9}
+.diff strong{font-weight:500;color:var(--ink)}
+
+.eyebrow{font-family:var(--display);font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-bottom:.95rem;font-style:italic}
+
+.sdiv{border:none;border-top:1px solid var(--paper3);margin:2.5rem 0}
+
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-bottom:2rem}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-bottom:2rem}
+
+.ic{background:var(--paper2);border:1px solid var(--paper3);border-radius:var(--r);padding:1.05rem 1.15rem}
+.ic-lbl{font-family:var(--display);font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);margin-bottom:.55rem;font-style:italic}
+.ic-val{font-size:14.5px;font-weight:500;line-height:1.6;color:var(--ink)}
+.ic-sub{font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.8}
+
+.obj-block{background:var(--paper2);border:1px solid var(--paper3);border-radius:var(--rlg);overflow:hidden;margin-bottom:2rem}
+.obj-row{padding:1.05rem 1.35rem;border-bottom:1px solid var(--paper3);display:flex;gap:14px;align-items:flex-start}
+.obj-row:last-child{border-bottom:none}
+.obj-row.unique{background:var(--gold-bg);border-color:var(--gold-border)}
+.obj-num{font-family:var(--display);font-size:15px;font-weight:500;min-width:25px;margin-top:1px;color:var(--ink3);letter-spacing:.02em}
+.obj-row.unique .obj-num{color:var(--gold2)}
+.obj-title{font-size:14.5px;font-weight:500;margin-bottom:.32rem;color:var(--ink);line-height:1.55}
+.obj-desc{font-size:14px;color:var(--ink2);line-height:1.8}
+.obj-badge{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--gold);color:#fff;padding:2.5px 9px;border-radius:20px;margin-left:8px;vertical-align:middle;white-space:nowrap;font-family:var(--display)}
+
+.ac{background:var(--paper2);border:1px solid var(--paper3);border-radius:var(--r);padding:1.05rem 1.15rem}
+.ac.prime{background:var(--gold-bg);border:1px solid var(--gold-border)}
+.ac-name{font-size:14.5px;font-weight:500;margin-bottom:.4rem;color:var(--ink)}
+.ac.prime .ac-name{color:var(--gold2)}
+.ac-desc{font-size:13px;color:var(--ink2);line-height:1.8}
+.prime-badge{display:inline-block;font-family:var(--display);font-size:10px;letter-spacing:.13em;text-transform:uppercase;background:var(--gold);color:#fff;padding:2.5px 9px;border-radius:20px;margin-bottom:.55rem;font-style:italic}
+
+.ch{margin-bottom:2rem;border:1px solid var(--paper3);border-radius:var(--rlg);overflow:hidden;background:#fcfaf3}
+.ch-head{padding:1.2rem 1.45rem;background:var(--paper2);border-bottom:1px solid var(--paper3);display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.ch-tag{font-family:var(--display);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem;font-style:italic;font-weight:500}
+.ch-title{font-family:var(--serif);font-size:18px;font-weight:600;margin-bottom:.45rem;line-height:1.45;color:var(--ink)}
+.ch-desc{font-size:14px;color:var(--ink2);line-height:1.85;max-width:600px}
+.ch-meta{text-align:right;flex-shrink:0}
+.ch-dur{font-family:var(--display);font-size:13px;color:var(--ink3);margin-bottom:3px;letter-spacing:.04em}
+.ch-cnt{font-family:var(--display);font-size:13px;color:var(--ink3);letter-spacing:.04em}
+
+.ur{display:grid;grid-template-columns:46px 1fr auto;padding:.95rem 1.45rem;border-bottom:1px solid var(--paper3);align-items:start;gap:.4rem}
+.ur:last-child{border-bottom:none}
+.un{font-family:var(--display);font-size:14.5px;color:var(--gold);padding-top:2px;font-style:italic;letter-spacing:.04em;font-weight:500}
+.ut{font-size:14.5px;font-weight:500;margin-bottom:.35rem;line-height:1.55;color:var(--ink)}
+.ud{font-size:14px;color:var(--ink2);line-height:1.85}
+.utime{font-family:var(--display);font-size:13px;color:var(--ink3);padding-top:2px;white-space:nowrap;padding-left:10px;letter-spacing:.04em}
+
+.hw{display:flex;gap:14px;padding:1.05rem 1.45rem;background:var(--paper2);border-top:1px solid var(--paper3);align-items:flex-start}
+.hw-lbl{font-family:var(--display);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap;padding-top:2px;min-width:54px;font-style:italic;font-weight:500}
+.hw-txt{font-size:14px;color:var(--ink2);line-height:1.9}
+
+.bonus-tag{display:inline-block;font-family:var(--display);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;background:var(--gold-bg);color:var(--gold2);border:1px solid var(--gold-border);padding:3.5px 12px;border-radius:20px;margin-bottom:.6rem;font-style:italic;font-weight:500}
+
+/* "Why integrated" section at bottom */
+.why-section{margin-top:3.5rem;padding-top:3rem;border-top:2px solid var(--paper3)}
+.why-eyebrow{font-family:var(--display);font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink3);margin-bottom:.85rem;font-style:italic;text-align:center}
+.why-title{font-family:var(--serif);font-size:22px;font-weight:600;line-height:1.45;text-align:center;margin-bottom:1.4rem;color:var(--ink)}
+.why-desc{font-size:15px;line-height:2;color:var(--ink2);max-width:760px;margin:0 auto;text-align:left;padding:1.4rem 1.6rem;background:var(--paper2);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0}
+.why-desc strong{color:var(--ink);font-weight:500}
+
+/* ==================== Mobile ==================== */
+@media(max-width:1080px){
+  /* 中型斷點:平板、手機橫放、桌機縮窗 */
+  /* 字級不動,只做 layout 回流避免欄位擠扁 */
+  
+  /* 4 欄能力卡片 → 2 欄(800px 寬時 4 欄會擠成超窄) */
+  .chain-grid{grid-template-columns:repeat(2,1fr)}
+  
+  /* 3 欄受眾卡片 → 2 欄(800px 寬時 3 欄會擠) */
+  .g3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  
+  /* g2 維持 2 欄(800px 寬還容納得下) */
+  
+  /* 容器 padding 略收,讓內容多點呼吸 */
+  .wrap{padding:2.75rem 2rem 4.5rem}
+  .hero-inner{padding:0 2rem}
+  .topbar-inner{padding:0 2rem}
+  .tabs-inner{padding:0 2rem}
+}
+
+@media(max-width:760px){
+  html{font-size:16px}
+  
+  /* Topbar mobile */
+  .topbar{padding:.7rem 0 .85rem}
+  .topbar-inner{padding:0 1rem}
+  .topbar-row-meta{margin-bottom:.4rem;gap:.75rem}
+  .topbar-brand{font-size:10px;letter-spacing:.26em}
+  .topbar-meta{font-size:9.5px;letter-spacing:.2em}
+  .topbar-promise{font-size:13px;letter-spacing:.08em}
+  .topbar-promise .dot{margin:0 .55em}
+  
+  /* Hero zone mobile */
+  .hero-inner{padding:0 1rem}
+  .hero-stage{padding:2.5rem 0 2.75rem}
+  .tabs{top:0}
+  .tabs-inner{padding:0 1rem}
+  .tab{padding:.95rem 1.05rem .85rem;font-size:13.5px}
+  .hero-eyebrow{font-size:11.5px;letter-spacing:.24em;margin-bottom:1.1rem}
+  .hero-title{font-size:28px;line-height:1.25;margin-bottom:1.4rem}
+  .hero-quote{padding:.4rem 0 .4rem 1.1rem}
+  .hero-quote-text{font-size:14.5px;line-height:1.85;letter-spacing:.02em}
+      .hero-title{font-size:28px;line-height:1.25;margin-bottom:0}
+  
+  body{line-height:1.75}
+  
+  /* Header mobile - 簡化排版 */
+
+  .wrap{padding:0 1rem 4rem}
+  
+  /* Page header mobile */
+  .ph{padding:2.5rem 0 1.75rem}
+  .ph-title{font-size:24px;line-height:1.4}
+  .ph-subtitle{font-size:16.5px;line-height:1.6}
+  .ph-desc{font-size:14.5px;line-height:1.95}
+  
+  /* Manifesto mobile */
+          
+  /* Flagship intro mobile */
+  .flagship-intro{padding:2.5rem 0 2rem}
+  .flagship-intro-title{font-size:22px;line-height:1.5;margin-bottom:1.2rem}
+    .flagship-intro-desc{font-size:14.5px;line-height:1.95;margin-bottom:1.5rem}
+  
+  /* Logic chain mobile - 緊湊化處理 */
+  .chain-grid{grid-template-columns:1fr;gap:11px}
+  .chain-card-arrow{display:none}
+  .chain-card{padding:1rem 1.15rem;gap:.45rem}
+  .chain-card-step{font-size:10.5px;letter-spacing:.16em;margin-bottom:0}
+  .chain-card-title{font-size:16.5px;line-height:1.45}
+  .chain-card-desc{font-size:13px;line-height:1.75}
+  .chain-card-foot{padding-top:.55rem;margin-top:.2rem}
+  .chain-card-link{font-size:11px}
+  .chain-card-en{font-size:11px}
+  .chain-grid > .chain-card:not(:last-child)::after{
+    content:"↓";
+    display:block;
+    text-align:center;
+    color:var(--ink4);
+    font-size:16px;
+    font-family:var(--display);
+    margin-top:11px;
+    margin-bottom:-11px;
+    position:relative;
+    z-index:1
+  }
+  
+  /* Other mobile adjustments */
+  .g2,.g3{grid-template-columns:1fr}
+  .ic-val{font-size:14.5px;line-height:1.55}
+  .ic-sub{font-size:13.5px;line-height:1.8}
+  
+  .ch-head{flex-direction:column;padding:1.1rem 1.2rem}
+  .ch-meta{text-align:left}
+  .ch-title{font-size:16.5px;line-height:1.5}
+  .ch-desc{font-size:13.5px;line-height:1.85}
+  
+  .ur{padding:.95rem 1.2rem;grid-template-columns:38px 1fr;gap:.25rem}
+  .ut{font-size:14.5px;line-height:1.55}
+  .ud{font-size:14px;line-height:1.85}
+  .un{font-size:13px}
+  .utime{grid-column:1/-1;padding-left:38px;padding-top:.35rem;font-size:12px}
+  
+  .hw{padding:.95rem 1.2rem}
+  .hw-txt{font-size:13.5px;line-height:1.85}
+  
+  .obj-row{padding:1rem 1.2rem}
+  .obj-title{font-size:14.5px;line-height:1.55}
+  .obj-desc{font-size:14px;line-height:1.85}
+  
+  .ac{padding:1rem 1.15rem}
+  .ac-name{font-size:14px}
+  .ac-desc{font-size:13.5px;line-height:1.85}
+  
+  .why-section{margin-top:3rem;padding-top:2.5rem}
+  .why-title{font-size:19px;line-height:1.5}
+  .why-desc{padding:1.1rem 1.2rem;font-size:13.5px;line-height:1.9}
+  
+  .diff{font-size:13.5px;padding:1rem 1.15rem;line-height:1.95}
+  
+  /* Eyebrow mobile */
+  .eyebrow{font-size:11.5px;margin-bottom:.85rem}
+}
+
+/* iPhone 14 / 標準手機 (390-430px) - 進一步壓字級避免孤字 */
+@media(max-width:430px){
+  .hero-eyebrow{font-size:10.5px;letter-spacing:.2em;margin-bottom:1rem}
+  .hero-title{font-size:24px;line-height:1.25;margin-bottom:1.2rem}
+  .hero-quote{padding:.4rem 0 .4rem 1rem}
+  .hero-quote-text{font-size:14px;line-height:1.85}
+      .topbar{padding:.6rem 0 .75rem}
+  .topbar-inner{padding:0 1rem}
+  .topbar-row-meta{margin-bottom:.3rem}
+  .topbar-brand{font-size:9.5px;letter-spacing:.22em}
+  .topbar-meta{font-size:9px;letter-spacing:.18em}
+  .topbar-promise{font-size:12.5px;letter-spacing:.06em}
+  .topbar-promise .dot{margin:0 .4em}
+  .hero-inner{padding:0 1rem}
+  .hero-stage{padding:2.25rem 0 2.5rem}
+  .tabs-inner{padding:0 1rem}
+  .tab{padding:.85rem .95rem .75rem;font-size:12.5px}
+
+  .wrap{padding:0 1rem 3.5rem}
+  
+  .ph-title{font-size:21px;line-height:1.4}
+  .ph-subtitle{font-size:15.5px}
+  .ph-desc{font-size:14px}
+
+  .flagship-intro-title{font-size:19px;line-height:1.5}
+    .flagship-intro-desc{font-size:14px;line-height:1.95}
+  
+  .chain-card-title{font-size:15.5px}
+  .chain-card-desc{font-size:13px;line-height:1.8}
+  
+  .ch-title{font-size:15.5px}
+  .ch-desc{font-size:13px;line-height:1.85}
+  .ut{font-size:14.5px;line-height:1.55}
+  .ud{font-size:13.5px;line-height:1.85}
+  
+  .obj-title{font-size:14.5px;line-height:1.6}
+  .obj-desc{font-size:13.5px;line-height:1.85}
+  
+  .ac-name{font-size:14px}
+  .ac-desc{font-size:13px;line-height:1.8}
+  
+  .why-title{font-size:17px}
+  .why-desc{font-size:13.5px;padding:1rem 1.1rem;line-height:1.9}
+  
+  .diff{font-size:13.5px;line-height:1.95}
+}
+</style>
+</head>
+<body>
+
+<!-- ============= TOPBAR ============= -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-row-meta">
+      <div class="topbar-brand">HiSKIO <span class="brand-x">×</span> <span class="brand-name">唐綺陽</span></div>
+      <div class="topbar-meta">Draft for discussion · 2026</div>
+    </div>
+    <div class="topbar-promise">
+      <span class="accent">看懂一個人</span><span class="dot">·</span><span class="accent">做出好選擇</span><span class="dot">·</span><span class="accent">扭轉自己的命運</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============= HERO ZONE (含 tabs + 主視覺) ============= -->
+<div class="hero-zone">
+  <div class="hero-inner">
+    <section class="hero-stage" id="hero-p0">
+      <p class="hero-eyebrow">— A Flagship Course —</p>
+      <h1 class="hero-title">唐綺陽的人生占星系統課</h1>
+      <div class="hero-quote">
+        <p class="hero-quote-text"><span class="accent">不是占星百科,也不是運勢預測。</span><br>是用占星理解人、決定方向、扭轉命運的系統化方法。</p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <button class="tab feat on" onclick="show(0)">總提案 · 旗艦整合版</button>
+    <button class="tab" onclick="show(1)">方向一 · 識人</button>
+    <button class="tab" onclick="show(2)">方向二 · 決斷</button>
+    <button class="tab" onclick="show(3)">方向三 · 轉運</button>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════
+     PANEL 0 ─ 總提案 · 旗艦整合版
+════════════════════════════════════════════ -->
+<div class="panel on" id="p0">
+<div class="wrap">
+
+<div class="flagship-intro">
+  <p class="flagship-intro-kicker">— A Flagship Course —</p>
+  <h2 class="flagship-intro-title">把將近 30 年的觀察,變成你能用的方法</h2>
+  <p class="flagship-intro-desc">這套系統由三個獨立但相連的模組組成:看懂一個人(理解他人與自己)、做出好選擇(在關鍵時刻不後悔)、扭轉自己的命運(看出人生關卡並主動應對)。三個模組可以分開學,也可以合在一起學——合在一起學,會多出一個其他三個方向都沒有的「整合視野」章節,以及唐綺陽親自示範她如何用占星看自己過去 將近 30 年的人生。</p>
+  <div class="flagship-chips">
+    <span class="chip feat">7 章節 · 26 個單元</span>
+    <span class="chip feat">約 9 小時</span>
+    <span class="chip">7 份章節作業</span>
+    <span class="chip">定價目標 NT$ 3,000–5,000</span>
+  </div>
+</div>
+
+<!-- 邏輯鏈:4 個但更豐富 -->
+<div class="chain-section">
+  <p class="chain-title">— 系統的四個能力 —</p>
+  <div class="chain-grid">
+    <div class="chain-card">
+      <p class="chain-card-step">Step 01</p>
+      <h3 class="chain-card-title">看懂一個人</h3>
+      <p class="chain-card-desc">從太陽、月亮、上升三層人格,加上行星與相位,看出一個人的核心、行為、關卡。應用在自己、伴侶、老闆、孩子身上。</p>
+      <div class="chain-card-foot">
+        <span class="chain-card-link">方向一 →</span>
+        <span class="chain-card-en">People</span>
+      </div>
+      <span class="chain-card-arrow">›</span>
+    </div>
+    <div class="chain-card">
+      <p class="chain-card-step">Step 02</p>
+      <h3 class="chain-card-title">做出好選擇</h3>
+      <p class="chain-card-desc">在重大關口,用占星看清自己「真正面對的是什麼」。不是替你做決定,是讓你做完不後悔。AI 取代不了的判斷力。</p>
+      <div class="chain-card-foot">
+        <span class="chain-card-link">方向二 →</span>
+        <span class="chain-card-en">Decision</span>
+      </div>
+      <span class="chain-card-arrow">›</span>
+    </div>
+    <div class="chain-card">
+      <p class="chain-card-step">Step 03</p>
+      <h3 class="chain-card-title">扭轉自己的命運</h3>
+      <p class="chain-card-desc">看出人生兩次大轉折,以及中間被忽略的小關卡。先看清,再準備,然後主動走過去——這才是真正的轉運。</p>
+      <div class="chain-card-foot">
+        <span class="chain-card-link">方向三 →</span>
+        <span class="chain-card-en">Destiny</span>
+      </div>
+      <span class="chain-card-arrow">›</span>
+    </div>
+    <div class="chain-card gold">
+      <p class="chain-card-step">Step 04</p>
+      <h3 class="chain-card-title">整合視野</h3>
+      <p class="chain-card-desc">把「人」「事」「時代」三個維度整合在一張盤裡看——這是占星最高階的看法,也是唐綺陽 將近 30 年來真實在做的事。</p>
+      <div class="chain-card-foot">
+        <span class="chain-card-link">此版獨有</span>
+        <span class="chain-card-en">Integration</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">課程定位</p>
+<div class="g2">
+  <div class="ic"><p class="ic-lbl">這堂課是什麼</p><p class="ic-val">一套完整的「人生占星觀」</p><p class="ic-sub">從理解他人,到面對選擇,到走過人生關卡的系統化方法</p></div>
+  <div class="ic"><p class="ic-lbl">這堂課不是什麼</p><p class="ic-val">不是運勢預測,不是占星百科</p><p class="ic-sub">不教星盤學,教的是「用占星看人生」這件事</p></div>
+  <div class="ic"><p class="ic-lbl">藝人不可替代性</p><p class="ic-val">將近 30 年觀察的系統化</p><p class="ic-sub">「占星 × 人生」這個位置,在華語世界等同於唐綺陽</p></div>
+  <div class="ic"><p class="ic-lbl">AI 時代的位置</p><p class="ic-val">教 AI 做不到的那一層</p><p class="ic-sub">AI 能算機率、能給建議,但 AI 看不見「你真正怕什麼」</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">課程目標</p>
+<div class="obj-block">
+  <div class="obj-row"><span class="obj-num">01</span><div><p class="obj-title">看懂一個人:他想活成什麼樣子、會卡在哪、什麼時候會突然不一樣</p><p class="obj-desc">用太陽、月亮、上升三層人格,加上行星與相位的整合,看出一個人的核心驅動、行為模式與關卡。</p></div></div>
+  <div class="obj-row"><span class="obj-num">02</span><div><p class="obj-title">做出好選擇:在重大關口看清自己真正面對的是什麼</p><p class="obj-desc">建立「選擇前的占星診斷工具」,讓學員在分手、換工作、創業、搬家這類重大關口,做出不後悔的決定。</p></div></div>
+  <div class="obj-row"><span class="obj-num">03</span><div><p class="obj-title">扭轉命運:看出人生兩次大轉折,並學會應對</p><p class="obj-desc">理解每個人都會經歷的「人生兩次大關」,以及中間的小關卡。學員學會把這套占星方法變成自己的「人生地圖」。</p></div></div>
+  <div class="obj-row unique"><span class="obj-num">04</span><div><p class="obj-title">整合「人 × 選擇 × 時代」三層視野<span class="obj-badge">此版獨有</span></p><p class="obj-desc">這是占星最高階的看法——把一個人、他正在做的選擇、他所在的時代放在一起看,得出「現在他應該怎麼活」的答案。</p></div></div>
+  <div class="obj-row"><span class="obj-num">05</span><div><p class="obj-title">在 AI 時代用占星補上判斷力的缺口</p><p class="obj-desc">AI 能給資訊,但給不了判斷。本課訓練的是「人對人、人對時代」的判斷力——AI 短期內無法取代的能力。</p></div></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">目標受眾</p>
+<div class="g3">
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">唐綺陽既有粉絲</p><p class="ac-desc">FB、IG 追蹤者與 podcast 聽眾,轉換率最高的基本盤,「人生占星系統課」這個高度也符合他們對唐綺陽的期待</p></div>
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">面對人生關鍵選擇的人</p><p class="ac-desc">換工作、結束感情、決定創業、規劃下半生——任何人在重大關口前,都需要「整合視野」</p></div>
+  <div class="ac"><p class="ac-name">管理者、HR、創業者</p><p class="ac-desc">「看人 + 看選擇」雙重剛需,把這套占星觀當成決策工具</p></div>
+  <div class="ac"><p class="ac-name">心理工作者、教練、命理工作者</p><p class="ac-desc">把這個系統當成理解客戶與案主的補充框架</p></div>
+  <div class="ac"><p class="ac-name">想入門占星的進階愛好者</p><p class="ac-desc">不滿足於「百科入門」,想學「資深占星師怎麼看」的人</p></div>
+  <div class="ac"><p class="ac-name">面對人生轉折期的成年人</p><p class="ac-desc">處在重要人生階段、想對自己有更清楚理解的所有成年人</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">課程大綱</p>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">導論</p><p class="ch-title">將近 30 年的觀察:為什麼現在要做這套課</p><p class="ch-desc">建立學員對「人生占星系統課」的整體框架——將近 30 年看人的核心觀察、對 AI 時代的判斷、以及為什麼決定把這份累積系統化。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 45 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">0-1</span><div><p class="ut">將近 30 年來,我聽過最多的一句話</p><p class="ud">將近 30 年來粉絲問她最多的不是「我會不會發財」,而是「我該不該分手/換工作/搬家」。這個現象背後的真實困境——人們真正缺的不是答案,是看清自己處境的能力。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">0-2</span><div><p class="ut">人生占星系統課的三層結構:看人、選擇、轉運</p><p class="ud">說明這套課的整體架構——為什麼這三件事必須一起學、為什麼順序是看人 → 選擇 → 轉運、以及最後的「統合視野」章節要做什麼。</p></div><span class="utime">約 23 分鐘</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第一章 · 看人篇</p><p class="ch-title">看懂一個人,從你自己開始</p><p class="ch-desc">建立「看人」的核心架構——三層人格(太陽、月亮、上升)、行為三維(水星、金星、火星)、關卡座標(土星、天王、凱龍)。完課後能完整拆解一個人。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 95 分鐘</div><div class="ch-cnt">5 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">1-1</span><div><p class="ut">三層人格:太陽、月亮、上升</p><p class="ud">看一個人,先看他想活成什麼樣子(太陽)、需要什麼才會放鬆(月亮)、外在表現出來的樣子(上升)。三層整合才是完整的人。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">1-2</span><div><p class="ut">行為三維:水星、金星、火星</p><p class="ud">水星看一個人怎麼想、怎麼接收訊息;金星看他的價值觀與喜好邏輯;火星看他的行動方式、戰鬥姿態與慾望表達。三顆行星合起來,就是一個人實際表現出來的樣子。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">1-3</span><div><p class="ut">關卡座標:土星、天王、凱龍</p><p class="ud">土星看他這輩子的核心考題;天王看他什麼時候會突然不一樣;凱龍看他身上那個一直好不了的傷。學員學會用同理代替評價。</p></div><span class="utime">約 19 分鐘</span></div>
+  <div class="ur"><span class="un">1-4</span><div><p class="ut">合盤入門:看兩個人的關係</p><p class="ud">合盤不是看「合不合」,是看兩張星盤合在一起會啟動什麼能量。重點在能量結構,不在配對指數。學員學會看伴侶、上司、父母關係的核心拉扯。</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="ur"><span class="un">1-5</span><div><p class="ut">看人最重要的事:看完之後怎麼辦</p><p class="ud">看懂一個人之後,最重要的不是去評價、不是去改變他,是知道「他為什麼是這樣的他」。看懂是為了同理。</p></div><span class="utime">約 15 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">拿你自己跟一個你最想看懂的人(伴侶/老闆/孩子),用本章十顆行星完整拆解,寫出你的觀察:他為什麼是這樣的他,你跟他之間真正在拉扯的是什麼。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第二章 · 選擇篇</p><p class="ch-title">看清楚你正在做什麼決定</p><p class="ch-desc">把第一章的「看人」轉向自己——在重大選擇前,看清楚自己現在站在哪裡、真正在面對什麼、應該往哪裡去。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 95 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">2-1</span><div><p class="ut">真選擇 vs. 假選擇:三個診斷問題</p><p class="ud">大部分人糾結很久的「選擇」其實是假議題。透過三個診斷問題,讓學員快速分辨自己現在面對的是真選擇還是假選擇。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">2-2</span><div><p class="ut">看清你正在「往哪裡去」</p><p class="ud">用流年(行運)與推運盤,看出自己這個階段在經歷什麼能量、正在內在地變成什麼樣的人——這個變化往往跟「以為自己想要什麼」很不一樣。</p></div><span class="utime">約 24 分鐘</span></div>
+  <div class="ur"><span class="un">2-3</span><div><p class="ut">三大重要決定的占星拆解</p><p class="ud">把方法套到三個最常見的重大選擇:該不該離開一段關係、該不該換工作或創業、該不該搬家或移居。每個場景用她的觀察拆解。</p></div><span class="utime">約 28 分鐘</span></div>
+  <div class="ur"><span class="un">2-4</span><div><p class="ut">做完選擇之後:不後悔的能力</p><p class="ud">不後悔不是運氣,是一種能力——關鍵是「選擇之前已經看清楚」。透過她自己幾個重大選擇,說明為什麼能不後悔。</p></div><span class="utime">約 21 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">用本章工具,把你現在面對的真實選擇完整拆解一次。寫出:這是真選擇還是假選擇、我現在站在哪裡、我願意承擔什麼。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第三章 · 轉運篇</p><p class="ch-title">看出人生的關鍵點,並學會應對</p><p class="ch-desc">每個人的一生都有兩次大轉折,以及若干個被忽略的小關卡。這一章讓學員看出自己現在處在什麼能量、下一個關卡何時會到、該怎麼應對。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 95 分鐘</div><div class="ch-cnt">5 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">3-1</span><div><p class="ut">人生第一次大轉折:你以為的人生瓦解</p><p class="ud">這個關卡通常是宇宙在問你:「你過去的人生,真的是你要的嗎?」這個單元說明這個關卡的徵兆、典型崩潰類型,以及她自己當年怎麼走過。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">3-2</span><div><p class="ut">兩次大轉折之間:你在累積什麼、錯過什麼</p><p class="ud">第一次大關走過後,你進入一段實作期。這段時間還有兩個小關卡(方向修正、中年再校準)。學員學會預先看到、避免錯過該累積的東西。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">3-3</span><div><p class="ut">人生第二次大轉折:整合期的真正考題</p><p class="ud">第二次大轉折看的是「你要不要真正成為自己」。這個單元拆解她對這個階段的觀察——什麼樣的人能整合、什麼樣的人會抗拒。</p></div><span class="utime">約 21 分鐘</span></div>
+  <div class="ur"><span class="un">3-4</span><div><p class="ut">每 7 年的小變動:其他被忽略的關卡</p><p class="ud">除了兩次大關,人生大約每 7 年會有一個小變動。還有一個被忽略的「療癒回歸」關卡——很多人那時候突然開始去看心理諮商,就是這個原因。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">3-5</span><div><p class="ut">畫出你的人生關卡地圖</p><p class="ud">給學員一個工具:輸入自己的生日,看出已經走過哪些關卡、下一個關卡何時到。把整堂課變成「你自己的人生地圖」。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">畫出「我的人生關卡地圖」,標出已經走過、正在走、還沒到的關卡。寫一段話描述:我目前處在哪一個能量裡、下一個關卡何時到、我想怎麼準備。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第四章 · 統合視野</p><p class="ch-title">人 × 選擇 × 時代:占星最高階的看法<span class="obj-badge" style="margin-left:8px">此版獨有</span></p><p class="ch-desc">前面三章建立的能力,這一章整合起來。占星最高階的不是看一張星盤,是把「這個人」「他正在做的選擇」「他所在的時代」放在一起看,得出整體判斷。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 90 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">4-1</span><div><p class="ut">三個維度合成一個判斷</p><p class="ud">說明資深占星師真正在做的事——不是看星盤本身,是把「這個人」「他現在的處境」「他所在的時代」三個維度整合,得出「現在他應該怎麼活」的答案。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">4-2</span><div><p class="ut">時代背景:冥王水瓶與我們現在的時代</p><p class="ud">2024 開始,人類進入一個 20 年的時代轉折(冥王水瓶)。這個時代的人在面對什麼?為什麼這個時代特別焦慮、特別愛問「我是誰」?</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">4-3</span><div><p class="ut">應用示範:把三維視野套到具體場景</p><p class="ud">透過一個完整的應用情境,示範「人 × 選擇 × 時代」的整合判讀——具體要看哪些位置、要怎麼組合判讀。</p></div><span class="utime">約 23 分鐘</span></div>
+  <div class="ur"><span class="un">4-4</span><div><p class="ut">把三維視野套到你自己</p><p class="ud">學員回到自己——你是誰、你現在面對什麼選擇、這個時代正在推著你往哪裡走。完成這個練習,你會看見自己過去看不見的東西。</p></div><span class="utime">約 23 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">做一份「我的三維整合報告」:我是什麼樣的人、我現在在做什麼選擇、我所在的時代給我什麼推力——三個維度合成一個整體判斷。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第五章 · 實戰篇</p><p class="ch-title">將近 30 年來最常被問的人生問題,完整拆解</p><p class="ch-desc">把前四章的能力套用到具體的人生場景。這章是學員最有「獲得感」的一章——把抽象的占星框架,落地成「我的問題該怎麼想」。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 80 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">5-1</span><div><p class="ut">感情:他到底愛不愛我、要不要繼續</p><p class="ud">用合盤、流年整合判讀感情問題。為什麼大部分感情困擾不是「他變了」,是「你們的能量結構從來沒對過」?</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">5-2</span><div><p class="ut">工作:我適不適合創業、要不要轉職</p><p class="ud">工作問題的占星整合——核心驅動、實作能力、時機,三層整合得出「現在要不要動」。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">5-3</span><div><p class="ut">家庭:跟父母、跟孩子的能量怎麼處理</p><p class="ud">原生家庭關係的合盤是最複雜也最值得看的——很多人成年後的問題,根源在這張合盤。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">5-4</span><div><p class="ut">自己:我這輩子到底要走去哪</p><p class="ud">最終極的問題——「我」這輩子的方向是什麼。整合太陽、月亮、北交點等元素,給學員一張「人生方向圖」。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">挑一個你目前最在意的人生場景(感情/工作/家庭/自己),用本章方法完整拆解,寫一份你自己的「整合判讀報告」。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第六章 · 收尾</p><p class="ch-title">走過將近 30 年:從「巫」到「醫」</p><p class="ch-desc">課程最後一章,她最真實的職涯故事與人生觀。不是成功學,是一個用占星走過 將近 30 年的人,對正在開始的人說的話。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 65 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">6-1</span><div><p class="ut">為什麼我認真對待占星這件事</p><p class="ud">占星師說的話會影響一個人的決定。她對這份責任的看法——為什麼她從不告訴粉絲「該怎麼做」,而是希望每個人明白「有權決定自己生命樣貌的只有自己」。這是她這 30 年最核心的工作態度。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">6-2</span><div><p class="ut">從巫到醫:我的角色怎麼變的</p><p class="ud">她這些年角色的轉變——從早期幫人看個人運勢,到後來用占星理解時代與社會。占星對她而言不只是工具,是一種看世界的方式。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">6-3</span><div><p class="ut">給正在用占星理解人生的你</p><p class="ud">課程結尾。唐綺陽對每一個正在用占星試圖看懂自己、看懂別人、看懂時代的學員說一段話——走了將近 30 年之後,她真正想留下的東西。</p></div><span class="utime">約 21 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">結業作業</span><span class="hw-txt">整合整門課,寫一份「我的占星人生宣言」:我看清了自己什麼、我現在在做什麼選擇、我正處在什麼時代、我接下來要怎麼走。每一段都要能用本課的占星語言說清楚。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><span class="bonus-tag">加映單元</span><p class="ch-title">唐綺陽的占星筆記:她自己怎麼看星盤</p><p class="ch-desc">非正式章節,訪談形式。公開她看一張星盤的實際 SOP——先看哪裡、再看哪裡、什麼是她最重視的細節。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 30 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">B-1</span><div><p class="ut">我看一張星盤的順序與重點</p><p class="ud">公開她看星盤的實際流程——拿到一張盤,先看哪裡、再看哪裡、什麼會讓她停下來多看一眼。給學員一個真實的看盤步驟。</p></div><span class="utime">約 15 分鐘</span></div>
+  <div class="ur"><span class="un">B-2</span><div><p class="ut">從「巫」到「醫」:這 30 年我怎麼看占星師這個身份</p><p class="ud">早期被當「算命的」「怪力亂神」,到後來被視為「療癒者」「人生顧問」——占星師這個身份在她心中怎麼轉變。她現在怎麼看自己的工作。</p></div><span class="utime">約 15 分鐘</span></div>
+</div>
+
+<!-- Why Integrated - moved to bottom -->
+<section class="why-section">
+  <p class="why-eyebrow">— Why an integrated version —</p>
+  <h3 class="why-title">為什麼要做整合版?</h3>
+  <p class="why-desc">三個方向各自獨立成課都成立,但合在一起會構成一個完整的人生決策邏輯——<strong>理解人</strong>(看懂自己跟身邊的人)、<strong>面對關口</strong>(做出不後悔的選擇)、<strong>走過時代</strong>(看出並應對人生的關鍵時刻)。整合版多了一個「統合視野」章節把三件事串成系統,並由唐綺陽親自示範她如何用占星看自己的人生——這是其他三個獨立方向無法取代的價值。</p>
+</section>
+
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PANEL 1 ─ 方向一 · 識人
+════════════════════════════════════════════ -->
+<div class="panel" id="p1">
+<div class="wrap">
+
+<div class="ph">
+  <p class="ph-kicker">方向一 · 以「識人能力」為主軸</p>
+  <h2 class="ph-title">唐綺陽的占星識人術</h2>
+  <p class="ph-subtitle">把多年識人的眼光,變成你能用的方法。</p>
+  <p class="ph-desc">不是教你看星盤,是把唐綺陽多年累積的識人判斷力系統化。這種看人的眼光過去屬於她個人,這堂課把它公開化、方法化。學員學會的不是占星技術,是「看一個人,要看哪幾個地方」的眼光。</p>
+  <div class="chips">
+    <span class="chip">6 章節 · 19 個單元</span>
+    <span class="chip">約 6.5 小時</span>
+    <span class="chip">5 份章節作業</span>
+    <span class="chip">定價目標 NT$ 3,000–5,000</span>
+  </div>
+</div>
+
+<div class="diff"><strong>這個方向的入口邏輯:</strong>從「我想看懂身邊的人」這個剛需出發,以職場、人際、家庭三大應用場景為主要購買動機。受眾範圍最廣,跟同類占星課的差異最清楚——別人教技術,這堂教眼光。</div>
+
+<hr class="sdiv">
+<p class="eyebrow">課程定位</p>
+<div class="g2">
+  <div class="ic"><p class="ic-lbl">這堂課是什麼</p><p class="ic-val">占星識人的判斷力</p><p class="ic-sub">將近 30 年觀察的系統化方法,讓沒學過占星的人,也能擁有看人的眼光</p></div>
+  <div class="ic"><p class="ic-lbl">這堂課不是什麼</p><p class="ic-val">不是占星百科,不是運勢預測</p><p class="ic-sub">不教完整占星學,只教「用占星看一個人」這件事</p></div>
+  <div class="ic"><p class="ic-lbl">藝人不可替代性</p><p class="ic-val">長期累積的識人經驗</p><p class="ic-sub">她看過的人數是任何其他講師達不到的——這是這堂課的核心資產</p></div>
+  <div class="ic"><p class="ic-lbl">應用場景</p><p class="ic-val">職場、感情、家庭三大剛需</p><p class="ic-sub">看老闆、看下屬、看伴侶、看小孩、看自己——人人每天都用得到的能力</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">課程目標</p>
+<div class="obj-block">
+  <div class="obj-row"><span class="obj-num">01</span><div><p class="obj-title">看懂一個人想活成什麼樣子</p><p class="obj-desc">用太陽、月亮、上升三層人格,看出一個人的核心驅動、安全感來源,以及外在表現之間的差距。</p></div></div>
+  <div class="obj-row"><span class="obj-num">02</span><div><p class="obj-title">看懂一個人怎麼做事與相處</p><p class="obj-desc">用水星(思維)、金星(價值觀與喜好)、火星(行動力與慾望)三顆行星,理解一個人的實際行為樣貌。</p></div></div>
+  <div class="obj-row"><span class="obj-num">03</span><div><p class="obj-title">看懂一個人的關卡與爆發點</p><p class="obj-desc">用土星(課題)、天王(突變)、凱龍(核心傷痛)三顆行星,看出一個人會卡關的地方、什麼時候會突變、那個一直好不了的傷。</p></div></div>
+  <div class="obj-row"><span class="obj-num">04</span><div><p class="obj-title">看懂兩個人為什麼合得來/合不來</p><p class="obj-desc">合盤入門——不是看「速配指數」,是看「兩張星盤合在一起會啟動什麼能量」。應用在伴侶、上司、父母、合作關係。</p></div></div>
+  <div class="obj-row"><span class="obj-num">05</span><div><p class="obj-title">用同理代替評價</p><p class="obj-desc">看懂之後的最終目的不是控制或改變,而是理解。學員學會以同理對待身邊難相處的人,更重要的是,對待自己。</p></div></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">目標受眾</p>
+<div class="g3">
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">管理者、HR、業務主管</p><p class="ac-desc">「看懂下屬、看懂老闆、看懂候選人」是工作剛需,願意付費獲取看人工具,職場應用就是購買動機</p></div>
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">唐綺陽既有粉絲</p><p class="ac-desc">FB、IG 追蹤者與 podcast 聽眾,轉換率最高的基本盤</p></div>
+  <div class="ac"><p class="ac-name">想看懂另一半/家人的人</p><p class="ac-desc">在感情或家庭中遇到溝通困難的人,佔大眾市場主體</p></div>
+  <div class="ac"><p class="ac-name">創投、業界觀察者</p><p class="ac-desc">看人是工作核心,占星是一種補充判讀工具</p></div>
+  <div class="ac"><p class="ac-name">心理工作者、教練</p><p class="ac-desc">把這套架構當成理解客戶與案主的補充框架</p></div>
+  <div class="ac"><p class="ac-name">想入門占星的初學者</p><p class="ac-desc">不想從技術細節入手,而是從應用層面理解占星的人</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">課程大綱</p>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">導論</p><p class="ch-title">她為什麼想做這堂課</p><p class="ch-desc">建立學員對「占星看人」的認知——不是貼星座標籤,不是運勢預測,而是把一個人的核心驅動、行為方式、關卡整體看一次的眼光。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 35 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">0-1</span><div><p class="ut">什麼叫「用占星看人」</p><p class="ud">同樣一個人,星座貼標籤的看法跟用整張星盤的看法,差距有多大。透過幾個對照,讓學員一開始就建立「這堂課要教的不是星座運勢」的認知。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">0-2</span><div><p class="ut">多年的看人:從公眾人物到一般人</p><p class="ud">這些年累積的不是運勢預測能力,而是看人的眼光。為什麼這個能力可以教給沒學過占星的人,以及這堂課的學習路徑。</p></div><span class="utime">約 17 分鐘</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第一章 · 三層人格</p><p class="ch-title">看一個人想活成什麼樣子</p><p class="ch-desc">建立看人最基本的三層架構——太陽、月亮、上升。完課後能看出一個人「外表的樣子」「真實的內在」「想成為的方向」之間的差距。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 70 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">1-1</span><div><p class="ut">太陽:他內心想成為什麼樣的人</p><p class="ud">太陽星座代表一個人的核心生命力與意志方向——看一個人,不是看他現在做什麼,是看他想活成什麼樣子。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">1-2</span><div><p class="ut">月亮:他需要什麼才會放鬆</p><p class="ud">月亮看一個人的情感需求與安全感來源。為什麼有人在外人前很強,回家就崩潰?因為太陽跟月亮在拉扯。學員學會看出一個人「真正需要被照顧的點」。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">1-3</span><div><p class="ut">上升:他在外面表現出來的樣子</p><p class="ud">上升是一個人面對世界的方式,也是別人對他的第一印象。為什麼有人「初看跟熟識完全不同」?太陽跟上升的差距就是答案。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">1-4</span><div><p class="ut">三層整合:從面具到核心,看懂一個完整的人</p><p class="ud">把太陽、月亮、上升放在一起看,才是完整的一個人。完整示範:一個人為什麼外表這樣、內心那樣、想成為什麼樣。</p></div><span class="utime">約 16 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">拿你自己跟一個你最想看懂的人(伴侶/老闆/孩子),分別寫出三層的對照觀察。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第二章 · 行為三維</p><p class="ch-title">看一個人怎麼想、怎麼喜歡、怎麼行動</p><p class="ch-desc">把「人格」進一步落地到「行為」——同樣是太陽獅子,他講話什麼樣?喜歡的方式什麼樣?生氣的反應什麼樣?用水星、金星、火星三顆行星拆解。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 70 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">2-1</span><div><p class="ut">水星:他的腦子怎麼運轉、怎麼溝通</p><p class="ud">水星看一個人的思維方式與溝通模式。為什麼有的人講話跳躍、有的人步步推理?學員學會看出一個人「怎麼接收訊息、怎麼表達訊息」——這直接決定怎麼跟他溝通。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">2-2</span><div><p class="ut">金星:他的價值觀與喜好邏輯</p><p class="ud">金星看一個人的審美、價值觀與喜好邏輯。為什麼有人喜歡得很慢卻深、有人快卻淺?這顆行星用在感情、銷售、合作判讀都通。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">2-3</span><div><p class="ut">火星:他的行動力、戰鬥姿態與慾望表達</p><p class="ud">火星代表行動力、競爭、慾望與爆發力。一個人遇到衝突會怎麼反應?他什麼時候會爆發?他追求目標時的姿態是什麼?</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="ur"><span class="un">2-4</span><div><p class="ut">整合練習:從三顆行星看一個人的行為樣貌</p><p class="ud">水星(思維)+金星(價值觀)+火星(行動力)= 一個人實際表現出來的樣子。這個單元用這三顆行星,完整拆解一個熟悉的公眾人物。</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">選一個你最近跟他相處有困難的人,用這三顆行星拆解他,寫出你的觀察。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第三章 · 關卡座標</p><p class="ch-title">看一個人的關卡:他會卡在哪、會在哪爆發</p><p class="ch-desc">前兩章看的是「日常的他」,這章看的是「關鍵時刻的他」。用土星、天王、凱龍三顆行星,看出一個人會卡關的地方、會突變的時刻、那個一直好不了的傷。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 70 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">3-1</span><div><p class="ut">土星:他這輩子最大的考題</p><p class="ud">土星代表一個人需要花一輩子去處理的課題、紀律與限制。為什麼有人總是在感情卡關、有人總是在工作卡關?學員學會看出一個人的核心功課,用同理代替評價。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">3-2</span><div><p class="ut">天王:他什麼時候會突然不一樣</p><p class="ud">天王代表斷裂式的轉變、覺醒與自由。為什麼一個看似穩定的人會突然辭職、突然分手、突然變一個人?這個單元拆解這類轉變背後的能量。</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="ur"><span class="un">3-3</span><div><p class="ut">凱龍:他身上那個一直好不了的傷</p><p class="ud">凱龍是「受傷的療癒者」(Wounded Healer)——一個人最深的傷,往往就是他能幫助別人的地方。學員學會看出一個人「為什麼總是在同一件事上重複犯錯」,以及這個傷怎麼變成天賦。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">3-4</span><div><p class="ut">看自己的關卡:回頭做一張你的關卡地圖</p><p class="ud">前面三個單元都在看別人,這一單元學員回到自己——找出自己這輩子的核心考題、突變點、傷痛點。她以自己的版本作為示範。</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">寫一份「我的關卡地圖」——我的土星功課是什麼、我可能會在哪裡突變、我的核心傷是什麼。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第四章 · 關係維度</p><p class="ch-title">看兩個人的關係:為什麼合得來、為什麼合不來</p><p class="ch-desc">前三章都是看「一個人」,這一章看「兩個人之間」。合盤入門——不是看「速配」,是看兩張星盤合在一起會啟動什麼能量。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 70 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">4-1</span><div><p class="ut">合盤是什麼:不是配對,是看「化學反應」</p><p class="ud">合盤不是「速配指數」,是看兩張星盤放在一起會產生什麼能量。從她過去的經驗出發,說明合盤怎麼看。</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="ur"><span class="un">4-2</span><div><p class="ut">看伴侶:他為什麼讓你又愛又氣</p><p class="ud">為什麼有人讓你著迷又讓你抓狂?重點不是「合不合」,是「你們的合盤啟動了什麼」。學員學會看出兩個人之間的核心拉扯。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">4-3</span><div><p class="ut">看上司下屬:為什麼這個老闆讓你工作不下去</p><p class="ud">職場關係的合盤跟感情合盤不同——重點在「權力流向」與「能量互補」。這個單元拆解工作關係的合盤怎麼看。</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="ur"><span class="un">4-4</span><div><p class="ut">看父母小孩:你跟你爸媽的能量怎麼運作</p><p class="ud">原生家庭關係的合盤是最複雜也最值得看的——很多人成年後的問題,根源在這張合盤。學員學會看出自己跟父母的能量結構。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">選一段你現在最想看懂的關係(伴侶/上司/家人),做一張簡易合盤觀察。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第五章 · 此刻的他</p><p class="ch-title">看一個人現在處在什麼時候</p><p class="ch-desc">前四章看的是「固定的他」,這章看「此刻的他」——一個人在不同時間點會不一樣,流年看的就是這件事。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 65 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">5-1</span><div><p class="ut">流年不是運勢,是「他現在的處境」</p><p class="ud">流年(行運)的本質——不是「今年好不好」,是這個人現在被什麼能量推著走。同樣一年,對不同的人意義完全不同。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">5-2</span><div><p class="ut">看一個人「現在不是平常的他」</p><p class="ud">為什麼一個人會突然變得跟平常不一樣?往往是流年在運作。學員學會看出「這個人現在是不是非常時期」,可以用更同理的方式對待他。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">5-3</span><div><p class="ut">看你自己現在處在哪裡</p><p class="ud">回到自己——你這個階段在經歷什麼能量?你現在做的決定為什麼會這樣?這一單元提供一個自我檢視的工具。</p></div><span class="utime">約 21 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">寫一份「我現在處在哪裡」——我這一兩年在經歷什麼、我為什麼會這樣決定、未來一年我可能會遇到什麼。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><span class="bonus-tag">加映單元</span><p class="ch-title">唐綺陽的看人筆記</p><p class="ch-desc">非正式章節,訪談形式。她這些年累積的看人哲學——看懂之後該怎麼辦。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 30 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">B-1</span><div><p class="ut">從「巫」到「醫」:這 30 年我怎麼看占星師這個身份</p><p class="ud">早期被當「算命的」「怪力亂神」,到後來被視為「療癒者」「人生顧問」——占星師這個身份在她心中怎麼轉變。她現在怎麼看自己的工作。</p></div><span class="utime">約 15 分鐘</span></div>
+  <div class="ur"><span class="un">B-2</span><div><p class="ut">看人最重要的事:看完之後怎麼辦</p><p class="ud">看懂一個人之後,最重要的不是去評價、不是去改變他,是知道「他為什麼是這樣的他」。看懂是為了同理。</p></div><span class="utime">約 15 分鐘</span></div>
+</div>
+
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PANEL 2 ─ 方向二 · 決斷
+════════════════════════════════════════════ -->
+<div class="panel" id="p2">
+<div class="wrap">
+
+<div class="ph">
+  <p class="ph-kicker">方向二 · 以「做出好選擇」為主軸</p>
+  <h2 class="ph-title">唐綺陽的占星決斷課</h2>
+  <p class="ph-subtitle">該分、該換、該走、該留——在重大關口,做出不後悔的決定。</p>
+  <p class="ph-desc">教你在重大選擇前,用占星看清「你真正在面對的是什麼」。不是替你做決定,是讓你做完決定不後悔。這也是唐綺陽明確的自我定位:「我希望粉絲明白,有權決定生命樣貌的只有自己。」</p>
+  <div class="chips">
+    <span class="chip">6 章節 · 18 個單元</span>
+    <span class="chip">約 6 小時</span>
+    <span class="chip">5 份章節作業</span>
+    <span class="chip">定價目標 NT$ 3,000–5,000</span>
+  </div>
+</div>
+
+<div class="diff"><strong>這個方向的入口邏輯:</strong>從「我該不該⋯」這個 將近 30 年來她最常被問的問題切入。直接回應 AI 時代的核心焦慮——AI 能算機率、能給建議,但 AI 看不見「你真正在怕什麼」。這是 AI 時代占星的真正用處。</div>
+
+<hr class="sdiv">
+<p class="eyebrow">課程定位</p>
+<div class="g2">
+  <div class="ic"><p class="ic-lbl">這堂課是什麼</p><p class="ic-val">用占星看清選擇,不替你做選擇</p><p class="ic-sub">把多年的決策諮詢經驗系統化,讓學員擁有「在關口看清自己」的能力</p></div>
+  <div class="ic"><p class="ic-lbl">這堂課不是什麼</p><p class="ic-val">不是占卜,不是「該選 A 還是 B」</p><p class="ic-sub">不替你做決定,也不替你扛責任——讓你做完決定後,願意承擔</p></div>
+  <div class="ic"><p class="ic-lbl">為什麼是現在</p><p class="ic-val">AI 時代的正面回應</p><p class="ic-sub">AI 能給資訊與建議,但給不了判斷力。這是 AI 時代占星不可被取代的價值</p></div>
+  <div class="ic"><p class="ic-lbl">藝人不可替代性</p><p class="ic-val">多年諮詢經驗的系統化</p><p class="ic-sub">她在私訊回覆、podcast、社群互動中累積的觀察,是其他講師難以取代的</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">課程目標</p>
+<div class="obj-block">
+  <div class="obj-row"><span class="obj-num">01</span><div><p class="obj-title">能分辨真選擇與假選擇</p><p class="obj-desc">大部分糾結很久的「選擇」其實是假議題。學員學會用三個診斷問題,快速分辨自己現在面對的到底是什麼。</p></div></div>
+  <div class="obj-row"><span class="obj-num">02</span><div><p class="obj-title">能看清楚自己現在站在哪裡</p><p class="obj-desc">用流年與推運看出自己這個階段在經歷什麼能量、正在內在地變成什麼樣的人——這往往跟「以為自己想要什麼」很不一樣。</p></div></div>
+  <div class="obj-row"><span class="obj-num">03</span><div><p class="obj-title">能拆解感情、工作、地點三大決策</p><p class="obj-desc">針對「該不該離開」「該不該換工作或創業」「該不該搬家或移居」這三個最常見的重大選擇,有具體的拆解方法。</p></div></div>
+  <div class="obj-row"><span class="obj-num">04</span><div><p class="obj-title">擁有「不後悔」的能力</p><p class="obj-desc">不後悔不是運氣,是一種能力——關鍵是「選擇之前已經看清楚」。學員學會在做決定之前先做完該做的功課。</p></div></div>
+  <div class="obj-row"><span class="obj-num">05</span><div><p class="obj-title">能跟自己和解:選擇本來就有代價</p><p class="obj-desc">所有選擇都有代價。這堂課教的不是「選對」,是「願意承擔」。這是這堂課的最高境界。</p></div></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">目標受眾</p>
+<div class="g3">
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">面對重大選擇的成年人</p><p class="ac-desc">換工作、結束關係、決定創業、考慮移居——購買動機最強烈,任何年齡段只要正面對重大關口</p></div>
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">唐綺陽既有粉絲</p><p class="ac-desc">「我該不該⋯」是她長期以來最常被問的問題,粉絲對這個切角共鳴最強</p></div>
+  <div class="ac"><p class="ac-name">管理者、創業者</p><p class="ac-desc">重大決策不能只看數據,還要看人,占星是補充判斷工具</p></div>
+  <div class="ac"><p class="ac-name">轉型期工作者</p><p class="ac-desc">AI 焦慮疊加職涯焦慮的工作者</p></div>
+  <div class="ac"><p class="ac-name">面對感情關卡的人</p><p class="ac-desc">結婚、分手、復合,需要外部視角</p></div>
+  <div class="ac"><p class="ac-name">決策疲勞的高壓職務者</p><p class="ac-desc">每天做大量決策、需要補充直覺的工作者</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">課程大綱</p>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">導論</p><p class="ch-title">為什麼選擇這麼難</p><p class="ch-desc">開場直接從學員痛點切入。她對 AI 時代的真實觀察——AI 能算很多事,但算不出「我該不該」。這是占星的位置。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 40 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">0-1</span><div><p class="ut">將近 30 年來,我聽過最多的一句話</p><p class="ud">將近 30 年來粉絲問她最多的不是「我會不會發財」,而是「我該不該分手/換工作/搬家/創業」。為什麼一樣的問題每個人都在問?因為「選擇」是這個時代最大的難題。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">0-2</span><div><p class="ut">AI 能算很多事,算不出「我該不該」</p><p class="ud">她對 AI 的觀察——AI 能給資訊、算機率、生成建議,但 AI 做不到「看見你真正在怕什麼」。這就是占星在 AI 時代的位置。她也聊到自己怎麼用 AI、不用 AI。</p></div><span class="utime">約 20 分鐘</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第一章 · 看清處境</p><p class="ch-title">「你以為的選擇」是不是假選擇</p><p class="ch-desc">大部分人糾結很久的「選擇」其實只是假議題。這一章先把學員手上的選擇題重新檢視一次。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 70 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">1-1</span><div><p class="ut">真選擇 vs. 假選擇:三個診斷問題</p><p class="ud">為什麼很多人糾結很久的「選擇」其實只是一個假議題?透過三個診斷問題,讓學員快速分辨自己現在面對的是真選擇還是假選擇。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">1-2</span><div><p class="ut">你的星盤裡有沒有「重複的考題」</p><p class="ud">為什麼你總是在類似的關口卡住?用土星跟凱龍找出你這輩子重複出現的考題——很多時候你的「選擇」其實是「同一個考題的第幾次出現」。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">1-3</span><div><p class="ut">你的恐懼是哪一種</p><p class="ud">所有選擇背後都是恐懼。但恐懼有不同種類:怕失去、怕改變、怕後悔、怕被評價。用月亮跟土星看出你這次的恐懼到底是哪一種。</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="ur"><span class="un">1-4</span><div><p class="ut">把選擇題重新寫一次</p><p class="ud">做完前面的診斷,大部分人會發現「我以為要選的根本不是真的選項」。這一單元教學員把自己面對的選擇,重新拆解一次。</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">拿你最近最糾結的一個選擇,用這四個工具重新拆解一次。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第二章 · 看清自己</p><p class="ch-title">看清楚「你」現在站在哪裡</p><p class="ch-desc">很多選擇困難不是因為選項難,是因為你不知道「現在的你是誰」。用流年、推運校準自己的座標。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 70 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">2-1</span><div><p class="ut">你不是固定的你:人生階段的能量差異</p><p class="ud">為什麼同一個選擇,在人生不同階段答案會不一樣?因為你不是同一個你。這一單元用流年講解「人生階段」這個概念——不是運勢預測,是「你現在處在什麼能量裡」。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">2-2</span><div><p class="ut">人生兩次大轉折,選擇會比平常重</p><p class="ud">占星裡有兩個特別關鍵的時期——人生第一次大轉折、人生第二次大轉折。這兩個時期裡做的選擇,會比平常重很多。學員學會看自己現在處於哪個階段。</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="ur"><span class="un">2-3</span><div><p class="ut">你正在「往哪裡去」</p><p class="ud">看推運盤——你的太陽現在實際上走到哪個星座、你正在內在地變成什麼樣的人。這個變化往往跟你「以為自己想要什麼」很不一樣。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">2-4</span><div><p class="ut">此刻的決定要符合「現在的你」,不是過去的你</p><p class="ud">很多人的選擇困難,是因為用「過去的價值觀」在判斷「現在的處境」。這一單元教學員校準——你現在到底是誰?</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">寫一份「我現在站在哪裡」——我處在什麼人生階段、我內在正在變成什麼、我這次的選擇要符合哪一個我。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第三章 · 具體場景</p><p class="ch-title">重大選擇的占星拆解</p><p class="ch-desc">把前兩章的方法,套用到三個最常見的重大選擇——感情、工作、地點。每個場景都從她的觀察出發拆解。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 80 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">3-1</span><div><p class="ut">該不該離開一段關係</p><p class="ud">用合盤跟流年拆解「離開」這個選擇。為什麼有時候「合不來」其實是「現在合不來」?為什麼有時候「捨不得」其實是「怕重新開始」?從她的觀察出發做示範。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">3-2</span><div><p class="ut">該不該換工作、創業</p><p class="ud">工作選擇看的不只是「適不適合」,是「現在這個時間點,這個選擇對你的人生意味著什麼」。學員學會用木星、土星看出「現在是擴張期還是收斂期」。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">3-3</span><div><p class="ut">該不該搬家、移居</p><p class="ud">地點對占星來說是真實的能量——同一個人在不同城市命運會不一樣。這一單元簡介「地理占星」(Astrocartography),讓學員看出「對你來說,什麼地方是好的」。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">3-4</span><div><p class="ut">該不該結束、開始(關係、事業、階段)</p><p class="ud">所有重大選擇本質都是「結束某個東西、開始某個東西」。冥王星看的就是這個——什麼東西該死掉、什麼東西該重生。學員學會分辨「該結束 vs. 還能救」。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">用本章工具,把你現在面對的真實選擇,完整拆解一次。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第四章 · 不後悔的能力</p><p class="ch-title">做完選擇之後</p><p class="ch-desc">前三章是「選擇之前」,這一章是「選擇之後」。不後悔不是運氣,是一種能力——關鍵是「選擇之前已經看清楚」。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 65 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">4-1</span><div><p class="ut">為什麼有人選完還在後悔</p><p class="ud">「不後悔」不是運氣,是一種能力。透過她自己人生幾個重大選擇,說明為什麼能不後悔——關鍵是「選擇之前已經看清楚」。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">4-2</span><div><p class="ut">選擇之後,星盤怎麼幫你走下去</p><p class="ud">選了之後不是結束,是開始。怎麼用流年看出「接下來幾個月會發生什麼、什麼時候會出現考驗、什麼時候會有貴人」,讓你做完選擇後不慌。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">4-3</span><div><p class="ut">跟自己和解:選擇本來就有代價</p><p class="ud">所有選擇都有代價。這堂課教你的不是「選對」,是「願意承擔」。這一單元收尾——做選擇的最高境界是「我選了,我願意承擔」。</p></div><span class="utime">約 21 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">寫一份「我為什麼這樣選」——我看清楚了什麼、我願意承擔什麼、我接下來怎麼走。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第五章 · 收尾</p><p class="ch-title">給做選擇的人:唐綺陽的話</p><p class="ch-desc">課程最後一章,她最真實的選擇故事——多年看人之後的真實看法。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 60 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">5-1</span><div><p class="ut">我做過的幾個重要選擇</p><p class="ud">她人生中幾個關鍵的選擇,以及當時是怎麼做這些決定的。每一個選擇當時都不一定被看好,但她為什麼選了。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">5-2</span><div><p class="ut">我看過最遺憾的選擇,跟最值得的選擇</p><p class="ud">她看過最多人遺憾的選擇是什麼類型?最值得的又是什麼類型?整理出一個「事後回看」的觀察。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">5-3</span><div><p class="ut">給正在做選擇的你</p><p class="ud">課程結尾。唐綺陽對每一個正在面對重大選擇的學員說一段話——不是雞湯,是多年看人之後的真實看法。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">結業作業</span><span class="hw-txt">整合整門課,完成「我的選擇宣言」——我面對的是什麼選擇、我看清了什麼、我選了什麼、我願意承擔什麼。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><span class="bonus-tag">加映單元</span><p class="ch-title">唐綺陽的選擇筆記</p><p class="ch-desc">非正式章節,訪談形式。公開她做重大決定時實際會看星盤的哪幾個地方,以及對未來幾年的時代觀察。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 30 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">B-1</span><div><p class="ut">我自己怎麼用占星做決定</p><p class="ud">公開她做重大決定時,實際會看星盤的哪幾個地方。給學員一個真實的決策步驟。</p></div><span class="utime">約 15 分鐘</span></div>
+  <div class="ur"><span class="un">B-2</span><div><p class="ut">一個關於選擇的時代觀察</p><p class="ud">對未來幾年的時代觀察——這幾年特別多人會面對重大選擇,為什麼。讓學員理解「不是只有你這樣」,有時代背景。</p></div><span class="utime">約 15 分鐘</span></div>
+</div>
+
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PANEL 3 ─ 方向三 · 轉運
+════════════════════════════════════════════ -->
+<div class="panel" id="p3">
+<div class="wrap">
+
+<div class="ph">
+  <p class="ph-kicker">方向三 · 以「占星轉運」為主軸</p>
+  <h2 class="ph-title">唐綺陽的占星轉運課</h2>
+  <p class="ph-subtitle">看出人生兩次大轉折,並學會應對。</p>
+  <p class="ph-desc">每個人的一生都會走過兩次大轉折——第一次,你以為的人生會瓦解、宇宙逼著你重新選擇;第二次,你會被推著回頭整合一切、決定真正想活成什麼樣子。這堂課把這兩次轉折講透,以及中間被忽略的小關卡。讓學員學會「看出關卡 → 理解關卡 → 走過關卡」的完整應對方法。</p>
+  <div class="chips">
+    <span class="chip">6 章節 · 18 個單元</span>
+    <span class="chip">約 6 小時</span>
+    <span class="chip">5 份章節作業</span>
+    <span class="chip">定價目標 NT$ 3,000–5,000</span>
+  </div>
+</div>
+
+<div class="diff"><strong>這個方向的入口邏輯:</strong>「轉運」是唐綺陽 將近 30 年來的核心品牌資產(年度運勢書持續銷售成長)。這堂課把「年度運勢」拉高到「人生轉折」維度——不是看下一年,是看人生關鍵時刻。跟年度運勢書定位互補,不互相搶市場。</div>
+
+<hr class="sdiv">
+<p class="eyebrow">課程定位</p>
+<div class="g2">
+  <div class="ic"><p class="ic-lbl">這堂課是什麼</p><p class="ic-val">用占星看出人生關鍵點,並學會應對</p><p class="ic-sub">不是運勢預測,是把人生切成可辨認的關卡,讓學員主動準備、主動轉運</p></div>
+  <div class="ic"><p class="ic-lbl">這堂課不是什麼</p><p class="ic-val">不是 12 星座運勢,不是開運課</p><p class="ic-sub">與年度運勢書區隔:那本書講「下一年」,這堂課講「人生」</p></div>
+  <div class="ic"><p class="ic-lbl">轉運的真實意義</p><p class="ic-val">不是改命,是「看出關卡 + 主動應對」</p><p class="ic-sub">真正的轉運不靠運氣或玄學,是知道自己現在處在哪、下一步該做什麼</p></div>
+  <div class="ic"><p class="ic-lbl">商業優勢</p><p class="ic-val">延伸她的核心品牌資產</p><p class="ic-sub">「轉運」是她多年的核心關鍵字,既有粉絲對這個切角共鳴最強</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">課程目標</p>
+<div class="obj-block">
+  <div class="obj-row"><span class="obj-num">01</span><div><p class="obj-title">看懂第一次大轉折在問你什麼</p><p class="obj-desc">這個關卡的本質是宇宙在問:「你過去活的人生,真的是你要的嗎?」學員學會看出這個關卡的徵兆、典型崩潰類型,以及應對方法。</p></div></div>
+  <div class="obj-row"><span class="obj-num">02</span><div><p class="obj-title">看懂兩次大轉折之間的累積與錯過</p><p class="obj-desc">這個階段還有方向修正、中年再校準兩個小關卡。學員學會預先看到、避免錯過該累積的東西。</p></div></div>
+  <div class="obj-row"><span class="obj-num">03</span><div><p class="obj-title">看懂第二次大轉折的整合考題</p><p class="obj-desc">第二次大轉折不是退休,是「真正活成自己」的關卡。學員理解「整合 vs. 抗拒」兩種應對,以及自己想成為哪一種。</p></div></div>
+  <div class="obj-row"><span class="obj-num">04</span><div><p class="obj-title">看懂其他被忽略的人生關卡</p><p class="obj-desc">每 7 年的小變動關卡、人生中段的療癒回歸關卡——這些大眾沒聽過、但會真實影響人生的節點。</p></div></div>
+  <div class="obj-row"><span class="obj-num">05</span><div><p class="obj-title">畫出自己完整的人生關卡地圖</p><p class="obj-desc">學員結業時擁有一張屬於自己的「人生關卡地圖」,標出已走過、正在走、還沒到的關卡——把整堂課變成自己的工具。</p></div></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">目標受眾</p>
+<div class="g3">
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">正在面對人生關卡的人</p><p class="ac-desc">感受到「人生瓦解」「方向迷失」「想重來」的人——這個族群焦慮值最高、購買動機最強</p></div>
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">唐綺陽既有粉絲</p><p class="ac-desc">「轉運」品牌核心受眾,對這個切角共鳴最強</p></div>
+  <div class="ac"><p class="ac-name">在規劃下半生的人</p><p class="ac-desc">面對第二次大轉折的人,想清楚下半生方向</p></div>
+  <div class="ac"><p class="ac-name">中段累積期的工作者</p><p class="ac-desc">已過第一次大轉折,正在中段累積,想看清自己有沒有錯過什麼</p></div>
+  <div class="ac"><p class="ac-name">HR、教練、心理工作者</p><p class="ac-desc">把「人生關卡」這個架構當成理解客戶與案主的工具</p></div>
+  <div class="ac"><p class="ac-name">想為未來做準備的人</p><p class="ac-desc">還沒到大轉折,但想預先理解自己會走過什麼</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow">課程大綱</p>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">導論</p><p class="ch-title">人生為什麼會有兩次大轉折</p><p class="ch-desc">開場讓學員理解「轉折」是真實存在的——不是運氣,不是個人問題,是占星早就指出來的人生節奏。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 40 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">0-1</span><div><p class="ut">將近 30 年的觀察:每個人都會走過兩次大轉折</p><p class="ud">將近 30 年看人累積出一個觀察——人會在兩個特定的人生階段「徹底不同」。從長期觀察的脈絡切入,讓學員一開始就感受到「這兩個轉折是真的存在」。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">0-2</span><div><p class="ut">轉運的真實意義:看出關卡,才談得上應對</p><p class="ud">說明這堂課的核心邏輯——真正的轉運不是靠運氣、不是靠玄學,是「先看出自己處在什麼關卡,才能主動應對」。看不清楚,做什麼都白費。</p></div><span class="utime">約 20 分鐘</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第一章 · 第一次大轉折</p><p class="ch-title">你以為的人生瓦解</p><p class="ch-desc">建立第一次大轉折的完整圖像——它的徵兆、它在問什麼、怎麼走過。這是大部分人會在生命裡遇到的第一次「真正的考驗」。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 80 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">1-1</span><div><p class="ut">第一次大轉折的徵兆:你怎麼知道它來了</p><p class="ud">這個關卡有非常明確的徵兆——一種「我過去做的這些好像都不對」的感覺。從她的觀察中,說明這個徵兆是怎麼出現的。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">1-2</span><div><p class="ut">三個典型崩潰:工作、感情、自我</p><p class="ud">第一次大轉折通常從這三個面向之一爆發:工作突然不對勁、感情突然走不下去、突然不認識自己。學員學會看出「自己現在的崩潰是哪一種」。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">1-3</span><div><p class="ut">這個關卡在問你什麼</p><p class="ud">第一次大轉折的本質,是宇宙在問你:「你過去活的這個人生,真的是你要的嗎?」用她自己當年的故事(辭掉配音、轉入占星)做示範。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">1-4</span><div><p class="ut">怎麼走過這個關卡:三個應對原則</p><p class="ud">不是給「該選 A 還是 B」的答案,是給三個應對原則:不要急著決定、誠實面對自己、把代價算清楚。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">如果你正在第一次大轉折——寫一份「我現在的崩潰是哪一種、宇宙在問我什麼」。如果你已過或還沒到——寫一份「我那時候/我預期會發生什麼」。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第二章 · 中段</p><p class="ch-title">兩次大轉折之間:你在累積什麼、錯過什麼</p><p class="ch-desc">第一次大轉折走過後,你進入一段實作期。這個階段的關鍵不是大爆發,是「不要錯過」。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 70 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">2-1</span><div><p class="ut">中段是實作期:你應該在這裡建立什麼</p><p class="ud">第一次大轉折走過之後,你進入一段實作期。這個階段的占星能量是什麼?你應該在這個階段累積什麼?用木星週期(12 年)劃分這個階段。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">2-2</span><div><p class="ut">兩個被忽略的中段小關卡</p><p class="ud">中段還有兩個小關卡——一個是「方向修正期」,一個是「中年再校準」。學員學會預先看到這兩個小關卡的徵兆與應對。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">2-3</span><div><p class="ut">你的「人生主題」會在這個階段定型</p><p class="ud">為什麼有人很快就找到自己的位置、有人到下半段還在飄?這個階段的關鍵是「人生主題」要定型——用太陽跟土星看出自己的人生主題。</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="ur"><span class="un">2-4</span><div><p class="ut">你會錯過的:大部分人後悔的事</p><p class="ud">很多人到了第二次大轉折才後悔的事——他們錯過的都是同一類東西。這一單元提醒學員「中段不要錯過什麼」。</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">寫一份「我的中段累積」——我在這個階段在累積什麼、我可能會錯過什麼。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第三章 · 第二次大轉折</p><p class="ch-title">整合期的真正考題</p><p class="ch-desc">第二次大轉折不是退休的開始,是「真正活成自己」的開始。她對這個關卡的觀察——是任何其他講師沒有的真實內容。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 75 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">3-1</span><div><p class="ut">第二次大轉折的徵兆:它跟第一次完全不同</p><p class="ud">第二次大轉折不是「你以為的人生瓦解」,而是「該整合的時候到了」。它的徵兆是一種突然意識到「我要不要再活一次別人想要的我」。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">3-2</span><div><p class="ut">整合 vs. 抗拒:兩種應對方式</p><p class="ud">第二次大轉折有兩種走法——一種是「整合過去所有累積」變得通透,一種是「抗拒這個過程」變得僵化。差別在哪?從她的觀察中說明。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">3-3</span><div><p class="ut">這個關卡的核心問題:你想留下什麼</p><p class="ud">第二次大轉折在問的是:「你想留下什麼?你的智慧要往哪裡走?你的遺憾要怎麼跟自己和解?」這是這個關卡真正的考題。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">3-4</span><div><p class="ut">應對方法:從「成就」轉向「成全」</p><p class="ud">第二次大轉折的應對方法跟第一次不同——不是再去「證明自己」,是學會「成全」。成全自己、成全身邊的人、成全自己沒做完的事。</p></div><span class="utime">約 19 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">如果你還沒到第二次大轉折——預覽這個關卡可能會是什麼。如果你正在或已過——回顧或正視這個關卡。寫一份「我想留下什麼」。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第四章 · 其他關卡</p><p class="ch-title">不只兩次大關:其他被忽略的關鍵節點</p><p class="ch-desc">除了兩次大轉折,人生還有其他被忽略的關鍵時點。學員學會看自己完整的人生地圖,並把整堂課變成自己的工具。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 60 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">4-1</span><div><p class="ut">每 7 年的小變動:天王星的小關卡</p><p class="ud">除了兩次大轉折,人生大約每 7 年會有一個小變動。學員學會看自己過去的 7 年週期,以及預覽下一個 7 年。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">4-2</span><div><p class="ut">人生中段的療癒回歸:一個被忽略的隱藏關卡</p><p class="ud">凱龍回歸是占星圈內知道、一般人沒聽過的隱藏關卡。它跟「核心傷痛的療癒」有關。為什麼很多人在某個時期突然開始去看心理諮商?這就是答案。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">4-3</span><div><p class="ut">畫出你的人生關卡地圖</p><p class="ud">給學員一個工具:輸入自己的生日,看出自己這輩子已經走過哪些關卡、下一個關卡何時到。讓學員把整堂課變成「自己的人生地圖」。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">畫一張「我的人生關卡地圖」——標出我已經走過的、正在走的、還沒到的。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第五章 · 收尾</p><p class="ch-title">唐綺陽的兩次大轉折:她真實的故事</p><p class="ch-desc">課程最後一章,她人生兩次大轉折的真實經歷,以及她正在面對的是什麼。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 65 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">5-1</span><div><p class="ut">我的第一次大轉折:那一年我做了什麼</p><p class="ud">她第一次大轉折時的真實故事——辭掉穩定的配音工作、栽進占星圈、被當怪力亂神。為什麼?她當時看到了什麼?</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">5-2</span><div><p class="ut">我的中段:我累積了什麼、錯過了什麼</p><p class="ud">她中段的歷程——這些年角色的轉變、外界對她的標籤,以及她在這個過程中看清了什麼、錯過了什麼。</p></div><span class="utime">約 21 分鐘</span></div>
+  <div class="ur"><span class="un">5-3</span><div><p class="ut">我的第二次大轉折:現在的我正在面對什麼</p><p class="ud">她現在這個階段的感受——什麼想法在改變、什麼決定在重新做、她對未來的看法。這是任何其他講師沒有的真實內容。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">結業作業</span><span class="hw-txt">整合整門課,寫一份「我的人生大關備忘錄」——已經走過的我學到了什麼、正在走的我看到了什麼、還沒到的我要準備什麼。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><span class="bonus-tag">加映單元</span><p class="ch-title">唐綺陽的關卡筆記</p><p class="ch-desc">非正式章節,訪談形式。兩個她印象最深的關卡觀察,以及她對自己接下來的真實計畫。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 30 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">B-1</span><div><p class="ut">我看過最戲劇性的兩個大轉折故事</p><p class="ud">她印象最深的關卡觀察——有人徹底脫胎換骨,有人錯過了。差別在哪?</p></div><span class="utime">約 15 分鐘</span></div>
+  <div class="ur"><span class="un">B-2</span><div><p class="ut">我接下來想做什麼</p><p class="ud">她接下來想做什麼、不想做什麼。這對所有正在規劃自己人生下一階段的人,是最真實的參考。</p></div><span class="utime">約 15 分鐘</span></div>
+</div>
+
+</div>
+</div>
+
+<script>
+function show(i){
+  document.querySelectorAll('.panel').forEach((p,idx)=>p.classList.toggle('on',idx===i));
+  document.querySelectorAll('.tab').forEach((t,idx)=>t.classList.toggle('on',idx===i));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
