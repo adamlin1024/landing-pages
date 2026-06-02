@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方文山 × HiSKIO 課程提案</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1c1a14;--ink2:#4a4640;--ink3:#8c8680;--ink4:#c4beb6;
+  --paper:#f6f3ec;--paper2:#eeeadf;--paper3:#e2ddd2;
+  --gold:#9a7c2a;--gold-bg:#f5edcf;--gold-border:#d4b86a;
+  --serif:'Noto Serif TC',serif;--sans:'Noto Sans TC',sans-serif;
+  --r:6px;--rlg:10px;
+}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+.hdr{background:var(--ink);padding:1.75rem 2.5rem 1.5rem;position:sticky;top:0;z-index:200}
+.hdr-inner{max-width:960px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap}
+.hdr-kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-bottom:.4rem}
+.hdr-title{font-family:var(--serif);font-size:18px;font-weight:500;color:var(--paper);line-height:1.3}
+.hdr-right{font-size:11px;color:var(--ink3);text-align:right;line-height:1.8}
+
+.tabs{background:var(--ink);border-bottom:1px solid #2c2a24;position:sticky;top:78px;z-index:199;padding:0 2.5rem}
+.tabs-inner{max-width:960px;margin:0 auto;display:flex}
+.tab{font-family:var(--sans);font-size:12px;color:var(--ink3);background:none;border:none;border-bottom:2px solid transparent;padding:.8rem 1.5rem .7rem;cursor:pointer;letter-spacing:.03em;transition:color .15s,border-color .15s;white-space:nowrap}
+.tab:hover{color:var(--paper)}
+.tab.on{color:var(--paper);border-bottom-color:var(--gold)}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.wrap{max-width:960px;margin:0 auto;padding:2.5rem 2.5rem 5rem}
+
+.ph{padding-bottom:1.75rem;margin-bottom:2rem;border-bottom:1px solid var(--paper3)}
+.ph-kicker{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:.55rem}
+.ph-title{font-family:var(--serif);font-size:26px;font-weight:600;line-height:1.35;margin-bottom:.5rem}
+.ph-title em{font-style:normal;font-weight:400;color:var(--ink2)}
+.ph-desc{font-size:13.5px;line-height:1.9;color:var(--ink2);max-width:660px;margin-bottom:1.2rem}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-size:11px;color:var(--ink2);background:var(--paper2);border:1px solid var(--paper3);padding:3px 12px;border-radius:20px}
+
+.diff{background:var(--paper2);border-left:2px solid var(--ink4);border-radius:0 var(--r) var(--r) 0;padding:.8rem 1rem;margin-bottom:1.75rem;font-size:13px;color:var(--ink2);line-height:1.75}
+.diff strong{font-weight:500;color:var(--ink)}
+
+.chain-wrap{margin-bottom:1.75rem}
+.eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:.7rem}
+.chain{display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap}
+.cn{background:var(--paper2);border:1px solid var(--paper3);border-radius:var(--r);padding:6px 13px;font-size:12px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:3px}
+.cn.pri{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.cn-lbl{font-size:10px;font-weight:400;color:var(--ink3)}
+.cn.pri .cn-lbl{color:var(--ink4)}
+.ca{color:var(--ink4);font-size:13px;margin-top:8px}
+
+.sdiv{border:none;border-top:1px solid var(--paper3);margin:2rem 0}
+
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:1.75rem}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:1.75rem}
+
+.ic{background:var(--paper2);border:1px solid var(--paper3);border-radius:var(--r);padding:.9rem 1rem}
+.ic-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:.35rem}
+.ic-val{font-size:13.5px;font-weight:500;line-height:1.5;color:var(--ink)}
+.ic-sub{font-size:12px;color:var(--ink2);margin-top:3px;line-height:1.6}
+
+.obj-block{background:var(--paper2);border:1px solid var(--paper3);border-radius:var(--rlg);overflow:hidden;margin-bottom:1.75rem}
+.obj-row{padding:.85rem 1.25rem;border-bottom:1px solid var(--paper3);display:flex;gap:10px;align-items:flex-start}
+.obj-row:last-child{border-bottom:none}
+.obj-row.unique{background:var(--gold-bg);border-color:var(--gold-border)}
+.obj-num{font-size:13px;font-weight:500;min-width:20px;margin-top:1px;color:var(--ink3)}
+.obj-row.unique .obj-num{color:var(--gold)}
+.obj-title{font-size:13.5px;font-weight:500;margin-bottom:.2rem;color:var(--ink);line-height:1.4}
+.obj-desc{font-size:12.5px;color:var(--ink2);line-height:1.65}
+.obj-badge{display:inline-block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:var(--gold);color:#fff;padding:2px 8px;border-radius:20px;margin-left:8px;vertical-align:middle;white-space:nowrap}
+
+.ac{background:var(--paper2);border:1px solid var(--paper3);border-radius:var(--r);padding:.9rem 1rem}
+.ac.prime{background:var(--gold-bg);border:1px solid var(--gold-border)}
+.ac-name{font-size:13px;font-weight:500;margin-bottom:.3rem;color:var(--ink)}
+.ac.prime .ac-name{color:var(--gold)}
+.ac-desc{font-size:12px;color:var(--ink2);line-height:1.65}
+.prime-badge{display:inline-block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:var(--gold);color:#fff;padding:2px 8px;border-radius:20px;margin-bottom:.4rem}
+
+.ch{margin-bottom:1.75rem;border:1px solid var(--paper3);border-radius:var(--rlg);overflow:hidden}
+.ch-head{padding:1rem 1.25rem;background:var(--paper2);border-bottom:1px solid var(--paper3);display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.ch-tag{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:.28rem}
+.ch-title{font-size:15.5px;font-weight:500;margin-bottom:.28rem;line-height:1.4;color:var(--ink)}
+.ch-desc{font-size:12.5px;color:var(--ink2);line-height:1.65;max-width:520px}
+.ch-meta{text-align:right;flex-shrink:0}
+.ch-dur{font-size:11px;color:var(--ink3);margin-bottom:2px}
+.ch-cnt{font-size:11px;color:var(--ink3)}
+
+.ur{display:grid;grid-template-columns:34px 1fr auto;padding:.7rem 1.25rem;border-bottom:1px solid var(--paper3);align-items:start}
+.ur:last-child{border-bottom:none}
+.un{font-size:11px;color:var(--ink3);padding-top:2px}
+.ut{font-size:13px;font-weight:500;margin-bottom:.22rem;line-height:1.4;color:var(--ink)}
+.ud{font-size:12px;color:var(--ink2);line-height:1.65}
+.utime{font-size:11px;color:var(--ink3);padding-top:2px;white-space:nowrap;padding-left:8px}
+
+.hw{display:flex;gap:10px;padding:.8rem 1.25rem;background:var(--paper2);border-top:1px solid var(--paper3);align-items:flex-start}
+.hw-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);white-space:nowrap;padding-top:2px;min-width:46px}
+.hw-txt{font-size:12px;color:var(--ink2);line-height:1.7}
+
+.bonus-tag{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-border);padding:2px 10px;border-radius:20px;margin-bottom:.5rem}
+
+@media(max-width:640px){
+  .hdr{padding:1.25rem 1rem 1rem}
+  .tabs{padding:0 1rem}
+  .wrap{padding:1.5rem 1rem 4rem}
+  .g2,.g3{grid-template-columns:1fr}
+  .ch-head{flex-direction:column}
+  .ch-meta{text-align:left}
+  .ph-title{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <div>
+      <p class="hdr-kicker">HiSKIO × 方文山 — 課程合作提案</p>
+      <h1 class="hdr-title">三個方向，一個完整的創作品味系統</h1>
+    </div>
+    <div class="hdr-right">Draft for discussion<br>2025 · Confidential</div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <button class="tab on" onclick="show(0)">方案一：文字的力量</button>
+    <button class="tab" onclick="show(1)">方案二：文字的記憶</button>
+    <button class="tab" onclick="show(2)">方案三：用文字被看見</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     PANEL 0 — 文字的力量
+══════════════════════════════════════ -->
+<div class="panel on" id="p0">
+<div class="wrap">
+
+<div class="ph">
+  <p class="ph-kicker">方案一 · 全框架整合版</p>
+  <h2 class="ph-title">文字的力量<em>：方文山的創作品味課</em></h2>
+  <p class="ph-desc">以「文字力量」為最大框架包裝，從畫面感技術、記憶點判斷力，到品味建立、創作者被看見，四個層次構成完整的文字創作觀。藝人品牌感最強，受眾最廣，適合作為課程系列的旗艦款。</p>
+  <div class="chips">
+    <span class="chip">6 章節 · 21 個單元</span>
+    <span class="chip">約 7 小時</span>
+    <span class="chip">6 份章節作業</span>
+    <span class="chip">定價目標 NT$3,000–5,000</span>
+  </div>
+</div>
+
+<div class="diff"><strong>這個方案的入口邏輯：</strong>從「方文山的能力與視角」出發，藝人形象最前置。標題氣勢最強，對既有歌迷與認識方文山的受眾號召力最高，適合以方文山粉絲社群為主要投放渠道。</div>
+
+<div class="chain-wrap">
+  <p class="eyebrow">課程核心邏輯鏈</p>
+  <div class="chain">
+    <div class="cn pri"><span>有畫面</span><span class="cn-lbl">技術層</span></div>
+    <span class="ca">→</span>
+    <div class="cn pri"><span>有記憶點</span><span class="cn-lbl">判斷層</span></div>
+    <span class="ca">→</span>
+    <div class="cn pri"><span>有品味</span><span class="cn-lbl">感知層</span></div>
+    <span class="ca">→</span>
+    <div class="cn pri"><span>被看見</span><span class="cn-lbl">職涯層</span></div>
+  </div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow" style="margin-bottom:.75rem">課程定位</p>
+<div class="g2">
+  <div class="ic"><p class="ic-lbl">這堂課是什麼</p><p class="ic-val">文字感知力的系統訓練</p><p class="ic-sub">從技術（畫面）到判斷（記憶點）到感知（品味）到職涯（被看見），四層完整遞進</p></div>
+  <div class="ic"><p class="ic-lbl">這堂課不是什麼</p><p class="ic-val">不是歌詞課，不是寫作技巧課</p><p class="ic-sub">與方文山 2021 年月學課的差異：那門課教歌詞技術，這門課教底層感知能力</p></div>
+  <div class="ic"><p class="ic-lbl">藝人不可替代性</p><p class="ic-val">方文山是華語文字品味的最高符號</p><p class="ic-sub">即使未來有其他文字工作者開課，這個「品味定義者」的位置無法被取代</p></div>
+  <div class="ic"><p class="ic-lbl">AI 時代的定位</p><p class="ic-val">教你駕馭 AI，不是與 AI 競爭</p><p class="ic-sub">AI 負責生成，你負責判斷。這堂課教的是生成之上的那一層能力</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow" style="margin-bottom:.75rem">課程目標</p>
+<div class="obj-block">
+  <div class="obj-row"><span class="obj-num">01</span><div><p class="obj-title">能在文字中主動製造畫面感</p><p class="obj-desc">掌握物件、動作、感官細節三個工具，把模糊的情緒轉化為讀者腦中能看見的具體場景。</p></div></div>
+  <div class="obj-row"><span class="obj-num">02</span><div><p class="obj-title">能說清楚一段文字「好在哪裡」<span class="obj-badge">此方案獨有</span></p><p class="obj-desc">建立語言品味的判斷框架，從「感覺好」進化到「說得清楚為什麼好」，讓品味成為可以操作的能力。</p></div></div>
+  <div class="obj-row"><span class="obj-num">03</span><div><p class="obj-title">能設計有記憶點的句子</p><p class="obj-desc">運用反差、情緒錨點、資訊密度三個邏輯，主動在文字中設計讓人「忘不掉」的記憶點。</p></div></div>
+  <div class="obj-row"><span class="obj-num">04</span><div><p class="obj-title">能找到並說明自己的個人風格</p><p class="obj-desc">透過三個自我診斷練習，找到屬於自己的文字特質，建立有辨識度的個人風格。</p></div></div>
+  <div class="obj-row"><span class="obj-num">05</span><div><p class="obj-title">能駕馭 AI 輸出，而不是被 AI 取代</p><p class="obj-desc">建立「AI 生成、人來判斷」的協作工作流，讓品味成為 AI 時代最不可被複製的個人資產。</p></div></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow" style="margin-bottom:.75rem">目標受眾</p>
+<div class="g3">
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">方文山歌迷與文字愛好者</p><p class="ac-desc">對方文山歌詞有深度興趣的受眾，「文字的力量」這個框架對他們號召力最強，轉換率最高</p></div>
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">自媒體與內容創作者</p><p class="ac-desc">需要讓文字更有吸引力的 YouTube、Podcast、IG 創作者，課程四個層次都能直接應用</p></div>
+  <div class="ac"><p class="ac-name">行銷、文案、品牌工作者</p><p class="ac-desc">需要建立 AI 時代人的差異化能力的文字工作者</p></div>
+  <div class="ac"><p class="ac-name">有創作志向的一般人</p><p class="ac-desc">想投入創作但不知道從哪入門，被方文山的名字吸引進來</p></div>
+  <div class="ac"><p class="ac-name">職場工作者</p><p class="ac-desc">希望讓溝通表達更有說服力的上班族，第四章應用層是他們的主要收穫</p></div>
+  <div class="ac"><p class="ac-name">文字工作者轉型者</p><p class="ac-desc">思考如何在 AI 時代找到文字工作出路，第五章職涯內容是購買動機</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow" style="margin-bottom:1rem">課程大綱</p>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">導論</p><p class="ch-title">文字是怎麼改變世界的</p><p class="ch-desc">開場建立學員對「文字力量」的認知框架。方文山分享他如何從花蓮長大、沒有背景的孩子，靠文字走到今天，並說清楚這門課要教的不是歌詞，而是一種感知能力。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 40 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">0-1</span><div><p class="ut">為什麼文字有力量，有些卻沒有</p><p class="ud">用三個對比案例開場：同樣的意思，一個版本讓人記住，另一個沒有。引導學員思考差異在哪裡，建立「文字感知力」的問題意識。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">0-2</span><div><p class="ut">方文山的文字觀：從歌詞到生活</p><p class="ud">方文山分享自己如何看待文字——不是工具，而是一種觀看世界的方式。說明課程學習路徑：畫面→記憶點→品味→被看見。</p></div><span class="utime">約 22 分鐘</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第一章 · 技術層</p><p class="ch-title">畫面感：讓文字被「看見」</p><p class="ch-desc">建立學員對「畫面感」的具體認識，並給出可操作的方法。目標是讓學員完課後能主動在文字中製造畫面，而不是被動感受。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 75 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">1-1</span><div><p class="ut">什麼是畫面感：具象 vs. 抽象的差異</p><p class="ud">用方文山歌詞（《青花瓷》《菊花台》）對照一般人常寫的抽象句，讓學員直觀感受兩者差距，建立判斷基準。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">1-2</span><div><p class="ut">製造畫面的三個工具：物件、動作、感官</p><p class="ud">把抽象感受轉化為畫面的三個切入點，每個工具各附兩個改寫示範。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">1-3</span><div><p class="ut">比喻的正確用法：不是裝飾，是翻譯</p><p class="ud">方文山分析自己最常用的比喻邏輯，說明什麼時候比喻會失敗，以及為什麼比喻的功能是翻譯而不是裝飾。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">1-4</span><div><p class="ut">常見的畫面感殺手：這樣寫會讓文字失去力量</p><p class="ud">五種讓畫面感消失的寫法，每種附「修改前 vs. 修改後」對照範例。</p></div><span class="utime">約 15 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">選一段你最近寫過的文字，用三個工具各改寫一次，提交三個版本。目標：讓同一個意思，改寫後讀者能在腦中產生具體畫面。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第二章 · 判斷層</p><p class="ch-title">記憶點：讓文字被「留住」</p><p class="ch-desc">從「寫得出來」進一步到「讓人記住」。這章教的不只是技術，而是判斷力——學員要能說清楚為什麼某句話會被記住，並主動設計記憶點。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 80 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">2-1</span><div><p class="ut">記憶點的三個構成要素：反差、錨點、密度</p><p class="ud">用《東風破》《煙花易冷》中的具體句子逐一拆解反差、情緒錨點、資訊密度這三個設計邏輯。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">2-2</span><div><p class="ut">AI 寫的文字哪裡不對：流暢但沒有重量</p><p class="ud">直接對比 AI 生成文字與方文山歌詞的差異，學員練習識別 AI 文字的特徵，並學習如何改成有重量的版本。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">2-3</span><div><p class="ut">如何讀方文山：訓練語言感知的精確度</p><p class="ud">方文山帶著學員讀他自己選出的 5 個「他認為寫得最好」的句子，並說明從「想表達的情緒」到「最後那個句子」的思考過程。</p></div><span class="utime">約 25 分鐘</span></div>
+  <div class="ur"><span class="un">2-4</span><div><p class="ut">一句話測試：你的文字有沒有記憶點</p><p class="ud">提供自我檢核框架，方文山分享他自己在定稿前的內部測試方式。</p></div><span class="utime">約 13 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">用 AI 工具生成一段文字，然後用三個要素各加強一次，提交改寫前後的對照版本，並說明你做了什麼改動、為什麼這樣改。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第三章 · 感知層</p><p class="ch-title">品味：讓文字有「你的樣子」</p><p class="ch-desc">品味不是天生的，而是大量輸入後的積累。方文山分享他如何建立自己的語言感知系統，以及什麼是「屬於自己」的文字。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 75 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">3-1</span><div><p class="ut">品味是什麼：感知能力的訓練方式</p><p class="ud">品味不是「喜好」，而是「能說清楚為什麼好」的判斷能力。方文山分享他如何從大量閱讀中提煉出自己的審美標準。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">3-2</span><div><p class="ut">模仿的正確方式：學風格，不是抄句子</p><p class="ud">方文山說明他早期如何模仿李白、宋詞、現代詩人——他模仿的是邏輯，以及什麼時候要停止模仿。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">3-3</span><div><p class="ut">找到你的個人風格：三個自我診斷練習</p><p class="ud">三個練習引導學員發現自己的文字特質，找到屬於自己的辨識度。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">3-4</span><div><p class="ut">中國風為什麼有效：意象系統的力量</p><p class="ud">方文山中國風成功的深層原因——不是用了古字，而是建立了一套完整的意象系統。說明任何創作者都可以建立自己的意象系統。</p></div><span class="utime">約 15 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">完成三個自我診斷，並寫一段 200 字以內的「我的個人風格說明書」：描述你的文字特質、你希望讀者有什麼感受、你想建立什麼樣的意象世界。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第四章 · 應用層</p><p class="ch-title">把文字用在真實場景：從創作到日常</p><p class="ch-desc">前三章建立的能力，這章直接落地到學員最常遇到的應用場景，讓學員感受到「學了真的有用」。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 65 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">4-1</span><div><p class="ut">社群與自媒體：讓你的標題停止被滑掉</p><p class="ud">把畫面感與記憶點應用在社群文字上，方文山示範如何把普通標題改成讓人停下來的版本，並說明背後的判斷邏輯。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">4-2</span><div><p class="ut">品牌文案與說話：讓人記住你說的話</p><p class="ud">方文山示範如何在職場、品牌、日常溝通中運用本課所學，讓說出的話在會議結束後還留在對方腦中。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">4-3</span><div><p class="ut">如何與 AI 協作而不被取代</p><p class="ud">方文山示範他自己如何使用 AI 作為初稿工具，然後用「品味」把 AI 輸出改成真正有力量的文字。</p></div><span class="utime">約 23 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">選一個你實際需要用到的場景，先用 AI 生成一個版本，再用本課所有學到的工具改寫一次，說明你改了什麼、為什麼這樣改。提交 AI 版本與你的版本對照。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第五章 · 職涯層</p><p class="ch-title">被看見：文字如何讓創作者走到世界面前</p><p class="ch-desc">從技術和品味回到「人」——為什麼有些創作者會被看見，有些不會？方文山從 30 年親身經歷出發，說清楚文字品味如何成為創作者被看見的真正原因。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 80 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">5-1</span><div><p class="ut">從花蓮到周杰倫：方文山的被看見之路</p><p class="ud">方文山分享被看見的關鍵時刻——不是靠人脈，而是靠一份讓人記住的作品。說明「主動用文字讓自己被看見」的根本邏輯。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">5-2</span><div><p class="ut">風格是護城河：為什麼 AI 無法取代有品味的創作者</p><p class="ud">技術可以被複製，品味不能。方文山說明他對「創作者護城河」的理解——有沒有別人沒有的「感知視角」。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">5-3</span><div><p class="ut">創作者的生存策略：在 AI 時代找到你的位置</p><p class="ud">方文山直接回答：如果你是剛起步的文字工作者，現在應該怎麼做？從建立作品集到讓對的人看到你的文字。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">5-4</span><div><p class="ut">給下一代創作者的話：方文山對文字未來的判斷</p><p class="ud">課程結尾。方文山說出他對文字、對創作、對未來的真實看法——一個在這個行業走了 30 年的人，對正在開始的人說的話。</p></div><span class="utime">約 16 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">寫一份「我的創作者定位宣言」：我是誰、我的文字視角是什麼、我希望被什麼樣的人看見、我接下來要做什麼讓自己被看見。每一句話都要能通過「記憶點測試」。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><span class="bonus-tag">加映單元</span><p class="ch-title">方文山的書桌：他怎麼積累與保存靈感</p><p class="ch-desc">非正式章節，訪談形式。方文山帶領鏡頭進入工作室，說明閱讀清單、詞彙收集方式、靈感捕捉工具與創作日常。設計為彩蛋，提升完課率與口碑分享率。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 30 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">B-1</span><div><p class="ut">我讀什麼、怎麼讀：方文山的輸入系統</p><p class="ud">方文山公開閱讀清單（文學、歷史、詩詞、雜學）、筆記方式、詞彙庫建立方法，提供學員最直接可複製的日常行動。</p></div><span class="utime">約 15 分鐘</span></div>
+  <div class="ur"><span class="un">B-2</span><div><p class="ut">靈感來了怎麼抓住：方文山的捕捉工具</p><p class="ud">方文山分享捕捉靈感的實際工具，並展示真實筆記範例。靈感不是玄學，而是一套可以建立的習慣。</p></div><span class="utime">約 15 分鐘</span></div>
+</div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PANEL 1 — 文字的記憶
+══════════════════════════════════════ -->
+<div class="panel" id="p1">
+<div class="wrap">
+
+<div class="ph">
+  <p class="ph-kicker">方案二 · 記憶點與品味判斷力為主軸</p>
+  <h2 class="ph-title">文字的記憶<em>：方文山的創作品味課</em></h2>
+  <p class="ph-desc">以「為什麼有些文字讓人記一輩子」作為購買入口，從消費者最直覺的困境出發——同樣的話，有些人說完讓人記住，有些人說完三秒後就忘。這個課程拆解「記憶點」背後的設計邏輯，再往上建立品味感知系統，最後以創作者如何被看見收尾。</p>
+  <div class="chips">
+    <span class="chip">6 章節 · 20 個單元</span>
+    <span class="chip">約 6.5 小時</span>
+    <span class="chip">6 份章節作業</span>
+    <span class="chip">定價目標 NT$3,000–5,000</span>
+  </div>
+</div>
+
+<div class="diff"><strong>這個方案的入口邏輯：</strong>從「你的困境」出發，而非從「方文山的能力」出發。標題本身就是廣告 hook，對不認識方文山的新受眾最友善，廣告投放效率預期為三個方案中最高。</div>
+
+<div class="chain-wrap">
+  <p class="eyebrow">課程敘事鏈</p>
+  <div class="chain">
+    <div class="cn pri"><span>你的困境：說了就忘</span><span class="cn-lbl">問題入口</span></div>
+    <span class="ca">→</span>
+    <div class="cn pri"><span>記憶點的設計邏輯</span><span class="cn-lbl">核心主軸</span></div>
+    <span class="ca">→</span>
+    <div class="cn"><span>畫面感作為工具</span><span class="cn-lbl">技術支撐</span></div>
+    <span class="ca">→</span>
+    <div class="cn"><span>品味的建立</span><span class="cn-lbl">深化層</span></div>
+    <span class="ca">→</span>
+    <div class="cn"><span>創作者如何被看見</span><span class="cn-lbl">職涯收尾</span></div>
+  </div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow" style="margin-bottom:.75rem">課程定位</p>
+<div class="g2">
+  <div class="ic"><p class="ic-lbl">這堂課是什麼</p><p class="ic-val">語言記憶點的設計課</p><p class="ic-sub">從拆解「為什麼這句話讓人記住」出發，建立可操作的文字判斷與設計能力</p></div>
+  <div class="ic"><p class="ic-lbl">這堂課不是什麼</p><p class="ic-val">不是歌詞課，不是寫作技巧課</p><p class="ic-sub">與方文山 2021 年月學課的差異：那門課教歌詞技術，這門課教底層感知與判斷能力</p></div>
+  <div class="ic"><p class="ic-lbl">藝人不可替代性</p><p class="ic-val">方文山是記憶點文字的最高符號</p><p class="ic-sub">「讓人記一輩子的句子」在華語世界幾乎等於方文山，身份與課程高度吻合</p></div>
+  <div class="ic"><p class="ic-lbl">AI 時代的定位</p><p class="ic-val">教你判斷 AI 輸出的上層能力</p><p class="ic-sub">AI 能生成文字，但無法設計記憶點。這堂課教的是生成之上的那一層</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow" style="margin-bottom:.75rem">課程目標</p>
+<div class="obj-block">
+  <div class="obj-row"><span class="obj-num">01</span><div><p class="obj-title">能拆解「為什麼這句話讓人記住」</p><p class="obj-desc">看到任何一段文字，都能說清楚它的記憶點在哪裡、缺什麼、應該怎麼加強——而不只是感覺「好」或「不好」。</p></div></div>
+  <div class="obj-row"><span class="obj-num">02</span><div><p class="obj-title">能主動在文字裡製造畫面感</p><p class="obj-desc">把抽象情緒轉化為讀者腦中能出現的具體畫面，讓文字從「說了意思」進化到「讓人看見」。</p></div></div>
+  <div class="obj-row"><span class="obj-num">03</span><div><p class="obj-title">能判斷並改寫 AI 生成的文字</p><p class="obj-desc">識別 AI 文字「流暢但沒有重量」的特徵，並用品味判斷力將它改成有記憶點的版本——讓 AI 為你工作，而不是取代你。</p></div></div>
+  <div class="obj-row"><span class="obj-num">04</span><div><p class="obj-title">能說清楚自己的個人風格是什麼</p><p class="obj-desc">找到自己文字的核心特質與辨識度，建立一套屬於自己的個人風格說明書，讓每次寫作都有方向感。</p></div></div>
+  <div class="obj-row unique"><span class="obj-num">05</span><div><p class="obj-title">能在真實場景中應用——社群、職場、品牌<span class="obj-badge">此方案獨有</span></p><p class="obj-desc">把本課所學直接落地到標題撰寫、自我介紹、品牌文案等日常場景，產出讓人停下來、記住你的文字。</p></div></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow" style="margin-bottom:.75rem">目標受眾</p>
+<div class="g3">
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">自媒體與內容創作者</p><p class="ac-desc">YouTube、Podcast、IG 創作者，需要讓標題與文案停止被滑掉，購買動機最直覺</p></div>
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">行銷、文案、品牌工作者</p><p class="ac-desc">在 AI 工具普及後需要建立「人的差異化」的文字工作者，尤其是需要審稿與判斷的職位</p></div>
+  <div class="ac"><p class="ac-name">方文山歌迷</p><p class="ac-desc">對方文山歌詞有深度興趣的受眾，轉換率高，是初期銷售的穩定基本盤</p></div>
+  <div class="ac"><p class="ac-name">職場工作者</p><p class="ac-desc">希望讓報告、簡報、日常溝通更讓人記住的上班族，市場規模最大但需精準文案</p></div>
+  <div class="ac"><p class="ac-name">有創作志向的一般人</p><p class="ac-desc">想寫歌、寫文章但不知道從哪入門的人，方文山的名字是最強購買信號</p></div>
+  <div class="ac"><p class="ac-name">文字工作者轉型者</p><p class="ac-desc">思考如何在 AI 時代找到文字工作出路的人，第五章職涯內容是他們的購買動機</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow" style="margin-bottom:1rem">課程大綱</p>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">導論</p><p class="ch-title">你說的話，為什麼沒有人記住？</p><p class="ch-desc">開場直接從學員痛點切入。方文山說明這個差距不是天賦，而是一種可以學習的設計能力，並說明本課的學習路徑。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 35 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">0-1</span><div><p class="ut">三組對比：同樣的意思，為什麼有一個會被記住</p><p class="ud">用三個真實案例開場——同一個概念、兩個不同表達方式，一個被記住，一個沒有。建立「文字是可以被設計的」這個認知前提。</p></div><span class="utime">約 15 分鐘</span></div>
+  <div class="ur"><span class="un">0-2</span><div><p class="ut">方文山怎麼看記憶點：不是才華，是觀察</p><p class="ud">方文山說明他如何理解「讓人記住的句子」。說明本課學習路徑：記憶點→畫面→品味→被看見。</p></div><span class="utime">約 20 分鐘</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第一章 · 核心主軸</p><p class="ch-title">記憶點的解剖：為什麼這句話忘不掉</p><p class="ch-desc">拆解「讓人記住的句子」的構成邏輯，讓學員從「感受到」進化到「說得清楚」，再到「能主動設計」。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 80 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">1-1</span><div><p class="ut">反差：打破預期的瞬間</p><p class="ud">記憶點最常見的來源是「預期被打破」。方文山從自己的歌詞選出最典型的反差案例，說明如何在一句話裡同時給出「熟悉感」與「意外感」。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">1-2</span><div><p class="ut">情緒錨點：勾到感受的那一下</p><p class="ud">方文山說明如何找到「普通人有過但說不出來的感受」，並把它釘進一句話裡。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">1-3</span><div><p class="ut">資訊密度：一句話裡藏多少層</p><p class="ud">方文山說明他如何在歌詞中做到「字少意多」，以及如何在日常文字中提高密度又不讓句子變晦澀。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">1-4</span><div><p class="ut">AI 文字為什麼沒有記憶點：現場改寫示範</p><p class="ud">方文山現場取一段 AI 生成文字，用三個要素逐一分析缺失，再示範改寫。讓學員直接看到「有品味的眼睛」如何工作。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">找一段你最近看過「覺得很平」的文字，用三個要素各加強一次，提交改寫版本並附說明：你加了什麼、為什麼這樣加。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第二章 · 技術支撐</p><p class="ch-title">畫面感：記憶點的基礎建設</p><p class="ch-desc">記憶點需要畫面作為載體——沒有具體畫面的句子，即使有反差和錨點也難以留存。這章教學員如何在文字裡製造讓人「看得見」的畫面。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 60 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">2-1</span><div><p class="ut">把感受變成畫面：物件、動作、感官的使用</p><p class="ud">把「悲傷」「孤獨」「期待」轉化為讀者腦中能出現的具體場景。三個工具：找物件、加動作、引感官細節。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">2-2</span><div><p class="ut">比喻不是裝飾，是翻譯</p><p class="ud">好的比喻讓陌生的感受變熟悉，壞的比喻讓清楚的意思變模糊。方文山分析自己最常用的比喻邏輯。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">2-3</span><div><p class="ut">讓畫面消失的五種寫法</p><p class="ud">過度解釋、情緒直述、堆砌副詞、抽象名詞、句子太長——五種常見寫法讓畫面感瞬間消失。每種附修改前後對照。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">寫一段 100 字以內描述「你最近一次強烈的情緒」的文字，要求：不能出現任何情緒形容詞，只能用畫面說話。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第三章 · 深化層</p><p class="ch-title">品味：讓你的文字有「你的樣子」</p><p class="ch-desc">技術可以學，品味才是讓你被記住的真正原因。這章從「製造記憶點」進入更深的層次：如何建立屬於自己的語言感知系統。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 65 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">3-1</span><div><p class="ut">品味從哪裡來：輸入的品質決定輸出的品質</p><p class="ud">方文山說明他的品味如何形成——幾十年大量輸入後的積累。他讀什麼、怎麼讀、如何把閱讀轉化為創作資源。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">3-2</span><div><p class="ut">找到你的個人風格：三個自我診斷練習</p><p class="ud">練習一：收集你過去最滿意的 10 個句子找共同特徵。練習二：請人描述你文字給他們的感受。練習三：選一位你想靠近的創作者，拆解他的句子結構。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">3-3</span><div><p class="ut">模仿的正確方式：學邏輯，不是抄句子</p><p class="ud">方文山早期如何模仿李白、宋詞、現代詩人——他模仿的不是字詞，而是結構邏輯。說明從模仿期過渡到有自己風格的創作期。</p></div><span class="utime">約 21 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">完成三個自我診斷，並寫一份 200 字以內的「我的個人風格說明書」：我的文字有什麼特質、讀者讀完應該有什麼感受、我想建立什麼樣的辨識度。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第四章 · 應用層</p><p class="ch-title">把記憶點用在真實場景</p><p class="ch-desc">前三章的能力直接落地，讓學員感受到「學了真的有用」——不只是創作，而是每個需要文字的日常場景。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 55 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">4-1</span><div><p class="ut">讓標題停止被滑掉：社群文字的記憶點設計</p><p class="ud">為什麼有些貼文被大量分享——差別在開頭那一行是否有記憶點。方文山示範如何把普通社群標題改成讓人停下來的版本。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">4-2</span><div><p class="ut">讓人記住你說的話：職場與品牌的文字設計</p><p class="ud">方文山示範如何在職場與品牌溝通中運用記憶點設計，讓你說的話在會議結束後還留在對方腦中。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">4-3</span><div><p class="ut">用 AI 生成，用品味判斷：人機協作的正確姿勢</p><p class="ud">方文山示範他如何用 AI 做初稿、再用本課判斷邏輯改出有重量的版本。</p></div><span class="utime">約 17 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">選一個真實場景，先用 AI 生成一個版本，再用本課三個記憶點要素改寫。提交 AI 版與改寫版對照，並說明你在哪裡改了什麼、改的原因。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第五章 · 職涯收尾</p><p class="ch-title">讓對的人記住你：創作者如何被看見</p><p class="ch-desc">會製造記憶點的創作者，如何讓世界記住他這個人？這章是方文山的職涯觀，也是課程的情感收尾。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 60 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">5-1</span><div><p class="ut">讓作品記住你的人：方文山的被看見經歷</p><p class="ud">方文山如何從無名到被吳宗憲發現——不是靠人脈，而是靠一份讓人記住的作品。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">5-2</span><div><p class="ut">AI 時代，有記憶點的創作者為什麼更值錢</p><p class="ud">AI 讓內容生產成本趨近於零，反而讓「有記憶點的創作者」更稀缺。方文山說明為什麼現在是創作者最好的時代。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">5-3</span><div><p class="ut">給正在開始的人：方文山的最後一堂課</p><p class="ud">方文山說出他對剛起步的創作者最想說的一句話，以及他走到今天最重要的一個決定。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">用本課所學工具，寫一段「讓對的人記住你」的自我介紹——不超過 150 字，但每一句話都要有記憶點。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><span class="bonus-tag">加映單元</span><p class="ch-title">方文山的輸入系統：他怎麼積累語感與靈感</p><p class="ch-desc">非正式章節，訪談形式。方文山公開閱讀清單、詞彙收集方式與靈感捕捉工具。設計為彩蛋，提升完課率與口碑分享。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 30 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">B-1</span><div><p class="ut">我讀什麼、怎麼讀：方文山的輸入清單</p><p class="ud">方文山公開長期閱讀的書單類型、筆記方式，以及詞彙庫如何建立，提供學員最直接可複製的日常行動。</p></div><span class="utime">約 15 分鐘</span></div>
+  <div class="ur"><span class="un">B-2</span><div><p class="ut">靈感來了怎麼抓住：方文山的捕捉工具</p><p class="ud">方文山展示實際使用的靈感捕捉工具與筆記範例，說明靈感積累不是玄學，而是一套可以建立的習慣。</p></div><span class="utime">約 15 分鐘</span></div>
+</div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PANEL 2 — 用文字被看見
+══════════════════════════════════════ -->
+<div class="panel" id="p2">
+<div class="wrap">
+
+<div class="ph">
+  <p class="ph-kicker">方案三 · 創作者職涯與生存策略為主軸</p>
+  <h2 class="ph-title">用文字被看見<em>：方文山的創作者生存課</em></h2>
+  <p class="ph-desc">最貼近方文山原本想做的方向。以「創作者如何在 AI 時代被看見」為核心命題，把畫面感技術與品味判斷力都轉化為「為什麼這樣做才能被看見」的底層解釋。方文山在這個版本中以「過來人」身份說話，訪談阻力最低，情感收尾最強。</p>
+  <div class="chips">
+    <span class="chip">6 章節 · 20 個單元</span>
+    <span class="chip">約 6.5 小時</span>
+    <span class="chip">6 份章節作業</span>
+    <span class="chip">定價目標 NT$3,000–5,000</span>
+  </div>
+</div>
+
+<div class="diff"><strong>這個方案的入口邏輯：</strong>從「我想被看見但不知道怎麼做」出發，方文山以「前輩」而非「老師」的身份說話，內容天然帶有故事性與情感重量。對有創作志向的受眾號召力最強，完課後口碑傳播意願預期最高。</div>
+
+<div class="chain-wrap">
+  <p class="eyebrow">課程敘事鏈</p>
+  <div class="chain">
+    <div class="cn pri"><span>創作者為什麼被看見</span><span class="cn-lbl">核心命題</span></div>
+    <span class="ca">→</span>
+    <div class="cn pri"><span>品味是護城河</span><span class="cn-lbl">核心答案</span></div>
+    <span class="ca">→</span>
+    <div class="cn"><span>品味怎麼建立</span><span class="cn-lbl">方法層</span></div>
+    <span class="ca">→</span>
+    <div class="cn"><span>畫面與記憶點工具</span><span class="cn-lbl">技術層</span></div>
+    <span class="ca">→</span>
+    <div class="cn"><span>AI 時代生存策略</span><span class="cn-lbl">現實落地</span></div>
+  </div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow" style="margin-bottom:.75rem">課程定位</p>
+<div class="g2">
+  <div class="ic"><p class="ic-lbl">這堂課是什麼</p><p class="ic-val">創作者的品味建立與生存策略課</p><p class="ic-sub">從「為什麼有品味的創作者能被看見」出發，建立品味→技術→策略的完整路徑</p></div>
+  <div class="ic"><p class="ic-lbl">方文山的角色</p><p class="ic-val">「過來人」而非「技術老師」</p><p class="ic-sub">方文山以 30 年創作歷程作為主軸，知識從故事中萃取，訪談形式最自然</p></div>
+  <div class="ic"><p class="ic-lbl">藝人不可替代性</p><p class="ic-val">走過這條路的人才說得出這些話</p><p class="ic-sub">從無名到全亞洲的路徑是方文山獨有的，其他人無法以同樣的真實性講述這門課</p></div>
+  <div class="ic"><p class="ic-lbl">製作建議</p><p class="ic-val">需強化知識萃取，避免變成故事聆聽</p><p class="ic-sub">訪綱設計須在每個故事單元後接「可複製化」問題，把故事轉化成學員能行動的方法</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow" style="margin-bottom:.75rem">課程目標</p>
+<div class="obj-block">
+  <div class="obj-row"><span class="obj-num">01</span><div><p class="obj-title">能說清楚「品味」是什麼，以及如何建立</p><p class="obj-desc">理解品味的本質——從「感受到」到「說得清楚」——並掌握一套可以刻意練習、長期積累的建立方法。</p></div></div>
+  <div class="obj-row"><span class="obj-num">02</span><div><p class="obj-title">能找到自己的個人風格與創作定位</p><p class="obj-desc">透過自我診斷，找到自己觀察世界的獨特切入點，形成有辨識度的個人風格，讓作品即使不署名也看得出來是你寫的。</p></div></div>
+  <div class="obj-row"><span class="obj-num">03</span><div><p class="obj-title">能運用畫面感與記憶點工具改寫文字</p><p class="obj-desc">掌握讓文字被「看見」與被「留住」的具體技術，並能直接應用在自己的創作或日常文字中。</p></div></div>
+  <div class="obj-row unique"><span class="obj-num">04</span><div><p class="obj-title">能制定一個「讓自己被看見」的具體行動計畫<span class="obj-badge">此方案獨有</span></p><p class="obj-desc">理解創作者被看見的底層邏輯，並根據自己的定位與條件，規劃出可以從今天開始執行的第一步。</p></div></div>
+  <div class="obj-row"><span class="obj-num">05</span><div><p class="obj-title">能在 AI 時代找到文字工作者的不可替代位置</p><p class="obj-desc">理解 AI 改變了什麼、沒有改變什麼，並建立「品味是護城河」的創作者思維，在 AI 時代持續保有競爭力。</p></div></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow" style="margin-bottom:.75rem">目標受眾</p>
+<div class="g3">
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">有創作志向的人</p><p class="ac-desc">想寫歌、寫小說、寫劇本，正在尋找方向的創作者。「被看見」是他們最深的渴望，購買動機最強烈</p></div>
+  <div class="ac prime"><span class="prime-badge">主力受眾</span><p class="ac-name">文字工作者與轉型者</p><p class="ac-desc">正在思考如何在 AI 時代找到文字工作出路的人，包含寫手、文案、內容工作者，這個版本直接回答他們的問題</p></div>
+  <div class="ac"><p class="ac-name">方文山歌迷</p><p class="ac-desc">對方文山創作歷程有深度興趣的受眾，這個版本披露最多方文山的個人故事，吸引力強</p></div>
+  <div class="ac"><p class="ac-name">自媒體創作者</p><p class="ac-desc">需要了解如何建立個人風格與被看見策略的內容創作者</p></div>
+  <div class="ac"><p class="ac-name">行銷與品牌工作者</p><p class="ac-desc">希望從方文山的創作視角獲得靈感，用於品牌敘事與內容策略</p></div>
+  <div class="ac"><p class="ac-name">教師與培訓者</p><p class="ac-desc">需要讓自己的教學語言更有感染力，或協助學生建立創作信心的教育工作者</p></div>
+</div>
+
+<hr class="sdiv">
+<p class="eyebrow" style="margin-bottom:1rem">課程大綱</p>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">導論</p><p class="ch-title">創作者為什麼會被看見，為什麼不會</p><p class="ch-desc">開場直接回答課程核心命題。方文山分享他觀察到的規律：不是才華最高的人被看見，而是「文字讓人感受到他」的人。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 40 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">0-1</span><div><p class="ut">我見過太多有才華的人沒被看見：方文山的觀察</p><p class="ud">方文山說出他認識的人裡，才華很高但沒被看見的案例——與最後被看見的人之間，差距不是人脈或運氣，而是「文字讓人記住了他」。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">0-2</span><div><p class="ut">這門課的路徑：從品味到工具到策略</p><p class="ud">說明課程結構：先理解「被看見」的底層邏輯（品味），再學習具體文字工具（畫面感、記憶點），最後落地到 AI 時代的實際生存策略。</p></div><span class="utime">約 20 分鐘</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第一章 · 核心答案</p><p class="ch-title">品味是護城河：AI 無法複製的創作者資產</p><p class="ch-desc">回答「為什麼有品味的創作者能被看見」。讓學員在學技術之前，先理解為什麼要建立品味——以及為什麼它在 AI 時代反而更值錢。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 65 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">1-1</span><div><p class="ut">什麼是品味：從感受到到說得清楚</p><p class="ud">品味不是「覺得好看」，而是「能說出為什麼好」。方文山說明他如何建立自己的文字審美標準。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">1-2</span><div><p class="ut">為什麼 AI 無法取代有品味的創作者</p><p class="ud">AI 能模仿技術，無法複製感知視角。方文山說明他的中國風歌詞為什麼即使用 AI 訓練也難以被複製。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">1-3</span><div><p class="ut">品味從哪裡來：輸入決定輸出</p><p class="ud">方文山分享他的品味如何形成——大量閱讀、觀察人、積累情緒經驗。說明「品味不是天生的」，任何人都可以透過刻意訓練提升語言感知能力。</p></div><span class="utime">約 21 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">找一位你認為「文字有品味」的創作者，選出他最讓你有感的三個句子，並嘗試說清楚：這三句話好在哪裡？它們有什麼共同特質？他的文字視角是什麼？</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第二章 · 方法層</p><p class="ch-title">建立你的個人風格：從輸入到個人視角</p><p class="ch-desc">知道品味重要之後，這章給出建立品味的具體方法。方文山分享積累語感的方式，以及如何從「什麼都想學」走到「找到自己的聲音」。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 65 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">2-1</span><div><p class="ut">方文山的輸入系統：他讀什麼、怎麼讀、怎麼用</p><p class="ud">方文山公開長期閱讀的書單類型、筆記方式、詞彙積累習慣，以及如何把輸入轉化為可在創作中使用的素材。附實際讀書清單。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">2-2</span><div><p class="ut">模仿的正確方式：學邏輯，不是抄句子</p><p class="ud">方文山早期如何透過模仿宋詞、現代詩人建立語感——他模仿的不是表面字詞，而是結構邏輯與觀察角度。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">2-3</span><div><p class="ut">找到你的個人風格：三個自我診斷</p><p class="ud">品味的最終表現是「你看世界的角度不一樣」。三個診斷幫助學員找到自己的個人風格：回顧最好的句子的共同特質、找出觀察世界的切入點、定義想讓讀者有什麼感受。</p></div><span class="utime">約 21 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">完成三個自我診斷，寫出你的「個人風格宣言」：我觀察世界的角度是什麼、我的文字有什麼特質、我希望讀者讀完有什麼感受。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第三章 · 技術層</p><p class="ch-title">讓文字被感受到：畫面感與記憶點的製造工具</p><p class="ch-desc">品味決定方向，技術決定執行。這章把前兩章建立的概念落地成可操作的文字工具。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 80 分鐘</div><div class="ch-cnt">4 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">3-1</span><div><p class="ut">畫面感：讓讀者在腦中看見你的文字</p><p class="ud">把抽象情緒轉化為具體畫面的三個工具——找物件、加動作、引感官細節。每個工具各附方文山歌詞案例與日常文字改寫示範。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">3-2</span><div><p class="ut">記憶點的三個要素：反差、情緒錨點、資訊密度</p><p class="ud">讓人記住一句話的三個設計邏輯。方文山用自己歌詞中的具體句子逐一拆解，並示範如何在非歌詞文字中應用同樣邏輯。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">3-3</span><div><p class="ut">讓文字失去力量的五種寫法</p><p class="ud">五種常見寫法讓畫面感和記憶點同時消失，每種附修改前後對照範例。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="ur"><span class="un">3-4</span><div><p class="ut">改寫示範：從平凡文字到讓人感受到</p><p class="ud">方文山現場取三段普通文字（自我介紹、社群貼文、品牌文案各一），用本章工具逐步改寫，說明每一個改動的判斷邏輯。</p></div><span class="utime">約 18 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">選一段你為自己或工作寫的文字，用本章工具改寫一次。改寫前先寫出你的「個人風格宣言」（第二章作業），說明這次改寫如何讓文字更接近你想建立的個人風格。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第四章 · 現實落地</p><p class="ch-title">AI 時代的創作者策略：如何真的被看見</p><p class="ch-desc">知道了品味，也有了技術，接下來實際要怎麼走？這章是方文山對「現在這個時代，創作者應該怎麼做」的直接回答。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 65 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">4-1</span><div><p class="ut">AI 讓什麼變容易，讓什麼更難</p><p class="ud">方文山直接分析 AI 對文字工作者的影響：它讓「產出」變容易，但讓「被記住」變更難——內容量爆炸後，能讓人停下來的文字才是真正有價值的。</p></div><span class="utime">約 20 分鐘</span></div>
+  <div class="ur"><span class="un">4-2</span><div><p class="ut">如何用 AI 而不被 AI 取代：正確的協作姿勢</p><p class="ud">方文山示範他的工作流程：用 AI 做初稿、用品味判斷、用技術改寫。這個流程讓 AI 為你工作，而不是取代你。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">4-3</span><div><p class="ut">讓作品先被看見：發表策略與累積方式</p><p class="ud">方文山分享他認為有效的創作者曝光路徑——包含平台選擇、發表節奏、作品集建立，以及他自己早期的實際做法。</p></div><span class="utime">約 23 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">作業</span><span class="hw-txt">用 AI 生成一段你需要的文字，再用本課品味判斷與技術工具改寫，提交對照版。同時說明：你打算在哪裡發表這個作品、你希望被什麼樣的人看見。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><p class="ch-tag">第五章 · 情感收尾</p><p class="ch-title">方文山的 30 年：從花蓮到全亞洲</p><p class="ch-desc">課程最後一章，方文山說出他最真實的創作故事。不是成功學，而是一個靠文字品味走到今天的人，對正在開始的人說的話。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 65 分鐘</div><div class="ch-cnt">3 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">5-1</span><div><p class="ut">讓一份作品改變命運：方文山的被看見時刻</p><p class="ud">方文山說出人生中最關鍵的那個時刻——他的一份投稿如何讓他被吳宗憲看見，以及那份投稿有什麼特質是一般人投稿沒有的。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">5-2</span><div><p class="ut">我走過的彎路：方文山不希望你重蹈的錯誤</p><p class="ud">方文山說出他早期最大的錯誤判斷——在什麼事情上浪費了時間、什麼事情上應該更早做。</p></div><span class="utime">約 22 分鐘</span></div>
+  <div class="ur"><span class="un">5-3</span><div><p class="ut">給下一個方文山：對正在開始的人說的話</p><p class="ud">課程最後一個單元。方文山對每一個正在用文字試圖被看見的人，說出他最想說的一句話。不是勵志口號，而是走了 30 年的人真正從心底說出的東西。</p></div><span class="utime">約 21 分鐘</span></div>
+  <div class="hw"><span class="hw-lbl">結業作業</span><span class="hw-txt">整合整門課的學習，寫一份「我的創作者宣言」：我是誰、我的個人風格是什麼、我要用文字讓誰看見我、我接下來要做的第一步是什麼。每一句話都要有記憶點。</span></div>
+</div>
+
+<div class="ch">
+  <div class="ch-head">
+    <div><span class="bonus-tag">加映單元</span><p class="ch-title">方文山的工作室：靈感的捕捉與積累</p><p class="ch-desc">訪談形式，方文山帶著鏡頭進入工作室，說明日常輸入系統、靈感捕捉工具，以及詞彙庫如何建立。設計為彩蛋，讓完課學員獲得額外的「近距離感」。</p></div>
+    <div class="ch-meta"><div class="ch-dur">約 30 分鐘</div><div class="ch-cnt">2 個單元</div></div>
+  </div>
+  <div class="ur"><span class="un">B-1</span><div><p class="ut">我的書桌與書單：方文山的輸入清單</p><p class="ud">方文山公開閱讀清單、做筆記的方式，以及如何把輸入轉化為創作資源。提供學員最直接可複製的日常行動。</p></div><span class="utime">約 15 分鐘</span></div>
+  <div class="ur"><span class="un">B-2</span><div><p class="ut">靈感來了怎麼抓住：我的捕捉工具與筆記範例</p><p class="ud">方文山展示實際使用的靈感捕捉工具，並公開筆記範例。靈感積累不是玄學，而是一套可以建立的習慣。</p></div><span class="utime">約 15 分鐘</span></div>
+</div>
+
+</div>
+</div>
+
+<script>
+function show(i){
+  document.querySelectorAll('.panel').forEach((p,idx)=>p.classList.toggle('on',idx===i));
+  document.querySelectorAll('.tab').forEach((t,idx)=>t.classList.toggle('on',idx===i));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
