@@ -2,12 +2,12 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=1100">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>大根網頁課 Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 :root{
   --bg:#0d0d0e; --panel:#161618; --panel2:#1d1d20; --line:#29292e; --ink:#ecebe7; --sub:#a09f9a; --mute:#6c6b67;
@@ -21,7 +21,6 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
-body{min-width:1100px}
 button{font:inherit;color:inherit;cursor:pointer}
 
 /* ---------- header ---------- */
@@ -258,6 +257,167 @@ button{font:inherit;color:inherit;cursor:pointer}
 .act.past{color:var(--sub)}
 .act.cur{color:var(--ink);background:rgba(255,255,255,.06);border-left-color:var(--teal)}
 .foot{max-width:1720px;margin:0 auto;padding:0 24px 28px;font-size:12.5px;color:var(--mute);line-height:1.8}
+/* ===== 手機版 START：這段以下只影響窄螢幕，桌機版面不受影響 ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.tabs button[data-p="about"],#p-about{display:none}
+.mob{display:none}
+@media (hover:none){.quiz .opt:hover{transform:none}}
+
+/* 平板、窄視窗：右側欄移到下方 */
+@media (max-width:1099px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .side{height:440px;min-height:0;position:static}
+}
+
+/* 手機（直拿、橫拿共用）：控制列精簡，逐字稿等內容收合 */
+@media (max-width:760px) and (orientation:portrait),(max-height:520px) and (orientation:landscape){
+  html,body{overflow-x:hidden}
+  .desk{display:none}
+  .mob{display:inline}
+  .layout{display:block;padding:0}
+  .stage{border-radius:0;box-shadow:none}
+  .ctrl{margin:0;border:0;border-radius:0;padding:2px 12px 8px;border-bottom:1px solid var(--line)}
+  .tl{height:34px;margin-bottom:2px;touch-action:none}
+  .tl .segs{top:14px}
+  .tl .seg .lab{display:none}
+  .tl .knob{width:18px;height:18px;margin-left:-9px;top:8px}
+  .tl .qmark{top:11px}
+  .bar{flex-wrap:nowrap;gap:6px}
+  .grp,.grp.tools{gap:6px}
+  .seglab,#lock,#fs,.now,.foot{display:none}
+  .time{min-width:0;font-size:12.5px;white-space:nowrap}
+  .chip{padding:7px 9px;font-size:12.5px}
+  #speed{min-width:42px}
+  .side{height:auto;min-height:0;position:static;border:0;border-radius:0;background:transparent}
+  .tabs button[data-p="about"]{display:block}
+  .tabs{gap:0}
+  .tabs button{padding:13px 0;font-size:13.5px}
+  .tabs button[data-p="tx"]{order:1}
+  .tabs button[data-p="units"]{order:2}
+  .tabs button[data-p="script"]{order:3}
+  .tabs button[data-p="about"]{order:4}
+  .tabs button::after{content:" ▾";font-size:11px;color:var(--mute)}
+  .side:not(.folded) .tabs button.on::after{content:" ▴";color:var(--teal-hi)}
+  .side.folded .tabs{border-bottom:0}
+  .side.folded .tabs button.on{color:var(--sub);font-weight:400;border-bottom-color:transparent}
+  .side.folded .pane{display:none}
+  .pane{max-height:58vh;max-height:58dvh;background:var(--panel)}
+  .side:not(.folded) #p-about.on{display:block}
+  .ph{font-size:13px}
+  .line{font-size:15px}
+  .act{font-size:14px}
+  .act.say{font-size:13.5px}
+  .unit{font-size:14.5px}
+  .ov .t1{font-size:26px}
+  .ov .t2{font-size:13.5px}
+  .bigplay{width:72px;height:72px;margin:18px auto 14px}
+  .legend span{font-size:12px}
+}
+
+/* 手機直拿：另一套直式畫布，字才讀得到。座標以 800×1000 為單位 */
+@media (max-width:760px) and (orientation:portrait){
+  .top{height:44px;padding:0 14px;gap:10px}
+  .logo{font-size:13px}
+  .crumb{font-size:12.5px}
+  .crumb>span:first-child,.crumb .sep,.badge,.top .sp{display:none}
+  .stage{aspect-ratio:4/5}
+  .canvas{width:800px;height:1000px}
+  .content{transition:left .75s cubic-bezier(.65,0,.25,1),top .75s cubic-bezier(.65,0,.25,1),width .75s cubic-bezier(.65,0,.25,1),height .75s cubic-bezier(.65,0,.25,1),opacity .35s}
+  .slide{gap:16px}
+
+  /* 老師：A 佔上半、B 右下卡片、C 右下小圓 */
+  .person video{-webkit-mask-image:none;mask-image:none}
+  .mode-A .person{left:0;top:0;width:800px;height:460px;border-radius:0;--fade:1}
+  .mode-B .person{left:544px;top:752px;width:232px;height:224px}
+  .mode-C .person{left:652px;top:852px;width:124px;height:124px}
+  .ring{left:646px;top:846px}
+  .nameplate{left:28px;right:auto;bottom:auto;top:356px;text-shadow:0 2px 14px rgba(0,0,0,.75)}
+  .nameplate .n{font-size:36px}
+  .nameplate .r{font-size:21px}
+  .mode-A .talk{top:32px;right:32px}
+
+  /* 字幕：放在老師旁邊的空位，不蓋內容 */
+  .cap,.mode-A .cap,.mode-B .cap{left:24px;right:auto;transform:none;bottom:auto;text-align:left;font-size:30px;line-height:1.42;padding:8px 16px}
+  .mode-A .cap{top:850px;width:752px;max-width:752px}
+  .mode-B .cap{top:752px;width:504px;max-width:504px}
+  .mode-C .cap{top:846px;width:610px;max-width:610px}
+
+  /* 內容字級放大 */
+  .kicker{font-size:26px}
+  .kicker::before{width:28px}
+  .h1{font-size:54px}
+  .tr{font-size:27px;line-height:1.5}
+  .tr.open{max-height:220px}
+
+  /* 互動題 */
+  .quiz .qk{font-size:24px}
+  .quiz .qq{font-size:42px;line-height:1.32}
+  .quiz .qs{font-size:27px;line-height:1.45;margin-bottom:14px}
+  .quiz .opts{gap:10px}
+  .quiz .opt{font-size:29px;line-height:1.32;padding:11px 16px;gap:14px}
+  .quiz .opt .l{width:44px;height:44px;font-size:24px}
+  .quiz .fb{flex-direction:column;align-items:flex-start;gap:10px;margin-top:12px;font-size:26px;line-height:1.45}
+  .quiz .fb p{flex:none}
+  .quiz .go{font-size:28px;padding:12px 30px}
+  .quiz .skip{font-size:25px;margin-top:12px}
+
+  .olabel{left:24px;top:24px;bottom:auto;max-width:752px;font-size:27px}
+}
+
+/* 手機橫拿：畫面放左邊，控制列放右邊 */
+@media (max-height:520px) and (orientation:landscape){
+  .top{display:none}
+  .col{display:grid;grid-template-columns:minmax(0,1fr) 216px}
+  .stage{width:100%;max-width:calc(100vh*16/9);max-width:calc(100dvh*16/9);align-self:center;justify-self:center}
+  .ctrl{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:8px 12px;border-bottom:0;border-left:1px solid var(--line)}
+  .bar{flex-direction:column;align-items:stretch;gap:12px}
+  .grp,.grp.tools{justify-content:center;margin:0}
+}
+/* 最窄的手機：騰出空間給「看原版」 */
+@media (max-width:340px){#back{display:none}}
+/* 大根：直式畫布。底圖的白底是烤死的，直拿不用底圖，改同色漸層 */
+@media (max-width:760px) and (orientation:portrait){
+  .canvas{background:linear-gradient(150deg,#2a1466 0%,#100a3a 36%,#040323 74%)}
+  .wm{left:632px;top:34px;width:130px;height:25px}
+  .head{left:32px;top:26px;height:48px;gap:18px;font-size:38px}
+  .head i{width:6px;height:42px}
+  .board::after,.board .dk{display:none}
+  .board{left:24px;top:96px;width:752px;height:640px;transition:top .75s cubic-bezier(.65,0,.25,1),height .75s cubic-bezier(.65,0,.25,1)}
+  .mode-A .board{top:476px;height:360px;width:752px}
+  .mode-B .board{width:752px}
+  .mode-C .board{width:752px;height:720px}
+  .content,.mode-B .content{left:52px;top:108px;width:696px;height:616px}
+  .mode-A .content{left:52px;top:488px;width:696px;height:336px}
+  .mode-C .content{left:52px;top:108px;width:696px;height:696px}
+  .mode-A .person video{object-position:50% 5%}
+  .h1.big{font-size:64px}
+  .sub{font-size:34px;line-height:1.4}
+  .lead{font-size:33px;line-height:1.4}
+  .arrowline{font-size:34px}
+  .rt{font-size:34px;line-height:48px}
+  .row{gap:16px}
+  .row.mini .rt{font-size:28px;line-height:36px}
+  .tag{font-size:22px;margin-left:10px;vertical-align:3px}
+  .cards{grid-template-columns:minmax(0,1fr);gap:10px;margin-top:12px}
+  .cards .fc{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 14px;padding:10px 18px}
+  .fc .ck{font-size:22px}
+  .fc .cv{font-size:32px;margin:0}
+  .fc .cd{font-size:24px;width:100%;line-height:1.35}
+  .flow3{gap:8px}
+  .flow3 .fc{padding:12px 10px}
+  .flow3 .cv{font-size:30px}
+  .flow3 .cd{font-size:23px;line-height:1.35}
+  .flow3 .arr{font-size:24px}
+  .term{border-bottom-width:4px}
+  .quiz,.mode-A .quiz,.mode-B .quiz{left:52px;top:116px;width:696px}
+}
+@media (max-width:760px) and (orientation:portrait){
+  .row.mini .num{width:38px;height:38px;font-size:24px}
+}
+@media (max-width:760px) and (orientation:portrait){
+  .h1.center .mk{display:inline-block}
+}
+/* ===== 手機版 END ===== */
 </style>
 </head>
 <body>
@@ -299,7 +459,7 @@ button{font:inherit;color:inherit;cursor:pointer}
       <div class="ov hide" id="end">
         <div class="box">
           <div class="t1">示範結束</div>
-          <div class="t2">試試右下的「構圖」鎖定 A、B、C 重播比較，或按「看原版」對照原本的做法。</div>
+          <div class="t2"><span class="desk">試試右下的「構圖」鎖定 A、B、C 重播比較，或按「看原版」對照原本的做法。</span><span class="mob">可以重看一次，或按「看原版」對照原本的做法。</span></div>
           <button class="bigplay" id="replay" aria-label="重播"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="#fff"/></svg></button>
         </div>
       </div>
@@ -329,11 +489,12 @@ button{font:inherit;color:inherit;cursor:pointer}
     <div class="now" id="now"></div>
   </div>
 
-  <aside class="side">
-    <div class="tabs"><button data-p="script" class="on">幕後劇本</button><button data-p="tx">逐字稿</button><button data-p="units">單元</button></div>
+  <aside class="side folded">
+    <div class="tabs"><button data-p="script" class="on">幕後劇本</button><button data-p="tx">逐字稿</button><button data-p="units">單元</button><button data-p="about">說明</button></div>
     <div class="pane on" id="p-script"><div class="ph"><b>這份劇本就是課程檔案本體。</b>畫面和講解分開存：改一句字幕、換構圖、補一個標註，都只改這份清單，不用重剪影片，也不用重排簡報。點任一行可跳到那個時間。</div><div id="acts"></div></div>
     <div class="pane" id="p-tx"><div class="ph">影片聲音的逐字稿（本機語音辨識，再對照講師備忘錄校對）。點任一句可跳過去。</div><div id="lines"></div></div>
     <div class="pane" id="p-units"><div class="ph">課程單元（取自 2025-11 定稿課綱，之後課綱已重排，這裡只示意分頁長相）。這次只示範 1-1 開頭約一分鐘。</div><div id="units"></div></div>
+    <div class="pane" id="p-about"><div class="ph" id="about"></div></div>
   </aside>
 </div>
 
@@ -346,7 +507,7 @@ const DATA = {
   duration: 66.67,
   introTitle: '直播變現的兩種類型',
   introSub: '大根 TikTok 娛樂直播課・1-1 開頭片段・約 1 分鐘<br>構圖會自動切換：A 主講 → B 角落 → C 收起（中間有一題互動題）',
-  foot: 'Demo 說明：① 人像與聲音都來自 1-1 原片（66.7 秒），只裁掉右側麥克風，沒有改動或新增任何一句話；這個位置之後換成重錄或數位人影片都可以。② 底圖、白底區、白色標題條、編號方塊的色調與樣式取自「1-1 講師簡報」，版面重新排過；文字、畫重點、卡片、字幕、互動題都是網頁即時呈現，不是燒在影片裡，所以字永遠清楚、可以選取複製、改字不用重剪片。③「看原版」是用該份簡報與原片合成的對照（簡報在左、老師在右，換頁時間依講師備忘錄對應），示意原本的做法，不是正式成片。④ 卡片上的歸納文字與互動題是依這段講稿寫的，內容要由企劃與大根確認。⑤ 只做桌機版。',
+  foot: 'Demo 說明：① 人像與聲音都來自 1-1 原片（66.7 秒），只裁掉右側麥克風，沒有改動或新增任何一句話；這個位置之後換成重錄或數位人影片都可以。② 底圖、白底區、白色標題條、編號方塊的色調與樣式取自「1-1 講師簡報」，版面重新排過；文字、畫重點、卡片、字幕、互動題都是網頁即時呈現，不是燒在影片裡，所以字永遠清楚、可以選取複製、改字不用重剪片。③「看原版」是用該份簡報與原片合成的對照（簡報在左、老師在右，換頁時間依講師備忘錄對應），示意原本的做法，不是正式成片。④ 卡片上的歸納文字與互動題是依這段講稿寫的，內容要由企劃與大根確認。',
   pages: [
     { id:'p1', mode:'A', start:0, end:9.18, label:'開場', title:'開場：大根自我介紹，預告最重要的一件事',
       html:'<div class="kicker">1-1 娛樂直播的變現機制</div>'+
@@ -484,7 +645,7 @@ const DATA = {
   let lock = 'auto', curPage = null, curMode = null, quizState = 'idle', lastT = 0, dur = DATA.duration || 60;
 
   /* ---- scale canvas to stage ---- */
-  function fit(){ const s = stage.clientWidth / 1600; cv.style.transform = 'scale(' + s + ')'; }
+  function fit(){ const s = stage.clientWidth / cv.offsetWidth; cv.style.transform = 'scale(' + s + ')'; }
   new ResizeObserver(fit).observe(stage); fit();
 
   /* ---- static text ---- */
@@ -492,6 +653,7 @@ const DATA = {
   $('#introTitle').textContent = DATA.introTitle;
   $('#introSub').innerHTML = DATA.introSub;
   $('#foot').innerHTML = DATA.foot;
+  $('#about').innerHTML = DATA.foot;
   $('#introLegend').innerHTML = ['A','B','C'].map(m => '<span><i style="background:'+MODE_INFO[m].color+'"></i>'+MODE_INFO[m].name+'</span>').join('');
 
   const fmt = t => { t = Math.max(0, t); const m = Math.floor(t/60), s = Math.floor(t%60); return m + ':' + String(s).padStart(2,'0'); };
@@ -509,11 +671,28 @@ const DATA = {
     if (DATA.quiz){ const q = document.createElement('div'); q.className = 'qmark'; q.style.left = (DATA.quiz.t/dur*100)+'%'; q.title = '互動題'; $('#tl').appendChild(q); }
   }
   $('#tl').addEventListener('click', e => { const r = e.currentTarget.getBoundingClientRect(); seek((e.clientX - r.left)/r.width*dur); });
+  // 手指拖曳時間軸（滑鼠維持原本的點擊）
+  const tl = $('#tl'); let dragging = false, moved = false, lastDrag = 0;
+  const tlTime = e => { const r = tl.getBoundingClientRect(); return (e.clientX - r.left)/r.width*dur; };
+  tl.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') return; dragging = true; moved = false; tl.setPointerCapture(e.pointerId); });
+  tl.addEventListener('pointermove', e => { if (!dragging) return; moved = true; const n = performance.now(); if (n - lastDrag < 150) return; lastDrag = n; seek(tlTime(e)); });
+  tl.addEventListener('pointerup', e => { if (dragging && moved) seek(tlTime(e)); dragging = false; });
+  tl.addEventListener('pointercancel', () => { dragging = false; });
 
   /* ---- side panels ---- */
+  const side = $('.side');
+  const PHONE = matchMedia('(max-width:760px) and (orientation:portrait),(max-height:520px) and (orientation:landscape)');
+  PHONE.addEventListener('change', () => { if (!PHONE.matches && $('.tabs button.on').dataset.p === 'about') $('.tabs button[data-p="script"]').click(); });
   document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+    const again = b.classList.contains('on');
     document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b));
     document.querySelectorAll('.pane').forEach(x => x.classList.toggle('on', x.id === 'p-' + b.dataset.p));
+    if (!PHONE.matches) return;
+    side.classList.toggle('folded', again && !side.classList.contains('folded'));
+    if (side.classList.contains('folded')) return;
+    const cur = $('.pane.on .cur');
+    if (cur) { const box = cur.closest('.pane'); box.scrollTop = cur.offsetTop - box.clientHeight/2; }
+    side.scrollIntoView({block:'nearest', behavior:'smooth'});
   });
   $('#units').innerHTML = DATA.units.map((u,i) => '<div class="unit'+(u.cur?' cur':'')+'"><span class="no">'+u.no+'</span><span>'+u.t+(u.cur?'<span class="tag">▶ 正在示範這一單元的片段</span>':'')+'</span><span class="d">'+u.d+'</span></div>').join('');
   $('#lines').innerHTML = DATA.captions.map((c,i) => '<div class="line" data-i="'+i+'"><span class="ts">'+fmt(c.s)+'</span><span>'+c.text+'</span></div>').join('');
