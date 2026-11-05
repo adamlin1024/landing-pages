@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>微波爐互動課 Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0e12; --panel:#13171d; --panel2:#1a1f27; --line:#262c36; --ink:#eceef1; --sub:#9aa3ae; --mute:#66707c;
+  --teal:#00a3b5; --teal-hi:#3cc6d6; --wave:#ff8a5c; --ok:#3fbf7f; --bad:#ef6b5f;
+  --sans:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+body{min-width:1100px}
+button{font:inherit;color:inherit;cursor:pointer}
+
+/* header */
+.top{height:58px;display:flex;align-items:center;gap:16px;padding:0 24px;border-bottom:1px solid var(--line);background:#0e1116}
+.logo{font-weight:700;letter-spacing:.14em;font-size:15px}
+.logo b{color:var(--teal)}
+.crumb{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--sub);min-width:0}
+.crumb .sep{color:var(--mute)}
+.crumb .unit{color:var(--ink);font-weight:500;white-space:nowrap}
+.top .sp{flex:1}
+.badge{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--teal-hi);border:1px solid rgba(60,198,214,.4);background:rgba(0,163,181,.1);padding:3px 10px;border-radius:99px;white-space:nowrap}
+
+/* layout */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) clamp(300px,24vw,380px);gap:20px;padding:20px 24px 28px;max-width:1720px;margin:0 auto}
+.col{min-width:0}
+
+/* stage */
+.stage{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:radial-gradient(ellipse at 50% 38%,#1b2532 0%,#10151c 55%,#0a0d11 100%);user-select:none}
+.stage:fullscreen{border-radius:0;aspect-ratio:auto;width:100vw;height:100vh}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;transition:opacity .5s,filter .5s;touch-action:none}
+.d3-hidden #gl{opacity:0;pointer-events:none}
+.d3-dim #gl{opacity:.28;filter:blur(2px);pointer-events:none}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.cv{position:absolute;left:0;top:0;width:1600px;height:900px;transform-origin:0 0;pointer-events:none;font-family:var(--sans)}
+.noanim *,.noanim *::before,.noanim *::after{transition:none!important;animation-duration:0s!important}
+
+/* views (slides) */
+.view{position:absolute;inset:0;opacity:0;transition:opacity .5s}
+.view.on{opacity:1}
+.view:not(.on) *{pointer-events:none!important}
+[data-r]{opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s}
+[data-r].on{opacity:1;transform:none}
+.kick{font-size:20px;font-weight:700;letter-spacing:.16em;color:var(--teal-hi)}
+.h1{font-size:76px;font-weight:900;line-height:1.22;letter-spacing:.02em;margin:18px 0 0}
+.h1 em{font-style:normal;color:var(--wave)}
+.chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px;max-width:640px}
+.chips span{font-size:23px;font-weight:700;padding:9px 18px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.chips span.tip{background:rgba(0,163,181,.16);border-color:rgba(60,198,214,.45);color:var(--teal-hi);font-size:19px;font-weight:500}
+.v-title .wrap{position:absolute;left:110px;top:210px;width:720px}
+
+/* molecule view */
+.v-mol{background:#0c1117}
+.v-mol .grid{opacity:.8}
+.v-mol .ttl{position:absolute;left:110px;top:70px;font-size:46px;font-weight:900}
+.v-mol .ttl small{display:block;font-size:20px;font-weight:700;color:var(--teal-hi);letter-spacing:.16em;margin-bottom:6px}
+.field{position:absolute;left:110px;top:210px;width:780px;height:560px;border-radius:22px;background:rgba(255,255,255,.03);border:1px solid var(--line);overflow:hidden;transition:background 1s}
+.field.hot{background:radial-gradient(ellipse at 50% 55%,rgba(255,110,60,.32),rgba(255,110,60,.06) 70%)}
+.plate{position:absolute;top:40px;bottom:40px;width:26px;border-radius:8px;background:#3a4452}
+.plate.l{left:34px}.plate.r{right:34px}
+.plate b{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:34px;font-weight:900;color:#fff;transition:opacity .2s}
+.plate .p{color:#ff8f7a}.plate .n{color:#7ab8ff;opacity:0}
+.flip .plate.l .p,.flip .plate.r .n{animation:sw .55s steps(1) infinite alternate}
+.flip .plate.l .n,.flip .plate.r .p{animation:sw2 .55s steps(1) infinite alternate}
+@keyframes sw{0%{opacity:1}50%{opacity:0}100%{opacity:0}}
+@keyframes sw2{0%{opacity:0}50%{opacity:1}100%{opacity:1}}
+.plate.r .p{opacity:0}.plate.r .n{opacity:1}
+.arrow{position:absolute;left:90px;right:90px;top:26px;height:30px;opacity:0;transition:opacity .4s}
+.flip .arrow{opacity:1;animation:ar .55s steps(1) infinite alternate}
+@keyframes ar{0%{transform:scaleX(1)}50%{transform:scaleX(-1)}100%{transform:scaleX(-1)}}
+.field svg.mols{position:absolute;left:70px;top:70px;width:640px;height:440px;overflow:visible}
+.w{transform-origin:0 0;transition:transform .4s}
+.flip .w{animation:fl .55s ease-in-out infinite alternate}
+@keyframes fl{from{transform:rotate(-70deg)}to{transform:rotate(110deg)}}
+.o{fill:#e8554e;transition:fill 1s}
+.hot .o{fill:#ff9a3d}
+.side-card{position:absolute;left:950px;width:540px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line);padding:22px 26px}
+.side-card .k{font-size:17px;font-weight:700;color:var(--teal-hi);letter-spacing:.1em}
+.side-card .v{font-size:30px;font-weight:700;line-height:1.45;margin-top:6px}
+.side-card .s{font-size:19px;color:var(--sub);margin-top:6px;line-height:1.6}
+.big{font-size:84px!important;font-weight:900!important;color:var(--wave);line-height:1.1!important}
+.big small{font-size:34px;color:var(--ink)}
+
+/* quiz view */
+.v-quiz .q{position:absolute;left:110px;top:64px;width:1380px}
+.v-quiz .qq{font-size:50px;font-weight:900;margin-top:10px;line-height:1.3}
+.opts{position:absolute;left:110px;top:250px;width:700px;display:grid;gap:16px}
+.opt{pointer-events:auto;display:flex;align-items:center;gap:18px;text-align:left;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.14);border-radius:16px;padding:20px 22px;font-size:25px;line-height:1.45;transition:border-color .2s,background .2s,transform .2s}
+.opt:hover{border-color:var(--teal-hi);transform:translateX(4px)}
+.opt .l{flex:0 0 auto;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#111;font-weight:900;font-size:21px}
+.opt .br{margin-left:auto;flex:0 0 auto;font-size:15px;color:var(--mute);font-weight:700;white-space:nowrap}
+.quiz-done .opt{pointer-events:none}
+.opt.pick{border-color:var(--teal-hi);background:rgba(0,163,181,.14)}
+.opt.right .l{background:var(--ok);color:#fff}
+.opt.right{border-color:var(--ok)}
+.opt.wrong .l{background:var(--bad);color:#fff}
+.skipq{pointer-events:auto;position:absolute;left:112px;top:640px;background:none;border:0;color:var(--sub);font-size:19px;text-decoration:underline;padding:0}
+.quiz-done .skipq{display:none}
+.brtag{position:absolute;left:880px;top:236px;font-size:18px;font-weight:700;color:#111;background:var(--teal-hi);padding:5px 14px;border-radius:99px;opacity:0;transition:opacity .4s}
+.quiz-done .brtag{opacity:1}
+.explain{position:absolute;left:880px;top:290px;width:610px;opacity:0;transition:opacity .4s}
+.quiz-done .explain{opacity:1}
+.explain svg{width:610px;height:300px;display:block;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid var(--line)}
+.explain ul{margin:16px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.explain li{font-size:22px;line-height:1.5;padding-left:28px;position:relative}
+.explain li::before{content:"";position:absolute;left:4px;top:13px;width:10px;height:10px;border-radius:50%;background:var(--teal-hi)}
+.explain svg [data-r]{transform:none}
+
+/* recap view */
+.v-recap .wrap{position:absolute;left:110px;top:150px;width:700px}
+.v-recap .h1{font-size:58px}
+.rlist{display:grid;gap:14px;margin-top:30px}
+.rlist div{display:flex;align-items:center;gap:16px;font-size:30px;font-weight:700}
+.rlist i{font-style:normal;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--teal);color:#fff;font-size:22px}
+.rlist span{font-size:20px;font-weight:500;color:var(--sub)}
+.rhint{margin-top:30px;font-size:21px;color:var(--teal-hi);background:rgba(0,163,181,.12);border:1px solid rgba(60,198,214,.35);padding:12px 18px;border-radius:12px;display:inline-block}
+
+/* 3D labels */
+.lbl{position:absolute;left:0;top:0;transform:translate(-50%,calc(-100% - 14px));pointer-events:none;opacity:0;transition:opacity .35s;white-space:nowrap}
+.lbl.on{opacity:1}
+.lbl .b{background:rgba(10,14,19,.86);border:1px solid rgba(60,198,214,.6);border-radius:12px;padding:8px 16px;text-align:center;box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.lbl .n{font-size:26px;font-weight:900}
+.lbl .d{font-size:17px;color:var(--sub);margin-top:2px}
+.lbl::after{content:"";position:absolute;left:50%;bottom:-14px;width:2px;height:14px;background:rgba(60,198,214,.8)}
+.lbl::before{content:"";position:absolute;left:50%;bottom:-19px;width:10px;height:10px;margin-left:-4px;border-radius:50%;background:var(--teal-hi)}
+.lbl.sm .b{padding:4px 10px;border-color:rgba(255,255,255,.25)}
+.lbl.sm .n{font-size:18px;font-weight:700}
+.lbl.sm .d{display:none}
+.lbl.temp .b{border-color:rgba(255,138,92,.8)}
+.lbl.temp .n{color:var(--wave)}
+
+/* speaker placeholder（之後換成數位人短片） */
+.spk{position:absolute;right:44px;bottom:40px;width:136px;text-align:center;transition:transform .5s}
+.spk .face{width:136px;height:136px;border-radius:50%;background:radial-gradient(circle at 50% 35%,#24415a,#132232);border:3px solid rgba(60,198,214,.55);position:relative;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.spk .face svg{position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);width:108px}
+.spk .ring{position:absolute;inset:-9px;border-radius:50%;border:3px solid var(--teal-hi);opacity:0}
+.spk.talk .ring{animation:rg 1.1s ease-out infinite}
+@keyframes rg{0%{opacity:.8;transform:scale(.94)}100%{opacity:0;transform:scale(1.12)}}
+.spk.wait .face{animation:br 2.4s ease-in-out infinite}
+@keyframes br{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-3px) scale(1.02)}}
+.spk .st{margin-top:8px;font-size:15px;font-weight:700;color:var(--ink);text-shadow:0 1px 4px #000}
+.spk .pl{font-size:12.5px;color:var(--mute)}
+.spk .bars{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:4px;align-items:flex-end;height:20px;opacity:0;transition:opacity .2s}
+.spk.talk .bars{opacity:1}
+.spk .bars i{width:5px;background:var(--teal-hi);border-radius:3px;animation:vb .5s ease-in-out infinite alternate}
+.spk .bars i:nth-child(2){animation-delay:.15s}.spk .bars i:nth-child(3){animation-delay:.3s}.spk .bars i:nth-child(4){animation-delay:.08s}
+@keyframes vb{from{height:4px}to{height:20px}}
+
+/* captions, banners, cards */
+.cap{position:absolute;left:0;right:0;bottom:40px;text-align:center;pointer-events:none;transition:opacity .3s}
+.cap span{display:inline-block;max-width:1060px;font-size:29px;line-height:1.5;padding:8px 20px;border-radius:10px;background:rgba(0,0,0,.66);color:#fff}
+.cap.off,.cap:empty{opacity:0}
+.banner{position:absolute;left:50%;top:26px;transform:translate(-50%,-14px);display:flex;align-items:center;gap:18px;padding:12px 14px 12px 24px;border-radius:99px;background:rgba(10,14,19,.92);border:1px solid rgba(60,198,214,.55);font-size:22px;font-weight:700;opacity:0;transition:opacity .3s,transform .3s;white-space:nowrap;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.banner.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.banner .sub{font-size:17px;font-weight:500;color:var(--sub);max-width:520px;overflow:hidden;text-overflow:ellipsis}
+.banner button{border:0;border-radius:99px;padding:10px 20px;font-size:19px;font-weight:700;background:var(--teal);color:#fff}
+.banner button.ghost{background:none;color:var(--sub);text-decoration:underline;padding:10px 6px}
+.banner.task{border-color:rgba(255,138,92,.7)}
+.toast{position:absolute;left:50%;top:104px;transform:translateX(-50%);padding:12px 26px;border-radius:12px;font-size:23px;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1}
+.toast.ok{background:rgba(63,191,127,.94);color:#04170d}
+.toast.no{background:rgba(239,107,95,.94);color:#1d0503}
+.info{position:absolute;right:40px;top:110px;width:390px;padding:22px 24px;border-radius:18px;background:rgba(10,14,19,.92);border:1px solid rgba(60,198,214,.5);opacity:0;transform:translateY(10px);transition:opacity .3s,transform .3s;box-shadow:0 14px 34px rgba(0,0,0,.5)}
+.info.on{opacity:1;transform:none;pointer-events:auto}
+.info .n{font-size:32px;font-weight:900}
+.info .d{font-size:19px;color:var(--teal-hi);font-weight:700;margin-top:4px}
+.info .x{position:absolute;right:14px;top:12px;border:0;background:none;color:var(--sub);font-size:26px}
+.info p{font-size:19px;line-height:1.7;color:#cfd5dc;margin:12px 0 0}
+.hint{position:absolute;left:40px;top:30px;font-size:18px;color:var(--ink);background:rgba(0,163,181,.2);border:1px solid rgba(60,198,214,.5);padding:9px 16px;border-radius:12px;opacity:0;transition:opacity .5s}
+.hint.on{opacity:1}
+
+/* intro overlay (screen space) */
+.ov{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(11,14,18,.55),rgba(11,14,18,.9));transition:opacity .45s}
+.ov.hide{opacity:0;pointer-events:none}
+.ov .box{text-align:center;max-width:680px;padding:0 20px}
+.ov .t1{font-size:clamp(26px,2.8vw,42px);font-weight:900;letter-spacing:.04em}
+.ov .t2{color:var(--sub);font-size:clamp(13px,1.1vw,16px);margin-top:10px;line-height:1.8}
+.ov .t2 b{color:var(--ink)}
+.bigplay{margin:24px auto 0;width:84px;height:84px;border-radius:50%;border:0;background:var(--teal);display:grid;place-items:center;box-shadow:0 0 0 10px rgba(0,163,181,.18),0 14px 34px rgba(0,0,0,.4);transition:transform .2s}
+.bigplay:hover{transform:scale(1.06)}
+
+/* controls */
+.ctrl{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px 14px}
+.tl{position:relative;height:30px;cursor:pointer;margin-bottom:8px}
+.tl .segs{position:absolute;left:0;right:0;top:12px;height:6px;display:flex;gap:3px}
+.tl .seg{height:100%;border-radius:3px;background:rgba(255,255,255,.12);position:relative}
+.tl .seg.br{background:repeating-linear-gradient(45deg,rgba(255,255,255,.12) 0 4px,rgba(255,255,255,.04) 4px 8px)}
+.tl .seg .fill{position:absolute;inset:0;width:0;border-radius:3px;background:var(--teal-hi)}
+.tl .seg .lab{position:absolute;top:-17px;left:0;font-size:11px;color:var(--mute);white-space:nowrap;pointer-events:none}
+.tl .knob{position:absolute;top:8px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5);pointer-events:none}
+.tl .gm{position:absolute;top:9px;width:12px;height:12px;margin-left:-6px;transform:rotate(45deg);background:var(--wave);border:2px solid var(--panel);pointer-events:none}
+.tl .gm.done{background:var(--ok)}
+.tl:hover .seg{height:8px;margin-top:-1px}
+.bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 14px}
+.grp{display:flex;align-items:center;gap:12px;flex-wrap:nowrap}
+.grp.tools{gap:10px;margin-left:auto}
+.ib{width:40px;height:40px;border-radius:50%;border:0;background:transparent;display:grid;place-items:center;color:var(--ink);transition:background .15s}
+.ib:hover{background:rgba(255,255,255,.08)}
+.ib.pri{background:#fff;color:#111}
+.ib.pri:hover{background:#e6e6e6}
+.ib.pri svg{margin-left:2px}
+.time{font-size:13.5px;color:var(--sub);font-variant-numeric:tabular-nums;min-width:96px}
+.seglab{font-size:12px;color:var(--mute);margin-right:-2px;white-space:nowrap}
+.segc{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:3px}
+.segc button{border:0;background:none;padding:6px 11px;border-radius:7px;font-size:13px;color:var(--sub);white-space:nowrap}
+.segc button:hover{color:var(--ink)}
+.segc button.on{background:#fff;color:#111;font-weight:700}
+.chip{border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:6px 11px;font-size:13px;color:var(--sub);white-space:nowrap}
+.chip:hover{color:var(--ink)}
+.chip.on{color:#111;background:#fff;border-color:#fff;font-weight:700}
+#speed{min-width:52px;text-align:center;font-variant-numeric:tabular-nums}
+.now{display:flex;gap:14px;align-items:flex-start;margin-top:14px;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.now .mtag{flex:0 0 auto;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:7px;color:#111;background:var(--teal-hi);margin-top:2px;white-space:nowrap}
+.now .mt{font-weight:700;font-size:15px}
+.now .md{font-size:13.5px;color:var(--sub);line-height:1.7;margin-top:2px}
+.foot{margin-top:12px;font-size:12.5px;color:var(--mute);line-height:1.8}
+
+/* side panel */
+.side{background:var(--panel);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;height:calc(100vh - 98px);min-height:560px;position:sticky;top:20px}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;border:0;background:none;padding:14px 0 12px;font-size:14px;color:var(--sub);border-bottom:2px solid transparent}
+.tabs button.on{color:var(--ink);font-weight:700;border-bottom-color:var(--teal)}
+.pane{display:none;overflow:auto;flex:1;padding:8px 0}
+.pane.on{display:block}
+.pane::-webkit-scrollbar{width:8px}.pane::-webkit-scrollbar-thumb{background:#333;border-radius:4px}
+.ph{padding:10px 18px 12px;font-size:12.5px;color:var(--mute);line-height:1.7;border-bottom:1px solid var(--line);margin-bottom:6px}
+.ph b{color:var(--sub)}
+.line{display:flex;gap:12px;padding:8px 18px;font-size:14px;line-height:1.65;color:var(--sub);cursor:pointer;border-left:3px solid transparent}
+.line:hover{background:rgba(255,255,255,.04)}
+.line .ts{flex:0 0 auto;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums;padding-top:2px;width:34px}
+.line.cur{color:var(--ink);background:rgba(255,255,255,.05);border-left-color:var(--teal)}
+.line .held{display:block;margin-top:4px;font-size:12px;font-weight:700;color:var(--wave)}
+.line.task{color:var(--ink)}
+.line.task .tx{background:rgba(255,138,92,.1);border:1px dashed rgba(255,138,92,.5);border-radius:8px;padding:6px 10px;display:block}
+.line.task .stt{display:block;font-size:12px;font-weight:700;margin-top:4px;color:var(--wave)}
+.line.task .stt.ok{color:var(--ok)}
+.line.task.cur{border-left-color:var(--wave)}
+.line.ph2{color:var(--mute);font-style:italic;cursor:default}
+.sh{padding:12px 18px 4px;font-size:12px;font-weight:700;color:var(--teal-hi);letter-spacing:.06em}
+.act{display:flex;gap:10px;padding:6px 18px;font-size:13px;line-height:1.6;color:var(--sub);cursor:pointer}
+.act:hover{background:rgba(255,255,255,.04)}
+.act .ts{flex:0 0 auto;width:34px;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums;padding-top:1px}
+.act .k{flex:0 0 auto;font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:5px;background:rgba(255,255,255,.08);color:var(--ink);height:fit-content;margin-top:1px;white-space:nowrap}
+.act .k.w{background:rgba(0,163,181,.16);color:var(--teal-hi)}
+.act .k.g{background:rgba(255,138,92,.16);color:var(--wave)}
+.act.done{color:var(--ink)}
+.act.cur{background:rgba(0,163,181,.1)}
+.act.chosen .k.g{background:var(--wave);color:#111}
+.how{padding:6px 18px 18px;font-size:13.5px;line-height:1.8;color:var(--sub)}
+.how h4{margin:16px 0 4px;font-size:14px;color:var(--ink)}
+.how ul{margin:0;padding-left:18px}
+.how b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="logo">Hi<b>SKIO</b></div>
+  <div class="crumb"><span>家電拆解（Demo 課）</span><span class="sep">›</span><span class="unit">微波爐為什麼會熱？</span></div>
+  <div class="sp"></div>
+  <span class="badge">互動課件播放器・Demo</span>
+</div>
+
+<div class="layout">
+  <div class="col">
+    <div class="stage" id="stage">
+      <canvas id="gl"></canvas>
+      <div class="cv" id="cv">
+        <div class="view v-title" data-view="title">
+          <div class="wrap">
+            <div class="kick">互動課件 DEMO｜家電拆解</div>
+            <div class="h1" data-r="t1">微波爐是怎麼<br>把食物<em>變熱</em>的？</div>
+            <div class="chips" data-r="t2"><span>磁控管</span><span>波導管</span><span>加熱腔</span><span>轉盤</span><span class="tip">右邊的模型可以直接拖曳轉動</span></div>
+          </div>
+        </div>
+
+        <div class="view v-mol" data-view="mol">
+          <div class="grid"></div>
+          <div class="ttl"><small>原理</small>讓水分子轉起來</div>
+          <div class="field" id="field">
+            <div class="plate l"><b class="p">+</b><b class="n">−</b></div>
+            <div class="plate r"><b class="p">+</b><b class="n">−</b></div>
+            <svg class="arrow" viewBox="0 0 600 30" preserveAspectRatio="none"><path d="M10 15 H570 M550 3 L578 15 L550 27" stroke="#ffd166" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="mols" viewBox="0 0 640 440" data-r="m1" id="mols"></svg>
+          </div>
+          <div class="side-card" style="top:210px" data-r="m1"><div class="k">水分子</div><div class="v">一頭偏正電、一頭偏負電</div><div class="s">放進來回變換的電場，就會被拉著翻轉</div></div>
+          <div class="side-card" style="top:400px" data-r="m3"><div class="k">翻轉多快</div><div class="v big">24.5 億<small> 次／秒</small></div><div class="s">微波爐的頻率是 2.45 GHz</div></div>
+          <div class="side-card" style="top:640px" data-r="m4"><div class="k">結果</div><div class="v">一直轉、一直碰撞 → 能量變成<span style="color:var(--wave)">熱</span></div></div>
+        </div>
+
+        <div class="view v-quiz" data-view="quiz" id="vquiz">
+          <div class="q"><div class="kick">考題・選不同答案，會聽到不同的講解</div><div class="qq" data-r="qq">為什麼金屬碗不能放進微波爐？</div></div>
+          <div class="opts" id="opts"></div>
+          <button class="skipq" id="skipq">不作答，直接聽解答</button>
+          <div class="brtag" id="brtag"></div>
+          <div class="explain">
+            <svg viewBox="0 0 610 300">
+              <defs><linearGradient id="bowl" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#d9dee5"/><stop offset="1" stop-color="#7f8894"/></linearGradient></defs>
+              <path d="M150 180 L460 180 L420 262 L190 262 Z" fill="url(#bowl)"/>
+              <path d="M150 180 L460 180" stroke="#fff" stroke-width="4"/>
+              <g data-r="x1"><path d="M40 40 q18 -14 36 0 t36 0 t36 0 t36 0 L232 150" stroke="#ff8a5c" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M232 150 L300 176 L368 150" stroke="#ff8a5c" stroke-width="5" fill="none" stroke-dasharray="2 10" stroke-linecap="round"/><path d="M368 150 L470 50 q18 -14 36 0 t36 0 t36 0" stroke="#ff8a5c" stroke-width="5" fill="none" stroke-linecap="round"/><text x="300" y="140" fill="#ffb08f" font-size="22" text-anchor="middle" font-weight="700">反射回去</text></g>
+              <g data-r="x2"><text x="305" y="236" fill="#9fd3ff" font-size="24" text-anchor="middle" font-weight="700">❄ 食物熱不了</text></g>
+              <g data-r="x3"><path d="M458 176 l14 -30 l4 22 l22 -14 l-12 24 l26 4 l-26 10" fill="#ffd166"/><text x="520" y="214" fill="#ffd166" font-size="22" font-weight="700">火花</text></g>
+            </svg>
+            <ul>
+              <li data-r="x1">金屬不吸收微波，會把它<b>反射</b>回去</li>
+              <li data-r="x2">所以光滑金屬碗裡的食物反而<b>熱不了</b></li>
+              <li data-r="x3">尖角、摺痕讓電荷集中，可能<b>冒火花</b></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="view v-recap" data-view="recap">
+          <div class="wrap">
+            <div class="kick">總結</div>
+            <div class="h1">今天看了四個零件</div>
+            <div class="rlist">
+              <div data-r="r1"><i>1</i>磁控管 <span>產生微波</span></div>
+              <div data-r="r2"><i>2</i>波導管 <span>把微波送進去</span></div>
+              <div data-r="r3"><i>3</i>加熱腔 <span>金屬牆來回反射</span></div>
+              <div data-r="r4"><i>4</i>轉盤 <span>讓加熱均勻</span></div>
+            </div>
+            <div class="rhint" data-r="r5">講完會進入自由探索：拖曳轉動、點零件看說明</div>
+          </div>
+        </div>
+
+        <div id="labels"></div>
+        <div class="hint" id="hint">可以直接拖曳轉動模型、點零件（講解會先暫停）</div>
+        <div class="banner" id="bHold">🖐 你接手了<span class="sub" id="bHoldSub"></span><button id="bResume">繼續講解 ▶</button></div>
+        <div class="banner" id="bFollow">🎥 鏡頭交給你，講解繼續<button id="bRecam">回到講解鏡頭</button></div>
+        <div class="banner task" id="bTask">🖐 換你：在模型上點出「產生微波」的零件<button class="ghost" id="bSkip">跳過</button></div>
+        <div class="banner" id="bEnd">自由探索：拖曳轉動、滾輪縮放、點零件看說明<button id="bReplay">重看一次</button></div>
+        <div class="toast" id="toast"></div>
+        <div class="info" id="info"><button class="x" id="infoX" aria-label="關閉">×</button><div class="n" id="infoN"></div><div class="d" id="infoD"></div><p id="infoP"></p></div>
+        <div class="cap" id="cap"></div>
+        <div class="spk" id="spk">
+          <div class="face"><div class="ring"></div>
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="38" r="19" fill="#5fa8c4"/><path d="M14 100 C16 72 32 62 50 62 C68 62 84 72 86 100 Z" fill="#5fa8c4"/></svg>
+            <div class="bars"><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="st" id="spkSt">講者</div><div class="pl">數位人位置</div>
+        </div>
+      </div>
+      <div class="ov" id="intro"><div class="box">
+        <div class="t1">微波爐為什麼會熱？</div>
+        <div class="t2">互動課件 Demo・約 1 分 40 秒<br>中間有 <b>2 個要你動手</b>的地方：在 3D 模型上點零件、選考題答案（<b>選不同答案會聽到不同講解</b>）<br>講解中隨時可以拖曳模型，講解會先暫停</div>
+        <button class="bigplay" id="bigplay" aria-label="播放"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg></button>
+      </div></div>
+    </div>
+
+    <div class="ctrl">
+      <div class="tl" id="tl"><div class="segs" id="segs"></div><div class="knob" id="knob"></div></div>
+      <div class="bar">
+        <div class="grp">
+          <button class="ib pri" id="play" aria-label="播放／暫停"></button>
+          <button class="ib" id="back" aria-label="倒退 5 秒" title="倒退 5 秒"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+          <div class="time" id="time">0:00 / 0:00</div>
+        </div>
+        <div class="grp tools">
+          <span class="seglab">操作模型時</span>
+          <div class="segc" id="imode"><button data-m="pause" class="on">暫停講解</button><button data-m="follow">邊聽邊轉</button></div>
+          <button class="chip" id="speed" title="播放速度（點一下切換）">1x</button>
+          <button class="chip on" id="ccBtn">字幕</button>
+          <button class="ib" id="fs" aria-label="全螢幕" title="全螢幕"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="now"><span class="mtag" id="nowTag"></span><div><div class="mt" id="nowT"></div><div class="md" id="nowD"></div></div></div>
+    <div class="foot">Demo 說明：① 3D 模型為示意，零件位置與比例有簡化。② 配音是微軟 AI 語音（免費），不是任何真人的聲音；右下角圓圈是之後放數位人的位置。③ 每一段配音之後就是一支數位人短片；畫面、3D 動作、題目都是網頁現場演，劇本綁在「講到哪個字」。④ 3D 用網路上的開源程式庫（three.js），要連網才能開。只做桌機版。</div>
+  </div>
+
+  <aside class="side">
+    <div class="tabs"><button data-p="tr" class="on">逐字稿</button><button data-p="sc">幕後劇本</button><button data-p="how">怎麼做的</button></div>
+    <div class="pane on" id="p-tr"><div class="ph">點任一句可以跳過去。<b>橘色虛線框</b>是要你動手的地方，講解會停在那裡等你。</div><div id="lines"></div></div>
+    <div class="pane" id="p-sc"><div class="ph">這就是課程檔裡的「劇本」：<b>講到哪個字 → 畫面做什麼</b>。秒數不是人寫的，是配音產生時自動算出來的，所以重配音不用改劇本。</div><div id="acts"></div></div>
+    <div class="pane" id="p-how"><div class="how">
+      <h4>這頁是怎麼組成的</h4>
+      <ul>
+        <li><b>播放器</b>：時間軸、暫停、字幕、逐字稿、關卡、分支。換一門課完全不用改。</li>
+        <li><b>3D 微波爐元件</b>：這門課特製的元件，但它對外只聽幾個指令（鏡頭飛到哪、哪個零件亮、拆開、開機），也會回報「學員點了哪個零件」。</li>
+        <li><b>課程檔</b>：8 段配音、每段的劇本、題目、分支。換主題主要是換這份。</li>
+      </ul>
+      <h4>學員動手時，講解怎麼辦</h4>
+      <ul>
+        <li><b>主動操作</b>（講解中拖模型）：預設暫停講解、逐字稿標「停在這裡」；按繼續，鏡頭先回到講解位置再講。可以改成「邊聽邊轉」：講解不停，只是鏡頭交給你。</li>
+        <li><b>關卡</b>（劇本要你動手）：講完那句就停，點對才繼續，點錯播提示語音。數位人改播等待動畫。</li>
+        <li><b>分支</b>：考題三個答案各接一段講解，播完匯回同一條主線。逐字稿只顯示你聽到的那段。</li>
+      </ul>
+      <h4>網頁能做的都能放</h4>
+      <ul><li>3D、模擬器、拖拉排序、小遊戲、程式碼編輯器、終端機、試算工具都行。條件是元件要遵守同一套「接口」：能被劇本下指令、能回報學員做了什麼、能被暫停。</li></ul>
+    </div></div>
+  </aside>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="audio/timings.js"></script>
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const TM = window.TIMINGS;
+
+/* ====== COURSE DATA：課程檔。每段配音＝之後一支數位人短片；劇本綁在「講到哪個字」 ====== */
+const PARTS = {
+  magnetron:  {n:'磁控管', d:'產生微波的「心臟」', p:'一種真空管，通電後產生 2.45 GHz 的微波。外面一片片的是散熱片，後面的風扇對著它吹。', a:[1.75,2.5,0.35]},
+  waveguide:  {n:'波導管', d:'把微波送進加熱腔的金屬管', p:'微波在金屬管裡前進、不會外洩。出口蓋著一片雲母片，擋住油污濺進去。', a:[0.9,2.95,0.35]},
+  cavity:     {n:'加熱腔', d:'四面金屬牆，把微波關在裡面', p:'微波在牆之間來回反射、互相疊加，形成固定的冷點和熱點，所以食物會受熱不均。', a:[-1.6,2.3,1.2]},
+  turntable:  {n:'轉盤', d:'讓食物輪流經過冷熱點', p:'底下有顆小馬達，每分鐘只轉幾圈。沒有轉盤的機種，改用頂上的金屬葉片攪拌微波。', a:[-1.6,0.45,0.8]},
+  transformer:{n:'高壓變壓器', d:'把 110 伏特升壓給磁控管', p:'先升到約 2,000 伏特，再靠高壓電容和二極體加倍到約 4,000 伏特（常見機種的約略值）。', a:[1.75,1.1,-0.75]},
+  capacitor:  {n:'高壓電容', d:'和二極體一起把電壓加倍', p:'拔掉插頭後仍可能殘留致命的高壓，千萬不要自己拆微波爐。', a:[1.45,0.62,1.0]},
+  fan:        {n:'散熱風扇', d:'替磁控管和變壓器降溫', p:'開機時一起轉。通風口被擋住，磁控管容易過熱。', a:[1.75,2.4,-1.45]},
+  door:       {n:'爐門', d:'看得到裡面，微波出不來', p:'玻璃夾著金屬網，網孔約 1～2 公釐，遠小於微波的波長（約 12 公分），所以微波穿不過，光線看得見。', a:[-0.7,2.9,2.0]},
+  panel:      {n:'控制面板', d:'設定時間與火力', p:'很多機種的「火力」其實是讓磁控管開開關關：中火大約是開一半時間、關一半時間。', a:[1.77,3.0,2.0]},
+  cup:        {n:'一杯水', d:'被加熱的對象', p:'水分子一頭偏正電、一頭偏負電，最容易被微波的電場帶著翻轉，所以含水的食物熱得快。', a:[0,1.25,0]}
+};
+const DEF3D = {cam:'overview', hl:null, glow:0, explode:0, power:0, waves:0, spin:0, heat:0};
+const SEGS = {
+  s1:{label:'開場', tag:'投影片＋3D 預覽', title:'開場：今天拆一台微波爐', view:'title', d3:'hero', st:{cam:'hero'},
+      now:'投影片的字跟著配音一句句出現。右邊的 3D 模型已經是真的，現在就可以拖曳轉動。',
+      cues:[{w:'怎麼把食物變熱', show:'t1', d:'大標題出現'},{w:'打開一台微波爐', show:'t2', d:'四個零件名稱出現'}]},
+  s2:{label:'原理', tag:'網頁動畫', title:'原理：讓水分子轉起來', view:'mol', d3:'hidden', st:{},
+      now:'純網頁動畫：講到「水分子」分子出現，講到「翻轉」電場開始正負交替，講到數字跳出大字。',
+      cues:[{w:'水分子', show:'m1', d:'水分子出現'},{w:'快速翻轉', show:'m2', d:'電場正負交替，分子跟著翻轉'},{w:'二十四億五千萬次', show:'m3', d:'大字：每秒 24.5 億次'},{w:'變成了熱', show:'m4', d:'分子變紅發熱'}]},
+  s3:{label:'3D 拆解', tag:'3D 元件（可操作）', title:'3D 拆解：四個關鍵零件', view:null, d3:'full', st:{cam:'overview'},
+      now:'講到哪個零件，鏡頭就飛到哪、零件發亮。你可以隨時拖曳或點零件：講解會先暫停，按「繼續講解」鏡頭會回到講解位置。',
+      cues:[{w:'微波爐', set:{cam:'overview'}, d:'鏡頭：整台微波爐'},
+            {w:'外殼拆開', set:{explode:1, cam:'open'}, d:'外殼掀起、爐門打開'},
+            {w:'磁控管', set:{cam:'magnetron', hl:'magnetron'}, d:'鏡頭飛到磁控管，零件發亮'},
+            {w:'產生微波', set:{glow:1}, d:'磁控管天線亮橘光'},
+            {w:'波導管', set:{cam:'waveguide', hl:'waveguide', glow:0}, d:'鏡頭移到波導管'},
+            {w:'加熱腔', set:{cam:'cavity', hl:'cavity'}, d:'鏡頭從爐門看進加熱腔'},
+            {w:'來回反射', set:{waves:1}, d:'微波在金屬牆之間反彈（示意）'},
+            {w:'轉盤', set:{cam:'turntable', hl:'turntable', waves:0, spin:1}, d:'轉盤開始轉'},
+            {w:'高壓變壓器', set:{cam:'transformer', hl:'transformer', spin:0}, d:'鏡頭飛到高壓變壓器'}]},
+  s4:{label:'換你點', tag:'關卡', title:'關卡：換你找出磁控管', view:null, d3:'full', st:{cam:'open', explode:1}, gate:'pick',
+      now:'講完這句就停下來等你：點對才繼續，點錯會播提示語音。右下的講者改成等待動畫（正式版是數位人的等待短片）。',
+      cues:[]},
+  s5:{label:'開機', tag:'3D 模擬', title:'開機模擬：微波怎麼跑', view:null, d3:'full', st:{cam:'open', explode:1},
+      now:'微波從磁控管出來，經過波導管進加熱腔，在金屬牆之間反彈；水溫跟著升高。',
+      cues:[{w:'按下開關', set:{power:1, cam:'side', spin:1}, d:'開機：燈亮、轉盤和風扇轉'},
+            {w:'發出微波', set:{waves:2, hl:'magnetron', glow:1}, d:'微波從磁控管冒出來'},
+            {w:'加熱腔', set:{cam:'cavity', hl:'cavity'}, d:'鏡頭跟著微波進加熱腔'},
+            {w:'溫度', set:{heat:1, cam:'cup', hl:'cup'}, d:'水溫往上升'}]},
+  s6:{label:'考題', tag:'考題（分支）', title:'考題：選不同答案，接不同講解', view:'quiz', d3:'dim', st:{cam:'hero', explode:1}, gate:'choice',
+      now:'三個答案各接一段不同的講解（三段配音，播哪段看你選什麼），之後匯回同一條主線。',
+      cues:[{w:'金屬碗', show:'qq', d:'題目出現'}]},
+  bA:{label:'分支講解', tag:'分支 A', title:'分支講解 A：「金屬會吸走微波？」其實相反', view:'quiz', d3:'dim', st:{cam:'hero', explode:1},
+      now:'只有選 A 的人會聽到這段，先糾正誤解，再講正確原因。',
+      cues:[{w:'反射回去', show:'x1', d:'圖：微波打到碗被反射'},{w:'熱不了', show:'x2', d:'圖：食物熱不了'},{w:'火花', show:'x3', d:'圖：尖角冒火花'}]},
+  bB:{label:'分支講解', tag:'分支 B', title:'分支講解 B：答對，補充原因', view:'quiz', d3:'dim', st:{cam:'hero', explode:1},
+      now:'只有選 B 的人會聽到這段，答對了，直接補充原因。',
+      cues:[{w:'反射回去', show:'x1', d:'圖：微波打到碗被反射'},{w:'熱不了', show:'x2', d:'圖：食物熱不了'},{w:'火花', show:'x3', d:'圖：尖角冒火花'}]},
+  bC:{label:'分支講解', tag:'分支 C', title:'分支講解 C：「轉盤轉不動？」不是這個原因', view:'quiz', d3:'dim', st:{cam:'hero', explode:1},
+      now:'只有選 C 的人會聽到這段，先排除誤解，再講正確原因。',
+      cues:[{w:'反射回去', show:'x1', d:'圖：微波打到碗被反射'},{w:'熱不了', show:'x2', d:'圖：食物熱不了'},{w:'火花', show:'x3', d:'圖：尖角冒火花'}]},
+  s7:{label:'總結', tag:'總結', title:'總結＋自由探索', view:'recap', d3:'hero', st:{cam:'hero', explode:1},
+      now:'講到哪個零件，那個零件就亮。講完進入自由探索模式。',
+      cues:[{w:'磁控管', show:'r1', set:{hl:'magnetron'}, d:'磁控管亮'},{w:'波導管', show:'r2', set:{hl:'waveguide'}, d:'波導管亮'},
+            {w:'加熱腔', show:'r3', set:{hl:'cavity'}, d:'加熱腔亮'},{w:'轉盤', show:'r4', set:{hl:'turntable'}, d:'轉盤亮'},
+            {w:'自己轉動模型', show:'r5', set:{hl:null}, d:'提示自由探索'}]}
+};
+const QUIZ = [
+  {k:'A', t:'金屬會把微波全部吸走，食物熱不了', br:'bA'},
+  {k:'B', t:'金屬會把微波反射回去，尖角還可能冒火花', br:'bB', right:true},
+  {k:'C', t:'金屬碗太重，轉盤轉不動', br:'bC'}
+];
+const SLOTS = ['s1','s2','s3','s4','s5','s6','BR','s7'];
+const GATES = ['s4','s6'];
+const REACT = {rOK:'答對了，就是磁控管！', rNO:'不是這個喔。提示：它連著波導管。'};
+
+/* ====== 劇本綁字：用配音的逐詞時間，把「講到哪個字」換成秒數 ====== */
+const strip = s => s.replace(/[，。！？：；、「」…\s]/g, '');
+const MAP = {};
+Object.keys(TM).forEach(k => { let s = '', t = []; TM[k].words.forEach(([st,,w]) => { for (const ch of w){ s += ch; t.push(st); } }); MAP[k] = {s, t}; });
+const missing = [];
+function timeOf(key, phrase, n){ const m = MAP[key], p = strip(phrase); let i = -1; for (let c = 0; c < (n||1); c++){ i = m.s.indexOf(p, i + 1); if (i < 0) break; } if (i < 0){ missing.push(key+':'+phrase); return null; } return m.t[i]; }
+Object.keys(SEGS).forEach(k => SEGS[k].cues.forEach(c => c.t = timeOf(k, c.w, c.n)));
+function sentences(key){
+  const text = TM[key].text, parts = text.match(/[^。！？]+[。！？]?/g) || [text];
+  let off = 0; const m = MAP[key];
+  return parts.map(p => { const st = m.t[Math.min(off, m.t.length - 1)] || 0; off += strip(p).length; return {text:p, t:st}; });
+}
+const SENT = {}; Object.keys(TM).forEach(k => SENT[k] = sentences(k));
+
+/* ====== state ====== */
+const AUD = {}; Object.keys(TM).forEach(k => { const a = new Audio('audio/'+k+'.mp3'); a.preload = 'auto'; AUD[k] = a; });
+let cur = 0, playing = false, mode = 'idle', held = false, userCam = false, interact = 'pause', reacting = null, ccOn = true;
+const G = {s4:{done:false, res:null}, s6:{done:false, choice:null, skipped:false}};
+let slotStart = [], total = 0;
+const slotKey = k => SLOTS[k] === 'BR' ? 'b'+(G.s6.choice || 'B') : SLOTS[k];
+function layout(){ slotStart = []; let acc = 0; SLOTS.forEach((s,k) => { slotStart.push(acc); acc += TM[slotKey(k)].dur; }); total = acc; buildTimeline(); buildTranscript(); buildScript(); }
+const gateEnd = s => { const k = SLOTS.indexOf(s); return slotStart[k] + TM[s].dur; };
+const curKey = () => slotKey(cur);
+const localT = () => mode === 'end' ? TM[curKey()].dur : AUD[curKey()].currentTime;
+const globalT = () => slotStart[cur] + localT();
+const fmt = s => { s = Math.max(0, s); return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0'); };
+
+function stateAt(key, t){
+  const seg = SEGS[key], st = Object.assign({}, DEF3D, seg.st), shows = new Set();
+  seg.cues.forEach(c => { if (c.t != null && c.t <= t){ if (c.set) Object.assign(st, c.set); if (c.show) shows.add(c.show); } });
+  if (key === 's4' && (G.s4.res === 'ok' || reacting === 'rOK')){ st.hl = 'magnetron'; st.glow = 1; }
+  if (key[0] === 'b' && key.length === 2){ ['qq'].forEach(x => shows.add(x)); }
+  if (key === 's6' && mode === 'gate') shows.add('qq');
+  if (mode === 'end'){ Object.assign(st, {cam:'hero', hl:null}); ['r1','r2','r3','r4','r5'].forEach(x => shows.add(x)); }
+  return {st, shows};
+}
+
+/* ====== transport ====== */
+function stopAudio(){ Object.values(AUD).forEach(a => a.pause()); }
+function play(){
+  if (mode === 'gate'){ flashTask(); return; }
+  if (mode === 'end'){ seek(0); }
+  $('#intro').classList.add('hide');
+  held = false; userCam = false; closeInfo();
+  if (reacting) { AUD[reacting].play(); playing = true; return; }
+  AUD[curKey()].play(); playing = true; mode = 'play';
+}
+function pause(reason){
+  stopAudio(); playing = false;
+  if (reason === 'user'){ held = true; }
+}
+function advance(){
+  userCam = false; held = false;
+  if (cur < SLOTS.length - 1){ stopAudio(); cur++; AUD[curKey()].currentTime = 0; mode = 'play'; if (playing) AUD[curKey()].play(); }
+  else { stopAudio(); playing = false; mode = 'end'; userCam = false; }
+}
+function onEnded(key){
+  if (reacting === key){ reacting = null; if (key === 'rOK'){ playing = true; advance(); } return; }
+  if (key !== curKey() || mode !== 'play') return;
+  const s = SLOTS[cur];
+  if (GATES.includes(s) && !G[s].done) openGate(s); else advance();
+}
+Object.keys(AUD).forEach(k => AUD[k].addEventListener('ended', () => onEnded(k)));
+function openGate(s){ stopAudio(); playing = false; mode = 'gate'; held = false; userCam = false; }
+function positionAt(T){
+  let k = SLOTS.length - 1; for (let i = 0; i < SLOTS.length; i++){ if (T < slotStart[i] + TM[slotKey(i)].dur){ k = i; break; } }
+  cur = k; AUD[curKey()].currentTime = Math.max(0, T - slotStart[k]);
+}
+function seek(T){
+  const was = playing || mode === 'end';
+  stopAudio(); reacting = null; held = false; closeInfo();
+  T = Math.max(0, Math.min(total - 0.05, T));
+  // 往回跳到關卡之前：關卡重新算「沒做過」，重播會再問一次
+  let reset = false;
+  if (T < gateEnd('s4') - 0.02 && G.s4.done){ G.s4 = {done:false, res:null}; reset = true; }
+  if (T < gateEnd('s6') - 0.02 && G.s6.done){ G.s6 = {done:false, choice:null, skipped:false}; reset = true; }
+  if (reset) layout();
+  for (const s of GATES){
+    if (T >= gateEnd(s) - 0.02 && !G[s].done){ positionAt(gateEnd(s) - 0.01); cur = SLOTS.indexOf(s); AUD[s].currentTime = TM[s].dur; openGate(s); return; }
+  }
+  positionAt(T); mode = 'play'; playing = false;
+  if (was){ playing = true; AUD[curKey()].play(); }
+}
+
+/* ====== gates ====== */
+let toastTimer = 0;
+function toast(msg, cls){ const t = $('#toast'); t.textContent = msg; t.className = 'toast on ' + cls; clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), 2400); }
+function flashTask(){ const b = SLOTS[cur] === 's4' ? $('#bTask') : null; if (b){ b.animate([{transform:'translate(-50%,0) scale(1)'},{transform:'translate(-50%,0) scale(1.06)'},{transform:'translate(-50%,0) scale(1)'}], {duration:400}); } }
+function playReact(k){ stopAudio(); reacting = k; AUD[k].currentTime = 0; AUD[k].playbackRate = rate; AUD[k].play(); }
+function resolvePick(part){
+  if (SLOTS[cur] !== 's4' || G.s4.done) return false;
+  if (mode === 'play'){ stopAudio(); mode = 'gate'; playing = false; }
+  if (part === 'magnetron'){ G.s4 = {done:true, res:'ok'}; toast('答對了！就是磁控管', 'ok'); mode = 'play'; playing = true; userCam = false; playReact('rOK'); buildTranscript(); buildTimeline(); }
+  else { toast('這是「'+PARTS[part].n+'」。提示：它連著波導管', 'no'); playReact('rNO'); }
+  return true;
+}
+function skipPick(){ G.s4 = {done:true, res:'skip'}; reacting = null; mode = 'play'; playing = true; buildTranscript(); buildTimeline(); advance(); }
+function choose(k, skipped){
+  if (G.s6.done) return;
+  G.s6 = {done:true, choice:k, skipped:!!skipped}; stopAudio(); reacting = null;
+  layout(); cur = SLOTS.indexOf('BR'); AUD[curKey()].currentTime = 0; mode = 'play'; playing = true; held = false; userCam = false;
+  $('#intro').classList.add('hide'); AUD[curKey()].play();
+}
+function buildQuiz(){
+  $('#opts').innerHTML = QUIZ.map(o => '<button class="opt" data-k="'+o.k+'"><span class="l">'+o.k+'</span><span>'+o.t+'</span><span class="br">→ 講解 '+o.k+'</span></button>').join('');
+  $('#opts').onclick = e => { const b = e.target.closest('.opt'); if (b && (SLOTS[cur] === 's6')) choose(b.dataset.k); };
+  $('#skipq').onclick = () => { if (SLOTS[cur] === 's6') choose('B', true); };
+}
+
+/* ====== 3D：微波爐元件（對外只聽 state 指令、回報點了哪個零件） ====== */
+const stage = $('#stage'), cvEl = $('#cv'), glEl = $('#gl');
+const renderer = new THREE.WebGLRenderer({canvas:glEl, antialias:true, alpha:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(34, 16/9, 0.1, 100);
+camera.position.set(7.5, 4.6, 9.5);
+const controls = new THREE.OrbitControls(camera, glEl);
+controls.enableDamping = true; controls.dampingFactor = 0.08; controls.minDistance = 3; controls.maxDistance = 20; controls.maxPolarAngle = Math.PI * 0.52; controls.target.set(0, 1.4, 0);
+scene.add(new THREE.HemisphereLight(0xdfefff, 0x1a2230, 0.75));
+const key = new THREE.DirectionalLight(0xffffff, 1.25); key.position.set(6, 10, 7); key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048); Object.assign(key.shadow.camera, {left:-7, right:7, top:7, bottom:-7}); key.shadow.bias = -0.0005; scene.add(key);
+const rim = new THREE.DirectionalLight(0x6fd6e2, 0.55); rim.position.set(-8, 5, -6); scene.add(rim);
+const fl = document.createElement('canvas'); fl.width = fl.height = 256; { const c = fl.getContext('2d'); const g = c.createRadialGradient(128,128,0,128,128,128); g.addColorStop(0,'#fff'); g.addColorStop(.55,'#888'); g.addColorStop(1,'#000'); c.fillStyle = g; c.fillRect(0,0,256,256); }
+const floor = new THREE.Mesh(new THREE.CircleGeometry(9, 64), new THREE.MeshStandardMaterial({color:0x0c1117, roughness:1, transparent:true, alphaMap:new THREE.CanvasTexture(fl)}));
+floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; scene.add(floor);
+
+const root = new THREE.Group(); scene.add(root);
+const PM = {};   // part -> {group, mats}
+const pickables = [];
+function M(color, o){ return new THREE.MeshStandardMaterial(Object.assign({color, metalness:.35, roughness:.5}, o||{})); }
+function partGroup(name, parent){ const g = new THREE.Group(); g.userData.part = name; (parent || root).add(g); if (name) PM[name] = {group:g, mats:[]}; return g; }
+function box(g, w,h,d, m, x,y,z){ return mesh(g, new THREE.BoxGeometry(w,h,d), m, x,y,z); }
+function mesh(g, geo, m, x,y,z, rx,ry,rz){
+  const me = new THREE.Mesh(geo, m); me.position.set(x||0,y||0,z||0); me.rotation.set(rx||0,ry||0,rz||0);
+  me.castShadow = true; me.receiveShadow = true; g.add(me);
+  const p = g.userData.part; me.userData.part = p;
+  if (p && PM[p]){ if (!PM[p].mats.includes(m)) PM[p].mats.push(m); if (p !== 'shell') pickables.push(me); }
+  return me;
+}
+// base
+const base = partGroup(null); box(base, 5.1, .12, 3.9, M(0x2a3039, {metalness:.5}), 0, .06, 0);
+// shell（外殼：掀起後變成半透明殘影）
+const shell = partGroup('shell');
+const shellM = M(0xe8e6e1, {metalness:.25, roughness:.42, transparent:true});
+box(shell, 5.1,.06,3.9, shellM, 0,3.0,0); box(shell, .06,2.94,3.9, shellM, -2.52,1.53,0); box(shell, .06,2.94,3.9, shellM, 2.52,1.53,0); box(shell, 5.1,2.94,.06, shellM, 0,1.53,-1.92);
+// cavity
+const cavity = partGroup('cavity');
+const cavM = M(0xcfd4da, {metalness:.7, roughness:.32, side:THREE.DoubleSide});
+box(cavity, 3.35,.04,3.6, cavM, -.725,.25,.05); box(cavity, 3.35,.04,3.6, cavM, -.725,2.65,.05);
+box(cavity, .04,2.4,3.6, cavM, -2.4,1.45,.05); box(cavity, .04,2.4,3.6, cavM, .95,1.45,.05); box(cavity, 3.35,2.4,.04, cavM, -.725,1.45,-1.75);
+box(cavity, .62,.012,.52, M(0xd8c48a, {metalness:.1, roughness:.6}), .12,2.625,.35);
+const lamp = new THREE.PointLight(0xffd9a0, 0, 7, 2); lamp.position.set(-.8, 2.3, .6); scene.add(lamp);
+// turntable + cup
+const tt = partGroup('turntable'); tt.position.set(-.725, 0, .05);
+mesh(tt, new THREE.CylinderGeometry(1.15,1.15,.05,56), M(0xbfe6ee, {metalness:.05, roughness:.08, transparent:true, opacity:.5}), 0,.36,0);
+mesh(tt, new THREE.TorusGeometry(.72,.035,8,40), M(0x30363f), 0,.31,0, Math.PI/2);
+mesh(tt, new THREE.CylinderGeometry(.12,.12,.08,16), M(0x30363f), 0,.3,0);
+const cup = partGroup('cup', tt); cup.position.set(.5, 0, 0);
+const cupM = M(0xf4f1ea, {metalness:.05, roughness:.35});
+mesh(cup, new THREE.CylinderGeometry(.36,.31,.74,36), cupM, 0,.76,0);
+mesh(cup, new THREE.TorusGeometry(.19,.05,10,24), cupM, .38,.78,0);
+const waterM = M(0x3a8fd6, {metalness:.1, roughness:.15, emissive:0x000000});
+mesh(cup, new THREE.CylinderGeometry(.33,.33,.02,32), waterM, 0,1.07,0);
+// magnetron
+const mag = partGroup('magnetron'); mag.position.set(1.75, 2.0, .35);
+box(mag, .62,.62,.62, M(0x6b7179, {metalness:.75, roughness:.35}), 0,0,0);
+const finM = M(0xc9ced5, {metalness:.8, roughness:.28});
+for (let i = 0; i < 9; i++) box(mag, .98,.022,.98, finM, 0,-.28 + i*.07,0);
+mesh(mag, new THREE.CylinderGeometry(.33,.33,.08,28), M(0x3d4249, {metalness:.6}), 0,.36,0);
+mesh(mag, new THREE.CylinderGeometry(.33,.33,.08,28), M(0x3d4249, {metalness:.6}), 0,-.36,0);
+const domeM = M(0x9aa1aa, {metalness:.6, roughness:.3, emissive:0x000000});
+mesh(mag, new THREE.CylinderGeometry(.13,.15,.32,20), domeM, 0,.56,0);
+box(mag, .26,.3,.34, M(0x2d3238), .46,-.05,0);
+// waveguide（L 形金屬管：磁控管往上，再往左進加熱腔頂）
+const wg = partGroup('waveguide'); const wgM = M(0xb9c0c8, {metalness:.7, roughness:.3});
+box(wg, .56,.5,.56, wgM, 1.75,2.68,.35); box(wg, 1.95,.24,.56, wgM, .85,2.8,.35); box(wg, .42,.14,.56, wgM, .12,2.71,.35);
+// transformer
+const tf = partGroup('transformer'); tf.position.set(1.75, .58, -.75);
+for (let i = 0; i < 10; i++) box(tf, 1.0,.072,.62, M(i % 2 ? 0x3a3f46 : 0x2e3238, {metalness:.55, roughness:.45}), 0,-.33 + i*.074,0);
+box(tf, .56,.5,.94, M(0xb8692e, {metalness:.85, roughness:.32}), 0,0,0);
+// capacitor
+const cap = partGroup('capacitor');
+mesh(cap, new THREE.CylinderGeometry(.17,.17,.78,24), M(0xd6d9dd, {metalness:.75, roughness:.25}), 1.45,.33,1.0, Math.PI/2);
+box(cap, .08,.1,.08, M(0x2d3238), 1.4,.52,.7); box(cap, .08,.1,.08, M(0x2d3238), 1.5,.52,.7);
+// fan
+const fan = partGroup('fan'); fan.position.set(1.75, 1.95, -1.45);
+mesh(fan, new THREE.TorusGeometry(.44,.05,10,36), M(0x2f353d), 0,0,0);
+const blades = new THREE.Group(); blades.userData.part = 'fan'; fan.add(blades);
+const bladeM = M(0x4a525c, {metalness:.3, roughness:.55}); PM.fan.mats.push(bladeM);
+for (let i = 0; i < 5; i++){ const b = new THREE.Mesh(new THREE.BoxGeometry(.36,.13,.02), bladeM); b.position.set(Math.cos(i*1.2566)*.2, Math.sin(i*1.2566)*.2, 0); b.rotation.z = i*1.2566; b.rotation.x = .35; b.castShadow = true; b.userData.part = 'fan'; blades.add(b); pickables.push(b); }
+mesh(fan, new THREE.CylinderGeometry(.09,.09,.08,16), M(0x2f353d), 0,0,0, Math.PI/2);
+// wires
+const wireMat = (c) => new THREE.MeshStandardMaterial({color:c, roughness:.6});
+[[0xc0392b, [[1.4,.85,-.6],[1.3,1.4,-.2],[1.45,1.8,.2],[1.6,1.85,.35]]], [0x22262b, [[2.1,.85,-.6],[2.2,1.4,-.1],[2.15,1.75,.3],[2.0,1.9,.35]]]].forEach(([c, pts]) => {
+  const tube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p))), 30, .03, 8), wireMat(c)); root.add(tube); });
+// door（左邊鉸鏈）
+const door = partGroup('door'); door.position.set(-2.5, 0, 1.95);
+const doorM = M(0x1c2026, {metalness:.4, roughness:.4});
+box(door, 3.45,2.8,.1, doorM, 1.725,1.53,0);
+const dots = document.createElement('canvas'); dots.width = dots.height = 64; { const c = dots.getContext('2d'); c.fillStyle = '#0b0d10'; c.fillRect(0,0,64,64); c.fillStyle = '#4b535c'; for (let y = 4; y < 64; y += 8) for (let x = 4; x < 64; x += 8){ c.beginPath(); c.arc(x, y, 2.2, 0, 7); c.fill(); } }
+const dotTex = new THREE.CanvasTexture(dots); dotTex.wrapS = dotTex.wrapT = THREE.RepeatWrapping; dotTex.repeat.set(10, 7);
+box(door, 2.5,1.9,.02, M(0x222831, {map:dotTex, metalness:.2, roughness:.3, transparent:true, opacity:.82}), 1.55,1.6,.06);
+box(door, .1,1.5,.14, M(0xb9c0c8, {metalness:.8, roughness:.25}), 3.2,1.53,.12);
+// control panel
+const panel = partGroup('panel');
+box(panel, 1.5,2.8,.1, M(0x14171b, {metalness:.3, roughness:.35}), 1.77,1.53,1.95);
+const disp = document.createElement('canvas'); disp.width = 256; disp.height = 80; const dctx = disp.getContext('2d');
+const dispTex = new THREE.CanvasTexture(disp);
+function drawDisp(txt, on){ dctx.fillStyle = '#05080a'; dctx.fillRect(0,0,256,80); dctx.fillStyle = on ? '#4dfcb5' : '#2f6b58'; dctx.font = 'bold 56px monospace'; dctx.textAlign = 'center'; dctx.textBaseline = 'middle'; dctx.fillText(txt, 128, 44); dispTex.needsUpdate = true; }
+drawDisp('0:30', false);
+box(panel, 1.1,.36,.02, new THREE.MeshBasicMaterial({map:dispTex}), 1.77,2.55,2.01);
+const btnM = M(0x2b3138, {metalness:.3}); for (let r = 0; r < 4; r++) for (let c = 0; c < 3; c++) box(panel, .28,.18,.05, btnM, 1.43 + c*.34, 2.05 - r*.3, 2.02);
+box(panel, .96,.24,.05, M(0x1f7a4d, {metalness:.3}), 1.77, .75, 2.02);
+
+/* sprites（微波粒子、水蒸氣） */
+const glow = document.createElement('canvas'); glow.width = glow.height = 64; { const c = glow.getContext('2d'); const g = c.createRadialGradient(32,32,0,32,32,32); g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(.35,'rgba(255,255,255,.55)'); g.addColorStop(1,'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(0,0,64,64); }
+const glowTex = new THREE.CanvasTexture(glow);
+const WAVES = [];
+for (let i = 0; i < 110; i++){ const s = new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex, color:0xff4a10, transparent:true, depthWrite:false, opacity:0, toneMapped:false})); s.scale.set(.17,.17,.17); s.visible = false; scene.add(s); WAVES.push({s, alive:false}); }
+const STEAM = [];
+for (let i = 0; i < 14; i++){ const s = new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex, color:0xffffff, transparent:true, depthWrite:false, opacity:0})); s.visible = false; scene.add(s); STEAM.push({s, life:Math.random()*2}); }
+const PATH = [[1.75,2.6,.35],[1.75,2.8,.35],[.12,2.8,.35],[.12,2.5,.35]].map(p => new THREE.Vector3(...p));
+const PLEN = PATH.slice(1).map((p,i) => p.distanceTo(PATH[i])); const PTOT = PLEN.reduce((a,b) => a+b, 0);
+const BOX = {x0:-2.28, x1:.83, y0:.42, y1:2.55, z0:-1.65, z1:1.75};
+let spawnAcc = 0;
+function spawn(fromPath){
+  const w = WAVES.find(x => !x.alive); if (!w) return;
+  w.alive = true; w.age = 0; w.s.visible = true;
+  if (fromPath){ w.phase = 'path'; w.u = 0; w.s.position.copy(PATH[0]); }
+  else { w.phase = 'box'; w.s.position.set(BOX.x0 + Math.random()*(BOX.x1-BOX.x0), BOX.y0 + Math.random()*(BOX.y1-BOX.y0), BOX.z0 + Math.random()*(BOX.z1-BOX.z0)); w.v = randV(); w.life = 1.6 + Math.random(); }
+}
+function randV(){ const v = new THREE.Vector3(Math.random()-.5, -Math.random()*.6 - .1, Math.random()-.5).normalize().multiplyScalar(2.6); return v; }
+function stepWaves(dt, level){
+  if (level > 0){ spawnAcc += dt * (level === 2 ? 34 : 26); while (spawnAcc > 1){ spawnAcc--; spawn(level === 2); } }
+  WAVES.forEach(w => {
+    if (!w.alive) return; w.age += dt;
+    if (w.phase === 'path'){
+      w.u += dt * 3.2; let d = w.u, i = 0; while (i < PLEN.length && d > PLEN[i]){ d -= PLEN[i]; i++; }
+      if (i >= PLEN.length){ w.phase = 'box'; w.v = randV(); w.life = 2.2 + Math.random(); w.age = 0; }
+      else w.s.position.lerpVectors(PATH[i], PATH[i+1], d / PLEN[i]);
+    } else {
+      w.s.position.addScaledVector(w.v, dt); const p = w.s.position, v = w.v;
+      if (p.x < BOX.x0 || p.x > BOX.x1){ v.x *= -1; p.x = Math.min(BOX.x1, Math.max(BOX.x0, p.x)); }
+      if (p.y < BOX.y0 || p.y > BOX.y1){ v.y *= -1; p.y = Math.min(BOX.y1, Math.max(BOX.y0, p.y)); }
+      if (p.z < BOX.z0 || p.z > BOX.z1){ v.z *= -1; p.z = Math.min(BOX.z1, Math.max(BOX.z0, p.z)); }
+      if (w.age > w.life || level === 0 && w.age > .3) { w.alive = false; w.s.visible = false; return; }
+    }
+    const fade = w.phase === 'box' ? Math.min(1, (w.life - w.age) * 2) : 1;
+    w.s.material.opacity = .95 * fade * (0.8 + Math.random()*.2);
+  });
+}
+
+/* camera presets */
+const V = (x,y,z) => new THREE.Vector3(x,y,z);
+const CAM = {
+  overview:{p:V(7.2,4.6,9.2), t:V(0,1.4,0)}, open:{p:V(7.4,7.2,7.6), t:V(.2,1.3,0)},
+  magnetron:{p:V(5.9,4.0,4.3), t:V(1.6,1.95,.3)}, waveguide:{p:V(3.4,6.0,4.6), t:V(.9,2.6,.3)},
+  cavity:{p:V(-.4,2.4,7.6), t:V(-.7,1.4,0)}, turntable:{p:V(-.6,3.6,5.6), t:V(-.75,.5,0)},
+  transformer:{p:V(5.6,2.4,1.6), t:V(1.75,.7,-.6)}, side:{p:V(6.6,5.6,7.6), t:V(0,1.5,0)},
+  cup:{p:V(-.2,2.5,5.6), t:V(-.6,.9,.2)}, hero:{p:V(10.6,6.6,12.4), t:V(0,1.3,0)}
+};
+let heroAng = 0;
+const now3 = {explode:0, power:0, spin:0, heat:0, glow:0, shift:0, temp:25};
+let dispNext = 0, dispSec = 30;
+function apply3D(st, dt, d3){
+  const k = 1 - Math.pow(.004, dt), ks = 1 - Math.pow(.15, dt);
+  now3.explode += (st.explode - now3.explode) * ks;
+  now3.power += (st.power - now3.power) * ks;
+  now3.spin += (st.spin - now3.spin) * ks;
+  now3.glow += (st.glow - now3.glow) * ks;
+  now3.heat += Math.sign(st.heat - now3.heat) * Math.min(Math.abs(st.heat - now3.heat), dt * .32);
+  const shiftT = d3 === 'hero' ? .22 : 0; now3.shift += (shiftT - now3.shift) * ks;
+  { const W = stage.clientWidth, H = stage.clientHeight; if (now3.shift > .002) camera.setViewOffset(W, H, -now3.shift * W, 0, W, H); else if (camera.view && camera.view.enabled) camera.clearViewOffset(); }
+  // camera
+  if (!userCam && CAM[st.cam]){
+    let p = CAM[st.cam].p.clone(), t = CAM[st.cam].t;
+    if (st.cam === 'hero' && mode !== 'end'){ heroAng += dt * .16; p.sub(t).applyAxisAngle(V(0,1,0), Math.sin(heroAng) * .55).add(t); }
+    camera.position.lerp(p, k); controls.target.lerp(t, k);
+  }
+  controls.update();
+  // explode
+  const e = now3.explode;
+  shell.position.set(0, e * 2.7, -e * .3); shellM.opacity = 1 - e; shellM.depthWrite = e < .1; shell.visible = shellM.opacity > .04;
+  door.rotation.y = -e * 1.32;
+  // power
+  lamp.intensity = now3.power * 1.6; blades.rotation.z += dt * now3.power * 14; tt.rotation.y += dt * now3.spin * .9;
+  if (st.power && performance.now() > dispNext){ dispNext = performance.now() + 1000; dispSec = Math.max(0, dispSec - 1); drawDisp('0:' + String(dispSec).padStart(2,'0'), true); }
+  if (!st.power && dispSec !== 30){ dispSec = 30; drawDisp('0:30', false); }
+  domeM.emissive.setRGB(1, .42, .2).multiplyScalar(now3.glow * (1.1 + .4*Math.sin(performance.now()/120)));
+  // heat
+  const h = now3.heat; waterM.color.setRGB(.23 + h*.77, .56 - h*.08, .84 - h*.6); waterM.emissive.setRGB(h*.35, h*.08, 0);
+  now3.temp = 25 + h * 45;
+  // highlight
+  const pulse = .22 + .18 * Math.sin(performance.now() / 260);
+  Object.keys(PM).forEach(p => { if (p === 'shell') return; const on = p === st.hl || p === hoverPart; PM[p].mats.forEach(m => { if (!m.emissive || m === domeM || m === waterM) return; if (on) m.emissive.setRGB(0, .64*(p===st.hl?pulse:.12), .71*(p===st.hl?pulse:.12)); else m.emissive.setRGB(0,0,0); }); });
+  // waves + steam
+  stepWaves(dt, st.waves);
+  const cw = new THREE.Vector3(); cup.getWorldPosition(cw);
+  STEAM.forEach(s => { s.life += dt; if (s.life > 2){ s.life = 0; s.x = (Math.random()-.5)*.3; s.z = (Math.random()-.5)*.3; }
+    const a = h > .5 ? (h - .5) * 2 : 0; s.s.visible = a > 0; s.s.position.set(cw.x + (s.x||0), cw.y + 1.15 + s.life*.55, cw.z + (s.z||0)); const sc = .18 + s.life*.18; s.s.scale.set(sc,sc,sc); s.s.material.opacity = a * .35 * (1 - s.life/2); });
+}
+
+/* labels（3D 座標投影到畫面） */
+const LBL = {};
+Object.keys(PARTS).forEach(p => { const d = document.createElement('div'); d.className = 'lbl'; d.innerHTML = '<div class="b"><div class="n">'+PARTS[p].n+'</div><div class="d">'+PARTS[p].d+'</div></div>'; $('#labels').appendChild(d); LBL[p] = d; });
+const tempL = document.createElement('div'); tempL.className = 'lbl temp sm'; tempL.innerHTML = '<div class="b"><div class="n" id="tempN">水溫 25°C</div></div>'; $('#labels').appendChild(tempL);
+let cvS = 1, offX = 0, offY = 0;
+function project(v3){ const v = v3.clone().project(camera); const W = stage.clientWidth, H = stage.clientHeight; return {x:((v.x+1)/2*W - offX)/cvS, y:((1-v.y)/2*H - offY)/cvS, z:v.z}; }
+function renderLabels(st, d3){
+  const all = mode === 'end' || (!playing && mode !== 'gate' && userCam);
+  Object.keys(PARTS).forEach(p => {
+    const el = LBL[p]; const a = PARTS[p].a;
+    const wpos = p === 'cup' ? (() => { const v = new THREE.Vector3(); cup.getWorldPosition(v); v.y += 1.25; return v; })()
+      : p === 'door' ? door.localToWorld(V(1.725, 2.95, 0))
+      : p === 'turntable' ? V(-.725 + 1.0, .45, .05 + .55) : V(...a);
+    const show = d3 !== 'hidden' && d3 !== 'dim' && mode !== 'gate' && (p === st.hl || all) && !(p === 'cup' && st.heat > 0);
+    el.classList.toggle('on', show); el.classList.toggle('sm', all && p !== st.hl);
+    if (show){ const s = project(wpos); el.style.left = s.x + 'px'; el.style.top = s.y + 'px'; }
+  });
+  const showT = st.heat > 0 && d3 === 'full'; tempL.classList.toggle('on', showT);
+  if (showT){ const v = new THREE.Vector3(); cup.getWorldPosition(v); v.y += 1.3; const s = project(v); tempL.style.left = s.x + 'px'; tempL.style.top = s.y + 'px'; $('#tempN').textContent = '水溫 ' + Math.round(now3.temp) + '°C'; }
+}
+
+/* picking：分辨「點」和「拖」 */
+const ray = new THREE.Raycaster(); let down = null, hoverPart = null;
+function partAt(ev){
+  const r = glEl.getBoundingClientRect(); const m = new THREE.Vector2(((ev.clientX - r.left)/r.width)*2 - 1, -((ev.clientY - r.top)/r.height)*2 + 1);
+  ray.setFromCamera(m, camera);
+  for (const h of ray.intersectObjects(pickables.concat(shell.children), false)){
+    if (h.object.userData.part === 'shell'){ if (shellM.opacity > .5) return null; continue; }   // 外殼蓋著時，點不到裡面的零件
+    return h.object.userData.part;
+  }
+  return null;
+}
+glEl.addEventListener('pointerdown', e => { down = {x:e.clientX, y:e.clientY}; });
+glEl.addEventListener('pointerup', e => {
+  if (!down) return; const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y); down = null; if (moved > 6) return;
+  const p = partAt(e); if (!p) return;
+  if (SLOTS[cur] === 's4' && !G.s4.done){ resolvePick(p); return; }
+  openInfo(p);
+});
+glEl.addEventListener('pointermove', e => { if (down) return; const p = partAt(e); hoverPart = (mode === 'gate' || !playing || mode === 'end' || interact === 'follow') ? p : null; glEl.style.cursor = p ? 'pointer' : 'grab'; });
+glEl.addEventListener('pointerleave', () => { hoverPart = null; });
+controls.addEventListener('start', () => {
+  if (mode === 'play' && playing){ if (interact === 'pause') pause('user'); userCam = true; }
+  else userCam = true;
+  $('#hint').classList.remove('on');
+});
+function openInfo(p){ $('#infoN').textContent = PARTS[p].n; $('#infoD').textContent = PARTS[p].d; $('#infoP').textContent = PARTS[p].p; $('#info').classList.add('on'); }
+function closeInfo(){ $('#info').classList.remove('on'); }
+$('#infoX').onclick = closeInfo;
+
+/* ====== molecules ====== */
+(function(){ let h = ''; const P = [[90,90],[300,70],[520,110],[170,250],[400,230],[600,300],[110,390],[330,380],[520,400]];
+  P.forEach(([x,y],i) => { h += '<g transform="translate('+x+','+y+')"><g class="w" style="animation-delay:'+(i*-0.07)+'s"><circle class="o" r="26"/><circle cx="-24" cy="20" r="15" fill="#f2f2f2"/><circle cx="24" cy="20" r="15" fill="#f2f2f2"/></g></g>'; });
+  $('#mols').innerHTML = h; })();
+
+/* ====== side panel ====== */
+function buildTimeline(){
+  const segs = $('#segs'); segs.innerHTML = '';
+  SLOTS.forEach((s,k) => { const key = slotKey(k), seg = SEGS[key]; const d = document.createElement('div'); d.className = 'seg' + (s === 'BR' ? ' br' : ''); d.style.flex = TM[key].dur + ' 0 0'; d.innerHTML = '<div class="fill"></div>' + (TM[key].dur > 6 || k % 2 === 0 ? '<span class="lab">'+(s === 'BR' ? (G.s6.choice ? '分支 '+G.s6.choice : '分支講解') : seg.label)+'</span>' : ''); segs.appendChild(d); });
+  $('#tl').querySelectorAll('.gm').forEach(x => x.remove());
+  GATES.forEach(s => { const m = document.createElement('div'); m.className = 'gm' + (G[s].done ? ' done' : ''); m.style.left = (gateEnd(s)/total*100) + '%'; m.title = s === 's4' ? '關卡：點零件' : '考題：選答案'; $('#tl').appendChild(m); });
+}
+$('#tl').addEventListener('click', e => { const r = e.currentTarget.getBoundingClientRect(); seek((e.clientX - r.left)/r.width*total); });
+let LINES = [];
+function buildTranscript(){
+  LINES = []; let h = '';
+  SLOTS.forEach((s,k) => {
+    if (s === 'BR' && !G.s6.choice){ h += '<div class="line ph2"><span class="ts"></span><span>（依你的答案，播 A／B／C 其中一段講解）</span></div>'; return; }
+    const key = slotKey(k);
+    SENT[key].forEach(se => { const i = LINES.length; LINES.push({g: slotStart[k] + se.t, k, key, text:se.text}); h += '<div class="line" data-i="'+i+'"><span class="ts">'+fmt(slotStart[k] + se.t)+'</span><span>'+se.text+'<span class="held"></span></span></div>'; });
+    if (s === 's4'){ const i = LINES.length; LINES.push({g:gateEnd('s4'), k, task:'s4'}); h += '<div class="line task" data-i="'+i+'"><span class="ts">'+fmt(gateEnd('s4'))+'</span><span><span class="tx">🖐 換你操作：在模型上點出產生微波的零件</span><span class="stt'+(G.s4.done?' ok':'')+'">'+(G.s4.res === 'ok' ? '✓ 完成' : G.s4.res === 'skip' ? '已略過' : '講解停在這裡，等你點')+'</span></span></div>'; }
+    if (s === 's6'){ const i = LINES.length; LINES.push({g:gateEnd('s6'), k, task:'s6'}); h += '<div class="line task" data-i="'+i+'"><span class="ts">'+fmt(gateEnd('s6'))+'</span><span><span class="tx">🖐 作答：選一個答案（不同答案接不同講解）</span><span class="stt'+(G.s6.done?' ok':'')+'">'+(G.s6.done ? (G.s6.skipped ? '未作答，播解答 B' : '✓ 你選了 '+G.s6.choice) : '講解停在這裡，等你選')+'</span></span></div>'; }
+  });
+  $('#lines').innerHTML = h;
+}
+$('#lines').onclick = e => { const l = e.target.closest('.line'); if (!l || l.dataset.i == null) return; seek(LINES[+l.dataset.i].g + .02); };
+let ACTS = [];
+function buildScript(){
+  ACTS = []; let h = '';
+  SLOTS.forEach((s,k) => {
+    if (s === 'BR'){
+      h += '<div class="sh">分支：看學員選什麼，播不同的一段</div>';
+      QUIZ.forEach(o => { const key = o.br, i = ACTS.length; ACTS.push({g:null, k, key}); h += '<div class="act'+(G.s6.choice === o.k ? ' chosen' : '')+'" data-i="'+i+'"><span class="ts"></span><span class="k g">選 '+o.k+'</span><span>播「'+SEGS[key].title.replace(/^分支講解 .：/,'')+'」（'+TM[key].dur.toFixed(0)+' 秒）</span></div>'; });
+      if (G.s6.choice){ const key = slotKey(k); SEGS[key].cues.forEach(c => { const i = ACTS.length; ACTS.push({g:slotStart[k] + c.t, k, key, t:c.t}); h += '<div class="act" data-i="'+i+'"><span class="ts">'+fmt(slotStart[k] + c.t)+'</span><span class="k w">講到「'+c.w+'」</span><span>'+c.d+'</span></div>'; }); }
+      return;
+    }
+    const key = slotKey(k), seg = SEGS[key];
+    h += '<div class="sh">'+seg.label+'｜'+seg.tag+'（一段配音 '+TM[key].dur.toFixed(1)+' 秒）</div>';
+    seg.cues.forEach(c => { const i = ACTS.length; ACTS.push({g:slotStart[k] + c.t, k, key, t:c.t}); h += '<div class="act" data-i="'+i+'"><span class="ts">'+fmt(slotStart[k] + c.t)+'</span><span class="k w">講到「'+c.w+'」</span><span>'+c.d+'</span></div>'; });
+    if (s === 's4'){ const i = ACTS.length; ACTS.push({g:gateEnd('s4'), k}); h += '<div class="act" data-i="'+i+'"><span class="ts">'+fmt(gateEnd('s4'))+'</span><span class="k g">關卡</span><span>停下來等學員點零件：點對播「答對了」接下一段；點錯播提示、繼續等</span></div>'; }
+    if (s === 's6'){ const i = ACTS.length; ACTS.push({g:gateEnd('s6'), k}); h += '<div class="act" data-i="'+i+'"><span class="ts">'+fmt(gateEnd('s6'))+'</span><span class="k g">考題</span><span>停下來等學員選答案，依答案跳到不同分支</span></div>'; }
+  });
+  $('#acts').innerHTML = h;
+}
+$('#acts').onclick = e => { const l = e.target.closest('.act'); if (!l) return; const a = ACTS[+l.dataset.i]; if (a.g != null) seek(a.g + .02); };
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b)); document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === 'p-'+b.dataset.p)); });
+
+/* ====== controls ====== */
+const ICON_PLAY = '<svg width="18" height="18" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
+const ICON_PAUSE = '<svg width="18" height="18" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></svg>';
+$('#play').onclick = () => playing ? pause('btn') : play();
+$('#bigplay').onclick = play;
+$('#back').onclick = () => seek(globalT() - 5);
+$('#bResume').onclick = play;
+$('#bRecam').onclick = () => { userCam = false; };
+$('#bSkip').onclick = skipPick;
+$('#bReplay').onclick = () => { seek(0); play(); };
+document.querySelectorAll('#imode button').forEach(b => b.onclick = () => { interact = b.dataset.m; document.querySelectorAll('#imode button').forEach(x => x.classList.toggle('on', x === b)); });
+let rate = 1; const RATES = [1, 1.25, 1.5];
+$('#speed').onclick = () => { rate = RATES[(RATES.indexOf(rate) + 1) % RATES.length]; Object.values(AUD).forEach(a => a.playbackRate = rate); $('#speed').textContent = rate + 'x'; $('#speed').classList.toggle('on', rate !== 1); };
+$('#ccBtn').onclick = () => { ccOn = !ccOn; $('#ccBtn').classList.toggle('on', ccOn); };
+$('#fs').onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else stage.requestFullscreen(); };
+document.addEventListener('keydown', e => { if (e.target.closest('input,textarea')) return; if (e.code === 'Space'){ e.preventDefault(); playing ? pause('btn') : play(); } else if (e.code === 'ArrowLeft') seek(globalT() - 5); else if (e.code === 'ArrowRight') seek(globalT() + 5); });
+
+function resize(){
+  const W = stage.clientWidth, H = stage.clientHeight; cvS = Math.min(W/1600, H/900); offX = (W - 1600*cvS)/2; offY = (H - 900*cvS)/2;
+  cvEl.style.transform = 'translate('+offX+'px,'+offY+'px) scale('+cvS+')';
+  renderer.setSize(W, H, false); camera.aspect = W/H; camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage); resize();
+
+/* ====== main loop ====== */
+let last = performance.now(), lastLine = -1, hintShown = false, playIcon = null;
+function tick(nowT){
+  const dt = Math.min(.05, (nowT - last)/1000); last = nowT;
+  const key = curKey(), t = localT(), seg = SEGS[key], T = globalT();
+  const {st, shows} = stateAt(key, t);
+  const d3 = mode === 'end' ? 'full' : seg.d3;
+  stage.classList.toggle('d3-hidden', d3 === 'hidden'); stage.classList.toggle('d3-dim', d3 === 'dim');
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', mode !== 'end' && v.dataset.view === seg.view));
+  const vw = mode !== 'end' && seg.view ? document.querySelector('.view[data-view="'+seg.view+'"]') : null;
+  if (vw) vw.querySelectorAll('[data-r]').forEach(el => el.classList.toggle('on', shows.has(el.dataset.r)));
+  $('#field').classList.toggle('flip', shows.has('m2')); $('#field').classList.toggle('hot', shows.has('m4'));
+  // quiz view state
+  const inBr = key[0] === 'b' && key.length === 2;
+  $('#vquiz').classList.toggle('quiz-done', inBr);
+  $('#brtag').textContent = inBr ? (G.s6.skipped ? '未作答：播解答' : '你選了 '+G.s6.choice+' → 這段是「講解 '+G.s6.choice+'」') : '';
+  $('#opts').querySelectorAll('.opt').forEach(o => { const q = QUIZ.find(x => x.k === o.dataset.k); o.classList.toggle('pick', inBr && o.dataset.k === G.s6.choice); o.classList.toggle('right', inBr && !!q.right); o.classList.toggle('wrong', inBr && o.dataset.k === G.s6.choice && !q.right); });
+  // 3D
+  apply3D(st, dt, d3);
+  if (d3 !== 'hidden') renderer.render(scene, camera);
+  renderLabels(st, d3);
+  // banners
+  $('#bHold').classList.toggle('on', held && mode === 'play');
+  $('#bFollow').classList.toggle('on', interact === 'follow' && userCam && playing && mode === 'play' && d3 === 'full');
+  $('#bTask').classList.toggle('on', mode === 'gate' && SLOTS[cur] === 's4');
+  $('#bEnd').classList.toggle('on', mode === 'end');
+  if (key === 's3' && t > .5 && t < 7 && playing && !hintShown){ hintShown = true; $('#hint').classList.add('on'); setTimeout(() => $('#hint').classList.remove('on'), 6000); }
+  // speaker
+  const spk = $('#spk'); spk.classList.toggle('talk', playing && (mode === 'play' || !!reacting)); spk.classList.toggle('wait', mode === 'gate');
+  $('#spkSt').textContent = mode === 'gate' ? '等你操作…' : playing ? '講解中' : mode === 'end' ? '講完了' : held ? '你在操作' : '暫停';
+  // captions
+  let capText = '';
+  if (reacting) capText = REACT[reacting];
+  else if (mode === 'play'){ const ss = SENT[key]; for (let i = ss.length - 1; i >= 0; i--) if (ss[i].t <= t + .05){ capText = ss[i].text; break; } }
+  const capEl = $('#cap'); const html = capText && ccOn ? '<span>'+capText+'</span>' : ''; if (capEl.innerHTML !== html) capEl.innerHTML = html;
+  // transcript
+  let li = -1;
+  if (mode === 'gate'){ li = LINES.findIndex(l => l.task === SLOTS[cur]); }
+  else for (let i = LINES.length - 1; i >= 0; i--) if (!LINES[i].task && LINES[i].g <= T + .05){ li = i; break; }
+  if (mode === 'end') li = -1;
+  document.querySelectorAll('#lines .line').forEach(el => { const on = +el.dataset.i === li; el.classList.toggle('cur', on); const hd = el.querySelector('.held'); if (hd) hd.textContent = on && held ? '⏸ 你在操作模型，講解停在這裡' : ''; });
+  if (li !== lastLine && li >= 0){ const el = $('#lines .line[data-i="'+li+'"]'); if (el) el.scrollIntoView({block:'nearest', behavior:'smooth'}); lastLine = li; }
+  if (held){ const l = LINES[li]; $('#bHoldSub').textContent = l && l.text ? '講解停在：「'+l.text.slice(0,16)+'…」' : ''; }
+  document.querySelectorAll('#acts .act').forEach(el => { const a = ACTS[+el.dataset.i]; el.classList.toggle('done', a.g != null && a.g <= T); });
+  // timeline
+  $('#segs').querySelectorAll('.seg').forEach((el,k) => { const d = TM[slotKey(k)].dur; el.firstChild.style.width = Math.max(0, Math.min(1, (T - slotStart[k])/d))*100 + '%'; });
+  $('#knob').style.left = (Math.min(T, total)/total*100) + '%';
+  $('#time').textContent = fmt(T) + ' / ' + fmt(total);
+  if (playIcon !== playing){ playIcon = playing; $('#play').innerHTML = playing ? ICON_PAUSE : ICON_PLAY; }
+  // now box
+  $('#nowTag').textContent = mode === 'end' ? '自由探索' : seg.tag; $('#nowT').textContent = mode === 'end' ? '講完了：自由探索' : seg.title;
+  $('#nowD').textContent = mode === 'end' ? '拖曳轉動、滾輪縮放、點零件看說明。按「重看一次」從頭播。' : seg.now;
+  requestAnimationFrame(tick);
+}
+
+buildQuiz(); layout(); requestAnimationFrame(tick);
+// 檢查用：#t=秒數（&choose=A|B|C 先替兩個關卡作答、&explore 直接進自由探索、&shot 關動畫、&follow）
+const hp = new URLSearchParams(location.hash.slice(1));
+if (hp.has('shot')) document.documentElement.classList.add('noanim');
+if (hp.has('follow')) document.querySelector('#imode [data-m="follow"]').click();
+if (hp.has('choose')){ G.s4 = {done:true, res:'ok'}; G.s6 = {done:true, choice:hp.get('choose'), skipped:false}; layout(); }
+if (hp.has('t') || hp.has('explore')){ $('#intro').classList.add('hide'); }
+Promise.all(Object.values(AUD).map(a => a.readyState >= 1 ? 1 : new Promise(r => a.addEventListener('loadedmetadata', r, {once:true})))).then(() => {
+  if (hp.has('t')) seek(+hp.get('t'));
+  if (hp.has('explore')){ cur = SLOTS.length - 1; mode = 'end'; }
+});
+window.__demo = {aud:AUD, seek, pick:resolvePick, choose, state:() => ({cur:SLOTS[cur], key:curKey(), mode, playing, held, userCam, T:+globalT().toFixed(2), total:+total.toFixed(2), G:JSON.parse(JSON.stringify(G))}), missing, grab:() => controls.dispatchEvent({type:'start'})};
+})();
+</script>
+</body>
+</html>
