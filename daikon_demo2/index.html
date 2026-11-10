@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>大根網頁課 Demo（角落版）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<style>
+:root{
+  --bg:#0d0d0e; --panel:#161618; --panel2:#1d1d20; --line:#29292e; --ink:#ecebe7; --sub:#a09f9a; --mute:#6c6b67;
+  --teal:#00a3b5; --teal-hi:#3cc6d6;
+  --navy:#040323; --pur:#674ea7; --pur-deep:#430083; --pur-lite:#c69ce5;
+  --paper-ink:#040423; --paper-sub:#55536f;
+  --hl:rgba(198,156,229,.6);
+  --mA:#d9a35b; --mB:#3cc6d6; --mC:#c779d0;
+  --sans:"Roboto","Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+  --serif:var(--sans);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+button{font:inherit;color:inherit;cursor:pointer}
+
+/* ---------- header ---------- */
+.top{height:58px;display:flex;align-items:center;gap:16px;padding:0 24px;border-bottom:1px solid var(--line);background:#111113}
+.logo{font-weight:700;letter-spacing:.14em;font-size:15px}
+.logo b{color:var(--teal)}
+.crumb{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--sub);min-width:0}
+.crumb .sep{color:var(--mute)}
+.crumb .unit{color:var(--ink);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .sp{flex:1}
+.badge{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--teal-hi);border:1px solid rgba(60,198,214,.4);background:rgba(0,163,181,.1);padding:3px 10px;border-radius:99px;white-space:nowrap}
+
+/* ---------- layout ---------- */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) clamp(300px,24vw,380px);gap:20px;padding:20px 24px 28px;max-width:1720px;margin:0 auto}
+.col{min-width:0}
+
+/* ---------- stage ---------- */
+.stage{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000;box-shadow:0 18px 50px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04)}
+.canvas{position:absolute;left:0;top:0;width:1600px;height:900px;transform-origin:0 0;overflow:hidden;font-family:var(--sans);color:var(--paper-ink);background:var(--navy) url(bg.jpg) center/100% 100% no-repeat}
+.noanim *,.noanim *::before,.noanim *::after{transition:none!important;animation:none!important}
+.wm{position:absolute;left:1406.7px;top:35px;width:155.8px;height:30px;z-index:6;pointer-events:none}
+
+/* 白底區：底圖本身烤了一塊白底，這塊只會從原位往右長，永遠蓋得住它 */
+.board{position:absolute;left:50px;top:170px;width:988px;height:581px;border-radius:13px;
+  background:linear-gradient(118deg,#fff 0%,#f7f9fb 30%,#eaf1f4 62%,#e3ecf1 100%);
+  box-shadow:0 0 0 12px rgba(255,255,255,.035),0 22px 60px rgba(2,1,20,.5);
+  transition:width .75s cubic-bezier(.65,0,.25,1)}
+.mode-B .board,.mode-C .board{width:1500px}
+.board::after{content:"";position:absolute;left:168px;bottom:25px;width:594px;height:31px;border-radius:16px;background:rgba(255,255,255,.42)}
+.board .dk{position:absolute;left:781px;bottom:25px;width:31px;height:31px;border-radius:50%;background:rgba(255,255,255,.42);box-shadow:46px 0 rgba(255,255,255,.42),92px 0 rgba(255,255,255,.42),138px 0 rgba(255,255,255,.42)}
+
+/* 標題：白字＋白直條，放在深色區 */
+.head{position:absolute;left:50px;top:64px;height:54px;display:flex;align-items:center;gap:30px;color:#fff;font-size:46px;font-weight:700;letter-spacing:.02em;transition:opacity .35s}
+.head i{width:7px;height:54px;background:#fff;border-radius:1px}
+.nohead .head{opacity:0}
+
+/* content box: moves with layout mode */
+.content{position:absolute;top:186px;height:514px;left:100px;width:890px;transition:left .75s cubic-bezier(.65,0,.25,1),width .75s cubic-bezier(.65,0,.25,1),opacity .35s}
+.mode-B .content{left:110px;width:1020px}
+.mode-C .content{left:110px;width:1380px}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:24px}
+.slide.enter{animation:slideIn .6s ease both}
+@keyframes slideIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.kicker{font-size:22px;font-weight:700;color:var(--pur);letter-spacing:.06em;display:flex;align-items:center;gap:14px}
+.kicker::before{content:"";width:34px;height:3px;background:var(--pur);border-radius:2px}
+.h1{font-size:60px;font-weight:900;line-height:1.28;letter-spacing:.01em}
+.h1.pur{color:var(--pur)}
+.h1.big{font-size:74px}
+.sub{font-size:31px;line-height:1.5;color:#2c2a48;font-weight:500}
+.arrowline{font-size:33px;font-weight:500;color:var(--paper-ink);display:flex;align-items:center;gap:14px}
+.lead{font-size:33px;font-weight:700;color:var(--pur);line-height:1.5}
+.center{text-align:center}
+.center.kicker{justify-content:center}
+.tr{font-size:23px;line-height:1.6;color:#2c2a48;background:rgba(103,78,167,.08);border-left:4px solid var(--pur);padding:0 18px;border-radius:4px;max-height:0;opacity:0;overflow:hidden;transition:max-height .45s,opacity .45s,padding .45s}
+.tr.open{max-height:120px;opacity:1;padding-top:10px;padding-bottom:10px}
+.hint{font-size:17px;color:var(--paper-sub);letter-spacing:.03em}
+.hint b{color:var(--pur)}
+.term{cursor:pointer;border-bottom:3px dashed var(--pur);padding-bottom:1px}
+/* marker highlight */
+.mk{background-image:linear-gradient(transparent 58%,var(--hl) 58%,var(--hl) 92%,transparent 92%);background-repeat:no-repeat;background-size:0% 100%;transition:background-size .7s ease,opacity .5s,transform .5s,filter .4s}
+.mk.hl{background-size:100% 100%}
+/* reveal + spotlight */
+[data-reveal]{opacity:0;transform:translateY(10px);transition:opacity .5s,transform .5s,filter .4s}
+[data-reveal].on{opacity:1;transform:none}
+[data-reveal]:not(.on){pointer-events:none}
+.slide.spotting [data-el]:not(.spot){opacity:.28;filter:saturate(.4)}
+.slide.spotting [data-reveal]:not(.on){opacity:0}
+[data-el]{transition:opacity .45s,filter .45s,transform .45s}
+/* numbered rows：沿用簡報的深色編號方塊 */
+.row{display:flex;gap:20px;align-items:flex-start}
+.num{flex:0 0 auto;width:48px;height:48px;border-radius:9px;display:grid;place-items:center;color:#fff;font-size:26px;font-weight:700;background:linear-gradient(135deg,#040323 10%,#2d0162 62%,#430083)}
+.rb{flex:1;min-width:0}
+.rt{font-size:33px;line-height:48px;font-weight:500}
+.rt b{font-weight:900}
+.row.mini .num{width:36px;height:36px;font-size:20px;border-radius:7px}
+.row.mini .rt{font-size:25px;line-height:36px}
+.tag{display:inline-block;margin-left:14px;font-size:17px;font-weight:700;color:#fff;background:var(--pur);padding:3px 12px;border-radius:99px;vertical-align:5px;letter-spacing:.04em;line-height:1.5}
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:16px;margin-top:16px}
+.fc{background:rgba(255,255,255,.78);border:1px solid rgba(103,78,167,.2);border-radius:12px;padding:16px 20px;box-shadow:0 8px 24px rgba(40,20,90,.07)}
+.fc .ck{font-size:16px;font-weight:700;color:var(--pur);letter-spacing:.08em}
+.fc .cv{font-size:32px;font-weight:900;line-height:1.3;margin:4px 0 4px}
+.fc .cd{font-size:19px;line-height:1.5;color:#3a3856}
+.fc.dark{background:linear-gradient(125deg,#040323 5%,#2d0162 62%,#430083);border-color:transparent;color:#fff;box-shadow:0 12px 30px rgba(40,10,110,.28)}
+.fc.dark .ck{color:var(--pur-lite)}
+.fc.dark .cd{color:#d9d3ee}
+.flow3{display:flex;align-items:stretch;gap:10px;margin-top:6px}
+.flow3 .fc{flex:1;padding:16px 16px;min-width:0}
+.flow3 .cv{font-size:29px}
+.flow3 .cd{font-size:17px}
+.flow3 .arr{align-self:center;font-size:27px;color:var(--pur);font-weight:700}
+
+/* ---------- person (老師／數位人的位置) ---------- */
+@property --fade{syntax:"<number>";inherits:true;initial-value:1}
+.person{position:absolute;z-index:5;overflow:hidden;--fade:1;
+  transition:left .75s cubic-bezier(.65,0,.25,1),top .75s cubic-bezier(.65,0,.25,1),width .75s cubic-bezier(.65,0,.25,1),height .75s cubic-bezier(.65,0,.25,1),border-radius .75s cubic-bezier(.65,0,.25,1),box-shadow .5s,--fade .75s}
+.person video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%;
+  -webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,var(--fade)) 0,#000 130px);mask-image:linear-gradient(90deg,rgba(0,0,0,var(--fade)) 0,#000 130px);
+  transition:object-position .75s,transform .75s}
+.mode-A .person{left:1040px;top:0;width:560px;height:900px;border-radius:0;--fade:0}
+.mode-A .person video{object-position:50% 50%}
+.mode-B .person{left:1166px;top:456px;width:364px;height:276px;border-radius:16px;box-shadow:0 16px 40px rgba(4,3,35,.42),0 0 0 3px rgba(255,255,255,.85)}
+.mode-B .person video{object-position:50% 10%}
+.mode-C .person{left:1422px;top:690px;width:124px;height:124px;border-radius:50%;box-shadow:0 12px 30px rgba(4,3,35,.42),0 0 0 3px rgba(255,255,255,.9)}
+.mode-C .person video{object-position:50% 8%;transform:scale(1.7);transform-origin:50% 22%}
+.nameplate{position:absolute;left:1120px;bottom:40px;z-index:6;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.75);transition:opacity .4s}
+.nameplate .n{font-size:34px;font-weight:900;letter-spacing:.1em}
+.nameplate .r{font-size:16px;opacity:.86;letter-spacing:.06em;margin-top:2px}
+.mode-B .nameplate,.mode-C .nameplate{opacity:0}
+.talk{position:absolute;right:12px;top:12px;z-index:6;display:flex;gap:3px;align-items:flex-end;height:18px;opacity:0;transition:opacity .3s}
+.mode-A .talk{top:82px;right:40px}
+.playing .talk{opacity:1}
+.mode-C .talk{display:none}
+.talk i{width:4px;background:#fff;border-radius:2px;animation:eq 1s ease-in-out infinite;box-shadow:0 0 6px rgba(0,0,0,.4)}
+.talk i:nth-child(2){animation-delay:.2s}.talk i:nth-child(3){animation-delay:.4s}
+@keyframes eq{0%,100%{height:5px}50%{height:18px}}
+.ring{position:absolute;left:1416px;top:684px;width:136px;height:136px;border-radius:50%;border:3px solid var(--pur-lite);z-index:4;opacity:0;pointer-events:none}
+.mode-C.waiting .ring{animation:ring 1.6s ease-out infinite}
+@keyframes ring{0%{opacity:.8;transform:scale(.92)}100%{opacity:0;transform:scale(1.35)}}
+
+/* captions：放在白底區下方的深色帶，不蓋內容 */
+.cap{position:absolute;z-index:7;left:50%;bottom:42px;transform:translateX(-50%);width:max-content;max-width:1180px;text-align:center;font-size:30px;font-weight:500;line-height:1.5;color:#fff;background:rgba(4,3,35,.66);padding:8px 22px;border-radius:10px;backdrop-filter:blur(4px);transition:left .75s cubic-bezier(.65,0,.25,1),opacity .25s}
+.cap:empty{opacity:0}
+.mode-A .cap{left:544px;max-width:980px}
+.nocap .cap{display:none}
+
+/* quiz */
+.quiz{position:absolute;z-index:8;left:110px;top:204px;width:1270px;opacity:0;pointer-events:none;transform:translateY(16px);transition:opacity .45s,transform .45s}
+.quiz.on{opacity:1;pointer-events:auto;transform:none}
+.mode-A .quiz{left:100px;width:890px}
+.mode-B .quiz{width:1020px}
+.quiz .qk{font-size:20px;font-weight:700;color:var(--pur);letter-spacing:.1em}
+.quiz .qq{font-size:38px;font-weight:900;line-height:1.35;margin:8px 0 6px;color:var(--paper-ink)}
+.quiz .qs{font-size:20px;color:var(--paper-sub);line-height:1.6;margin-bottom:20px}
+.quiz .opts{display:grid;gap:12px}
+.quiz .opt{display:flex;align-items:center;gap:18px;text-align:left;background:rgba(255,255,255,.82);border:2px solid rgba(103,78,167,.2);border-radius:12px;padding:12px 20px;font-size:24px;color:var(--paper-ink);transition:border-color .2s,background .2s,transform .2s}
+.quiz .opt:hover{border-color:var(--pur);transform:translateX(4px)}
+.quiz .opt .l{flex:0 0 auto;width:38px;height:38px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(135deg,#040323 10%,#2d0162 62%,#430083);color:#fff;font-weight:700;font-size:19px}
+.quiz .opt.right{border-color:#2f8f6b;background:rgba(219,243,233,.95)}
+.quiz .opt.right .l{background:#2f8f6b}
+.quiz .opt.wrong{border-color:#b23a78;background:rgba(250,226,238,.95)}
+.quiz .opt.wrong .l{background:#b23a78}
+.quiz.done .opt{pointer-events:none}
+.quiz .fb{margin-top:16px;font-size:21px;line-height:1.6;color:#2c2a48;display:none;align-items:center;gap:20px}
+.quiz.done .fb{display:flex}
+.quiz .fb p{margin:0;flex:1}
+.quiz .go{flex:0 0 auto;background:var(--pur);color:#fff;border:0;border-radius:99px;padding:11px 26px;font-size:20px;font-weight:700;box-shadow:0 8px 20px rgba(103,78,167,.3)}
+.quiz .go:hover{background:#7a5fbf}
+.quiz .skip{margin-top:14px;background:none;border:0;color:var(--paper-sub);font-size:17px;text-decoration:underline;padding:0}
+.quiz.done .skip{display:none}
+.waiting .content,.waiting .cap{opacity:0}
+
+/* compare: original */
+.orig{position:absolute;inset:0;z-index:20;background:#000;opacity:0;pointer-events:none;transition:opacity .4s}
+.orig video{width:100%;height:100%;object-fit:contain}
+.compare .orig{opacity:1}
+.olabel{position:absolute;z-index:21;left:50px;bottom:44px;font-size:22px;font-weight:700;color:#fff;background:rgba(103,78,167,.94);padding:6px 16px;border-radius:8px;opacity:0;transition:opacity .4s}
+.compare .olabel{opacity:1}
+
+/* intro + end overlays (screen-space, outside canvas) */
+.ov{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(13,13,14,.55),rgba(13,13,14,.88));transition:opacity .45s}
+.ov.hide{opacity:0;pointer-events:none}
+.ov .box{text-align:center;max-width:620px;padding:0 20px}
+.ov .t1{font-family:var(--serif);font-size:clamp(24px,2.6vw,40px);font-weight:900;letter-spacing:.06em}
+.ov .t2{color:var(--sub);font-size:clamp(13px,1.1vw,16px);margin-top:8px;line-height:1.7}
+.bigplay{margin:24px auto 18px;width:84px;height:84px;border-radius:50%;border:0;background:var(--teal);display:grid;place-items:center;box-shadow:0 0 0 10px rgba(0,163,181,.18),0 14px 34px rgba(0,0,0,.4);transition:transform .2s}
+.bigplay:hover{transform:scale(1.06)}
+.legend{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.legend span{font-size:13px;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.07);border:1px solid var(--line)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+
+/* ---------- controls ---------- */
+.ctrl{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px 14px}
+.tl{position:relative;height:30px;cursor:pointer;margin-bottom:8px}
+.tl .segs{position:absolute;left:0;right:0;top:12px;height:6px;display:flex;gap:3px}
+.tl .seg{height:100%;border-radius:3px;background:rgba(255,255,255,.12);position:relative}
+.tl .seg .fill{position:absolute;inset:0;width:0;border-radius:3px}
+.tl .seg .lab{position:absolute;top:-17px;left:0;font-size:11px;color:var(--mute);white-space:nowrap;pointer-events:none}
+.tl .knob{position:absolute;top:8px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5);pointer-events:none}
+.tl .qmark{position:absolute;top:9px;width:12px;height:12px;margin-left:-6px;transform:rotate(45deg);background:var(--mC);border:2px solid var(--panel);pointer-events:none}
+.tl:hover .seg{height:8px;margin-top:-1px}
+.bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 14px}
+.grp{display:flex;align-items:center;gap:12px;flex-wrap:nowrap}
+.grp.tools{gap:10px;margin-left:auto}
+.ib{width:40px;height:40px;border-radius:50%;border:0;background:transparent;display:grid;place-items:center;color:var(--ink);transition:background .15s}
+.ib:hover{background:rgba(255,255,255,.08)}
+.ib.pri{background:#fff;color:#111}
+.ib.pri:hover{background:#e6e6e6}
+.ib.pri svg{margin-left:2px}
+.time{font-size:13.5px;color:var(--sub);font-variant-numeric:tabular-nums;min-width:96px}
+.bar .sp{flex:1}
+.seglab{font-size:12px;color:var(--mute);margin-right:-2px;white-space:nowrap}
+#speed{min-width:52px;text-align:center;font-variant-numeric:tabular-nums}
+.segc{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:3px}
+.segc button{border:0;background:none;padding:6px 11px;border-radius:7px;font-size:13px;color:var(--sub);white-space:nowrap}
+.segc button:hover{color:var(--ink)}
+.segc button.on{background:#fff;color:#111;font-weight:700}
+.chip{border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:6px 11px;font-size:13px;color:var(--sub);white-space:nowrap}
+.chip:hover{color:var(--ink)}
+.chip.on{color:#111;background:#fff;border-color:#fff;font-weight:700}
+.chip.red.on{background:var(--pur);border-color:var(--pur);color:#fff}
+
+.now{display:flex;gap:14px;align-items:flex-start;margin-top:14px;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.now .mtag{flex:0 0 auto;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:7px;color:#111;margin-top:2px}
+.now .mt{font-weight:700;font-size:15px}
+.now .md{font-size:13.5px;color:var(--sub);line-height:1.7;margin-top:2px}
+
+/* ---------- side panel ---------- */
+.side{background:var(--panel);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;height:calc(100vh - 98px);min-height:560px;position:sticky;top:20px}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;border:0;background:none;padding:14px 0 12px;font-size:14px;color:var(--sub);border-bottom:2px solid transparent}
+.tabs button.on{color:var(--ink);font-weight:700;border-bottom-color:var(--teal)}
+.pane{display:none;overflow:auto;flex:1;padding:8px 0;position:relative}
+.act.say{font-size:12.5px}
+.act.say .k{background:rgba(0,163,181,.14);color:var(--teal-hi)}
+.pane.on{display:block}
+.pane::-webkit-scrollbar{width:8px}.pane::-webkit-scrollbar-thumb{background:#333;border-radius:4px}
+.ph{padding:10px 18px 12px;font-size:12.5px;color:var(--mute);line-height:1.7;border-bottom:1px solid var(--line);margin-bottom:6px}
+.ph b{color:var(--sub)}
+.unit{display:flex;gap:12px;padding:10px 18px;font-size:13.5px;color:var(--mute);line-height:1.5}
+.unit .no{flex:0 0 auto;width:28px;text-align:right;font-variant-numeric:tabular-nums}
+.unit .d{flex:0 0 auto;margin-left:auto;font-size:12px;font-variant-numeric:tabular-nums}
+.unit.cur{background:rgba(0,163,181,.1);color:var(--ink);border-left:3px solid var(--teal);padding-left:15px}
+.unit.cur .tag{display:block;font-size:12px;color:var(--teal-hi);font-weight:700;margin-top:2px}
+.line{display:flex;gap:12px;padding:8px 18px;font-size:14px;line-height:1.65;color:var(--sub);cursor:pointer;border-left:3px solid transparent}
+.line:hover{background:rgba(255,255,255,.04)}
+.line .ts{flex:0 0 auto;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums;padding-top:2px;width:34px}
+.line.cur{color:var(--ink);background:rgba(255,255,255,.05);border-left-color:var(--teal)}
+.act{display:flex;gap:10px;padding:7px 18px;font-size:13.5px;line-height:1.55;color:var(--mute);cursor:pointer;border-left:3px solid transparent}
+.act:hover{background:rgba(255,255,255,.04)}
+.act .ts{flex:0 0 auto;width:34px;font-size:12px;font-variant-numeric:tabular-nums;padding-top:1px}
+.act .k{flex:0 0 auto;font-size:11.5px;font-weight:700;border-radius:5px;padding:1px 7px;height:fit-content;margin-top:1px;background:rgba(255,255,255,.08);color:var(--sub)}
+.act .k.mode{color:#111}
+.act.past{color:var(--sub)}
+.act.cur{color:var(--ink);background:rgba(255,255,255,.06);border-left-color:var(--teal)}
+.foot{max-width:1720px;margin:0 auto;padding:0 24px 28px;font-size:12.5px;color:var(--mute);line-height:1.8}
+/* ===== 手機版 START：這段以下只影響窄螢幕，桌機版面不受影響 ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.tabs button[data-p="about"],#p-about{display:none}
+.mob{display:none}
+@media (hover:none){.quiz .opt:hover{transform:none}}
+
+/* 平板、窄視窗：右側欄移到下方 */
+@media (max-width:1099px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .side{height:440px;min-height:0;position:static}
+}
+
+/* 手機（直拿、橫拿共用）：控制列精簡，逐字稿等內容收合 */
+@media (max-width:760px) and (orientation:portrait),(max-height:520px) and (orientation:landscape){
+  html,body{overflow-x:hidden}
+  .desk{display:none}
+  .mob{display:inline}
+  .layout{display:block;padding:0}
+  .stage{border-radius:0;box-shadow:none}
+  .ctrl{margin:0;border:0;border-radius:0;padding:2px 12px 8px;border-bottom:1px solid var(--line)}
+  .tl{height:34px;margin-bottom:2px;touch-action:none}
+  .tl .segs{top:14px}
+  .tl .seg .lab{display:none}
+  .tl .knob{width:18px;height:18px;margin-left:-9px;top:8px}
+  .tl .qmark{top:11px}
+  .bar{flex-wrap:nowrap;gap:6px}
+  .grp,.grp.tools{gap:6px}
+  .seglab,#lock,#fs,.now,.foot{display:none}
+  .time{min-width:0;font-size:12.5px;white-space:nowrap}
+  .chip{padding:7px 9px;font-size:12.5px}
+  #speed{min-width:42px}
+  .side{height:auto;min-height:0;position:static;border:0;border-radius:0;background:transparent}
+  .tabs button[data-p="about"]{display:block}
+  .tabs{gap:0}
+  .tabs button{padding:13px 0;font-size:13.5px}
+  .tabs button[data-p="tx"]{order:1}
+  .tabs button[data-p="units"]{order:2}
+  .tabs button[data-p="script"]{order:3}
+  .tabs button[data-p="about"]{order:4}
+  .tabs button::after{content:" ▾";font-size:11px;color:var(--mute)}
+  .side:not(.folded) .tabs button.on::after{content:" ▴";color:var(--teal-hi)}
+  .side.folded .tabs{border-bottom:0}
+  .side.folded .tabs button.on{color:var(--sub);font-weight:400;border-bottom-color:transparent}
+  .side.folded .pane{display:none}
+  .pane{max-height:58vh;max-height:58dvh;background:var(--panel)}
+  .side:not(.folded) #p-about.on{display:block}
+  .ph{font-size:13px}
+  .line{font-size:15px}
+  .act{font-size:14px}
+  .act.say{font-size:13.5px}
+  .unit{font-size:14.5px}
+  .ov .t1{font-size:26px}
+  .ov .t2{font-size:13.5px}
+  .bigplay{width:72px;height:72px;margin:18px auto 14px}
+  .legend span{font-size:12px}
+}
+
+/* 手機直拿：另一套直式畫布，字才讀得到。座標以 800×1000 為單位 */
+@media (max-width:760px) and (orientation:portrait){
+  .top{height:44px;padding:0 14px;gap:10px}
+  .logo{font-size:13px}
+  .crumb{font-size:12.5px}
+  .crumb>span:first-child,.crumb .sep,.badge,.top .sp{display:none}
+  .stage{aspect-ratio:4/5}
+  .canvas{width:800px;height:1000px}
+  .content{transition:left .75s cubic-bezier(.65,0,.25,1),top .75s cubic-bezier(.65,0,.25,1),width .75s cubic-bezier(.65,0,.25,1),height .75s cubic-bezier(.65,0,.25,1),opacity .35s}
+  .slide{gap:16px}
+
+  /* 老師：A 佔上半、B 右下卡片、C 右下小圓 */
+  .person video{-webkit-mask-image:none;mask-image:none}
+  .mode-A .person{left:0;top:0;width:800px;height:460px;border-radius:0;--fade:1}
+  .mode-B .person{left:544px;top:752px;width:232px;height:224px}
+  .mode-C .person{left:652px;top:852px;width:124px;height:124px}
+  .ring{left:646px;top:846px}
+  .nameplate{left:28px;right:auto;bottom:auto;top:356px;text-shadow:0 2px 14px rgba(0,0,0,.75)}
+  .nameplate .n{font-size:36px}
+  .nameplate .r{font-size:21px}
+  .mode-A .talk{top:32px;right:32px}
+
+  /* 字幕：放在老師旁邊的空位，不蓋內容 */
+  .cap,.mode-A .cap,.mode-B .cap{left:24px;right:auto;transform:none;bottom:auto;text-align:left;font-size:30px;line-height:1.42;padding:8px 16px}
+  .mode-A .cap{top:850px;width:752px;max-width:752px}
+  .mode-B .cap{top:752px;width:504px;max-width:504px}
+  .mode-C .cap{top:846px;width:610px;max-width:610px}
+
+  /* 內容字級放大 */
+  .kicker{font-size:26px}
+  .kicker::before{width:28px}
+  .h1{font-size:54px}
+  .tr{font-size:27px;line-height:1.5}
+  .tr.open{max-height:220px}
+
+  /* 互動題 */
+  .quiz .qk{font-size:24px}
+  .quiz .qq{font-size:42px;line-height:1.32}
+  .quiz .qs{font-size:27px;line-height:1.45;margin-bottom:14px}
+  .quiz .opts{gap:10px}
+  .quiz .opt{font-size:29px;line-height:1.32;padding:11px 16px;gap:14px}
+  .quiz .opt .l{width:44px;height:44px;font-size:24px}
+  .quiz .fb{flex-direction:column;align-items:flex-start;gap:10px;margin-top:12px;font-size:26px;line-height:1.45}
+  .quiz .fb p{flex:none}
+  .quiz .go{font-size:28px;padding:12px 30px}
+  .quiz .skip{font-size:25px;margin-top:12px}
+
+  .olabel{left:24px;top:24px;bottom:auto;max-width:752px;font-size:27px}
+}
+
+/* 手機橫拿：畫面放左邊，控制列放右邊 */
+@media (max-height:520px) and (orientation:landscape){
+  .top{display:none}
+  .col{display:grid;grid-template-columns:minmax(0,1fr) 216px}
+  .stage{width:100%;max-width:calc(100vh*16/9);max-width:calc(100dvh*16/9);align-self:center;justify-self:center}
+  .ctrl{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:8px 12px;border-bottom:0;border-left:1px solid var(--line)}
+  .bar{flex-direction:column;align-items:stretch;gap:12px}
+  .grp,.grp.tools{justify-content:center;margin:0}
+}
+/* 最窄的手機：騰出空間給「看原版」 */
+@media (max-width:340px){#back{display:none}}
+/* 大根：直式畫布。底圖的白底是烤死的，直拿不用底圖，改同色漸層 */
+@media (max-width:760px) and (orientation:portrait){
+  .canvas{background:linear-gradient(150deg,#2a1466 0%,#100a3a 36%,#040323 74%)}
+  .wm{left:632px;top:34px;width:130px;height:25px}
+  .head{left:32px;top:26px;height:48px;gap:18px;font-size:38px}
+  .head i{width:6px;height:42px}
+  .board::after,.board .dk{display:none}
+  .board{left:24px;top:96px;width:752px;height:640px;transition:top .75s cubic-bezier(.65,0,.25,1),height .75s cubic-bezier(.65,0,.25,1)}
+  .mode-A .board{top:476px;height:360px;width:752px}
+  .mode-B .board{width:752px}
+  .mode-C .board{width:752px;height:720px}
+  .content,.mode-B .content{left:52px;top:108px;width:696px;height:616px}
+  .mode-A .content{left:52px;top:488px;width:696px;height:336px}
+  .mode-C .content{left:52px;top:108px;width:696px;height:696px}
+  .mode-A .person video{object-position:50% 5%}
+  .h1.big{font-size:64px}
+  .sub{font-size:34px;line-height:1.4}
+  .lead{font-size:33px;line-height:1.4}
+  .arrowline{font-size:34px}
+  .rt{font-size:34px;line-height:48px}
+  .row{gap:16px}
+  .row.mini .rt{font-size:28px;line-height:36px}
+  .tag{font-size:22px;margin-left:10px;vertical-align:3px}
+  .cards{grid-template-columns:minmax(0,1fr);gap:10px;margin-top:12px}
+  .cards .fc{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 14px;padding:10px 18px}
+  .fc .ck{font-size:22px}
+  .fc .cv{font-size:32px;margin:0}
+  .fc .cd{font-size:24px;width:100%;line-height:1.35}
+  .flow3{gap:8px}
+  .flow3 .fc{padding:12px 10px}
+  .flow3 .cv{font-size:30px}
+  .flow3 .cd{font-size:23px;line-height:1.35}
+  .flow3 .arr{font-size:24px}
+  .term{border-bottom-width:4px}
+  .quiz,.mode-A .quiz,.mode-B .quiz{left:52px;top:116px;width:696px}
+}
+@media (max-width:760px) and (orientation:portrait){
+  .row.mini .num{width:38px;height:38px;font-size:24px}
+}
+@media (max-width:760px) and (orientation:portrait){
+  .h1.center .mk{display:inline-block}
+}
+/* ===== 手機版 END ===== */
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="logo"><b>Hi</b>SKIO</div>
+  <div class="crumb"><span>大根 TikTok 娛樂直播課（工作名稱）</span><span class="sep">／</span><span class="unit" id="unitTitle"></span></div>
+  <div class="sp"></div>
+  <div class="badge">互動網頁課・Demo</div>
+</header>
+
+<div class="layout">
+  <div class="col">
+    <div class="stage" id="stage">
+      <div class="canvas mode-B nohead" id="cv">
+        <div class="board"><i class="dk"></i></div>
+        <div class="head"><i></i><span id="headTxt"></span></div>
+        <div class="content"><div class="slide" id="slide"></div></div>
+        <div class="ring"></div>
+        <div class="person" id="person">
+          <video id="pv" src="person.mp4" playsinline preload="auto"></video>
+          <div class="talk"><i></i><i></i><i></i></div>
+        </div>
+        <img class="wm" src="logo.png" alt="HiSKIO">
+        <div class="nameplate"><div class="n">大根</div><div class="r">TikTok 娛樂直播主</div></div>
+        <div class="quiz" id="quiz"></div>
+        <div class="cap" id="cap"></div>
+        <div class="orig"><video id="ov" src="original.mp4" muted playsinline preload="auto"></video></div>
+        <div class="olabel">原本做法：簡報在左、老師在右，字燒在影片裡</div>
+      </div>
+      <div class="ov" id="intro">
+        <div class="box">
+          <div class="t1" id="introTitle"></div>
+          <div class="t2" id="introSub"></div>
+          <button class="bigplay" id="introPlay" aria-label="播放"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="#fff"/></svg></button>
+          <div class="legend" id="introLegend"></div>
+        </div>
+      </div>
+      <div class="ov hide" id="end">
+        <div class="box">
+          <div class="t1">示範結束</div>
+          <div class="t2">可以重看一次，或按「看原版」對照原本的做法。</div>
+          <button class="bigplay" id="replay" aria-label="重播"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="#fff"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ctrl">
+      <div class="tl" id="tl"><div class="segs" id="segs"></div><div class="knob" id="knob"></div></div>
+      <div class="bar">
+        <div class="grp">
+          <button class="ib pri" id="play" aria-label="播放／暫停"></button>
+          <button class="ib" id="back" aria-label="倒退 5 秒" title="倒退 5 秒（←）"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="currentColor"/></svg></button>
+          <div class="time" id="time">0:00 / 0:00</div>
+        </div>
+        <div class="grp tools">
+          <span class="seglab">構圖</span>
+          <div class="segc" id="lock">
+            <button data-m="auto" class="on">自動</button><button data-m="A">A 主講</button><button data-m="B">B 角落</button><button data-m="C">C 收起</button>
+          </div>
+          <button class="chip" id="speed" title="播放速度（點一下切換）">1x</button>
+          <button class="chip on" id="ccBtn">字幕</button>
+          <button class="chip red" id="cmpBtn">看原版</button>
+          <button class="ib" id="fs" aria-label="全螢幕" title="全螢幕"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="now" id="now"></div>
+  </div>
+
+  <aside class="side folded">
+    <div class="tabs"><button data-p="script" class="on">幕後劇本</button><button data-p="tx">逐字稿</button><button data-p="units">單元</button><button data-p="about">說明</button></div>
+    <div class="pane on" id="p-script"><div class="ph"><b>這份劇本就是課程檔案本體。</b>畫面和講解分開存：改一句字幕、換構圖、補一個標註，都只改這份清單，不用重剪影片，也不用重排簡報。點任一行可跳到那個時間。</div><div id="acts"></div></div>
+    <div class="pane" id="p-tx"><div class="ph">影片聲音的逐字稿（本機語音辨識，再對照講師備忘錄校對）。點任一句可跳過去。</div><div id="lines"></div></div>
+    <div class="pane" id="p-units"><div class="ph">課程單元（取自 2025-11 定稿課綱，之後課綱已重排，這裡只示意分頁長相）。這次只示範 1-1 開頭約一分鐘。</div><div id="units"></div></div>
+    <div class="pane" id="p-about"><div class="ph" id="about"></div></div>
+  </aside>
+</div>
+
+<div class="foot" id="foot"></div>
+
+<script>
+/* ====== COURSE DATA：這一段就是「課程檔案」。畫面、劇本、字幕、互動題都在這裡，影片只負責人像＋聲音 ====== */
+const DATA = {
+  unit: '1-1｜娛樂直播的變現機制',
+  duration: 66.67,
+  introTitle: '直播變現的兩種類型',
+  introSub: '大根 TikTok 娛樂直播課・1-1 開頭片段・約 1 分鐘<br>老師在右下角陪你講；中間有一題互動題，出題時老師縮成小圓頭像',
+  foot: 'Demo 說明：① 人像與聲音都來自 1-1 原片（66.7 秒），只裁掉右側麥克風，沒有改動或新增任何一句話；這個位置之後換成重錄或數位人影片都可以。② 底圖、白底區、白色標題條、編號方塊的色調與樣式取自「1-1 講師簡報」，版面重新排過；文字、畫重點、卡片、字幕、互動題都是網頁即時呈現，不是燒在影片裡，所以字永遠清楚、可以選取複製、改字不用重剪片。③「看原版」是用該份簡報與原片合成的對照（簡報在左、老師在右，換頁時間依講師備忘錄對應），示意原本的做法，不是正式成片。④ 卡片上的歸納文字與互動題是依這段講稿整理的示意，正式版內容會再確認。',
+  pages: [
+    { id:'p1', mode:'B', start:0, end:9.18, label:'開場', title:'開場：大根自我介紹，預告最重要的一件事',
+      html:'<div class="kicker">1-1 娛樂直播的變現機制</div>'+
+        '<div class="h1 big" data-reveal="a1">哈囉，我是大根</div>'+
+        '<div class="sub" data-reveal="a2">跟你分享我做直播的經驗</div>'+
+        '<div class="lead" data-reveal="a3">這堂課，我最想讓你知道一件事⋯⋯</div>' },
+    { id:'p2', mode:'B', start:9.18, end:21.76, label:'先懂邏輯', title:'核心訊息：直播可以賺錢，但要先懂賺錢的邏輯',
+      html:'<div class="h1 big pur" data-reveal="b1">直播<span class="mk" data-mk="m1">可以賺錢</span></div>'+
+        '<div class="arrowline" data-reveal="b2">➔<span>要理解賺錢的<span class="mk" data-mk="m2">底層邏輯</span>。</span></div>'+
+        '<div class="flow3"><div class="fc" data-reveal="s1"><div class="ck">①</div><div class="cv">為什麼能賺</div><div class="cd">先了解原因</div></div>'+
+        '<div class="arr" data-reveal="s2">→</div><div class="fc" data-reveal="s2"><div class="ck">②</div><div class="cv">怎麼變現</div><div class="cd">錢是怎麼來的</div></div>'+
+        '<div class="arr" data-reveal="s3">→</div><div class="fc dark" data-reveal="s3"><div class="ck">③</div><div class="cv">賺到這些錢</div><div class="cd">搞懂邏輯，才有辦法</div></div></div>' },
+    { id:'p3', mode:'B', start:21.76, end:43.3, label:'直播帶貨', head:'直播變現的兩種類型', title:'第一種：直播帶貨',
+      html:'<div class="row" data-el="r1" data-reveal="r1"><span class="num">1</span><div class="rb"><div class="rt"><b>直播帶貨</b><span data-reveal="r1d">：銷售實體商品、與廠商抽成</span></div>'+
+        '<div class="cards"><div class="fc" data-reveal="c1"><div class="ck">賣什麼</div><div class="cv">實體商品</div><div class="cd">吃的、穿的、用的</div></div>'+
+        '<div class="fc" data-reveal="c2"><div class="ck">跟誰分</div><div class="cv">跟廠商抽成</div><div class="cd">或者他自己就是廠商</div></div>'+
+        '<div class="fc" data-reveal="c3"><div class="ck">怎麼賺更多</div><div class="cv"><span class="mk" data-mk="m3">賣越多，抽越多</span></div><div class="cd">收入跟著銷量走</div></div></div></div></div>'+
+        '<div class="row" data-el="r2" data-reveal="r2"><span class="num">2</span><div class="rb"><div class="rt"><b>娛樂直播</b></div></div></div>' },
+    { id:'p4', mode:'B', start:43.3, end:57.72, label:'娛樂直播', head:'直播變現的兩種類型', title:'第二種：娛樂直播，這堂課的重點', note:'點一下「打賞」可以展開錢怎麼流；這句內容來自簡報第 8 頁，講解沒有提到。',
+      html:'<div class="row mini" data-el="r1"><span class="num">1</span><div class="rb"><div class="rt"><b>直播帶貨</b>：銷售實體商品、與廠商抽成</div></div></div>'+
+        '<div class="row" data-el="r2"><span class="num">2</span><div class="rb"><div class="rt"><b>娛樂直播</b><span data-reveal="d0">：觀眾打賞</span><span class="tag" data-reveal="d1">本課重點</span></div>'+
+        '<div class="cards"><div class="fc" data-reveal="d2"><div class="ck">怎麼賺</div><div class="cv">靠觀眾<span class="term" data-tr="tr4">打賞</span></div><div class="cd">點一下看錢怎麼流</div></div>'+
+        '<div class="fc" data-reveal="d3"><div class="ck">你會聽到</div><div class="cv"><span class="mk" data-mk="m4">抖內</span><span data-reveal="n1">＝打賞</span></div><div class="cd">直播圈的說法</div></div>'+
+        '<div class="fc" data-reveal="d4"><div class="ck">不賣什麼</div><div class="cv">沒有實體商品</div><div class="cd">那觀眾在付什麼錢？</div></div></div>'+
+        '<div class="tr" id="tr4" style="margin-top:14px">觀眾 ➔ 真錢 ➔ 平台貨幣 ➔ 禮物 ➔ 娛樂主播</div></div></div>' },
+    { id:'p5', mode:'C', start:57.72, end:60.7, label:'互動', head:'直播變現的兩種類型', title:'互動題：觀眾為什麼願意付錢？→ 答完聽答案', note:'一進這頁先暫停出題（選 A／B／C）；答完或跳過才接著播，畫面換成老師的答案。',
+      html:'<div class="kicker center">娛樂主播賣的是什麼</div>'+
+        '<div class="h1 big center" data-reveal="e1">販賣的是<span class="mk" data-mk="m5">你的內容</span>、<span class="mk" data-mk="m6">你的表演</span></div>' },
+    { id:'p6', mode:'B', start:60.7, end:66.67, label:'收束', title:'收束：觀眾開心了，就會付錢',
+      html:'<div class="kicker">本段重點</div>'+
+        '<div class="flow3"><div class="fc" data-reveal="f1"><div class="ck">①</div><div class="cv">觀眾開心了</div></div>'+
+        '<div class="arr" data-reveal="f2">→</div><div class="fc" data-reveal="f2"><div class="ck">②</div><div class="cv">得到情緒價值</div></div>'+
+        '<div class="arr" data-reveal="f3">→</div><div class="fc dark" data-reveal="f3"><div class="ck">③</div><div class="cv">開心付錢給你</div></div></div>'+
+        '<div class="row mini" style="margin-top:14px"><span class="num">1</span><div class="rb"><div class="rt"><b>直播帶貨</b>：銷售實體商品、與廠商抽成</div></div></div>'+
+        '<div class="row mini"><span class="num">2</span><div class="rb"><div class="rt"><b>娛樂直播</b>：觀眾打賞，賣的是<span class="mk" data-mk="m7">表演和內容</span></div></div></div>' }
+  ],
+  actions: [
+    {t:0.2, type:'show', id:'a1', d:'大字：哈囉，我是大根'},
+    {t:2.9, type:'show', id:'a2', d:'副標：跟你分享我做直播的經驗'},
+    {t:6.8, type:'show', id:'a3', d:'預告：最想讓你知道一件事'},
+    {t:9.25, type:'show', id:'b1', d:'大字：直播可以賺錢（簡報第 2 頁）'},
+    {t:10.5, type:'mk', id:'m1', d:'「可以賺錢」畫重點'},
+    {t:11.55, type:'show', id:'b2', d:'顯示：要理解賺錢的底層邏輯（簡報第 3 頁）'},
+    {t:13.5, type:'show', id:'s1', d:'流程①：為什麼能賺'},
+    {t:16.4, type:'show', id:'s2', d:'流程②：怎麼變現'},
+    {t:18.5, type:'mk', id:'m2', d:'「底層邏輯」畫重點'},
+    {t:20.6, type:'show', id:'s3', d:'流程③：賺到這些錢'},
+    {t:21.9, type:'show', id:'r1', d:'列出第一種'},
+    {t:21.9, type:'show', id:'r2', hide:true},
+    {t:26.05, type:'spot', id:'r1', d:'聚焦第一種，第二種變淡'},
+    {t:27.0, type:'show', id:'r1d', d:'顯示：銷售實體商品、與廠商抽成（簡報第 4 頁）'},
+    {t:32.3, type:'show', id:'c1', d:'卡片：賣什麼＝實體商品'},
+    {t:37.3, type:'show', id:'c2', d:'卡片：跟誰分＝跟廠商抽成'},
+    {t:40.75, type:'show', id:'c3', d:'卡片：賣越多，抽越多'},
+    {t:41.6, type:'mk', id:'m3', d:'「賣越多，抽越多」畫重點'},
+    {t:43.4, type:'spot', id:'r2', d:'聚焦第二種，第一種變淡'},
+    {t:45.6, type:'show', id:'d1', d:'標籤：本課重點'},
+    {t:48.9, type:'show', id:'d0', hide:true},
+    {t:48.9, type:'show', id:'d2', d:'卡片：靠觀眾打賞（簡報第 5 頁）'},
+    {t:52.6, type:'show', id:'d3', d:'卡片：抖內'},
+    {t:53.0, type:'mk', id:'m4', d:'「抖內」畫重點'},
+    {t:53.9, type:'show', id:'n1', k:'標註', d:'標註：抖內就是打賞'},
+    {t:55.8, type:'show', id:'d4', d:'卡片：沒有實體商品'},
+    {t:57.85, type:'show', id:'e1', d:'大字：販賣的是你的內容、你的表演'},
+    {t:58.9, type:'mk', id:'m5', d:'「你的內容」畫重點'},
+    {t:59.7, type:'mk', id:'m6', d:'「你的表演」畫重點'},
+    {t:60.8, type:'show', id:'f1', d:'流程①：觀眾開心了'},
+    {t:62.5, type:'show', id:'f2', d:'流程②：得到情緒價值'},
+    {t:64.4, type:'show', id:'f3', d:'流程③：開心付錢給你'},
+    {t:65.2, type:'mk', id:'m7', d:'「表演和內容」畫重點（回到簡報第 5 頁的總結）'}
+  ],
+  quiz: { t:57.72,
+    q:'娛樂主播沒有賣實體商品，那觀眾為什麼願意付錢？',
+    sub:'大根剛說，娛樂主播不像帶貨主播有東西可以賣。先想一想，再聽他怎麼接。',
+    opts:['因為下單後，會收到主播寄來的商品','因為看得開心，買的是主播的內容和表演','因為平台規定，要付錢才能看直播'],
+    ans:1,
+    fb:'大根接下來會講：販賣的是你的內容、你的表演。' },
+  captions: [
+    {s:0.0, e:1.52, text:'哈囉大家好，我是大根。'},
+    {s:1.52, e:5.14, text:'很高興有這個機會，可以跟大家分享我做直播的經驗。'},
+    {s:5.14, e:9.18, text:'在我們這堂課裡面，我最想讓大家知道的一件事情就是，'},
+    {s:9.18, e:11.48, text:'直播是真的可以賺錢的。'},
+    {s:11.48, e:15.36, text:'關鍵在於說，你們要先了解直播為什麼能賺錢，'},
+    {s:15.36, e:17.94, text:'它到底是怎麼樣做變現的。'},
+    {s:17.94, e:21.76, text:'我們先搞懂賺錢的邏輯，這樣你就有辦法賺到這些錢。'},
+    {s:21.76, e:26.02, text:'所以首先，我們要知道的是直播變現分成的兩種類型。'},
+    {s:26.02, e:28.14, text:'首先第一種是直播帶貨。'},
+    {s:28.14, e:32.24, text:'像你們在滑一些短影片，你會看到主播在直播間裡面賣東西，'},
+    {s:32.24, e:36.3, text:'賣的是實體商品，有些可能是吃的、穿的、用的。'},
+    {s:36.3, e:40.68, text:'這些很多都是跟廠商做抽成，或者是他自己就是廠商。'},
+    {s:40.68, e:43.3, text:'所以就是你賣得越多，抽成就越多。'},
+    {s:43.3, e:48.16, text:'那我們的課程主要是著重在第二種，也就是娛樂直播。'},
+    {s:48.16, e:50.76, text:'主播是靠觀眾的打賞來賺錢的。'},
+    {s:50.76, e:54.62, text:'所以你們可能很常會聽到別人說抖內，抖內就是打賞。'},
+    {s:54.62, e:57.72, text:'所以娛樂主播是沒有在販賣實體商品的，'},
+    {s:57.78, e:60.7, text:'販賣的是你的內容、你的表演。'},
+    {s:60.7, e:66.4, text:'你讓觀眾開心了，他得到了情緒價值，他就會開開心心的付錢給你。'}
+  ],
+  units: [
+    {no:'1-1', t:'娛樂直播的變現機制', d:'', cur:true},
+    {no:'1-2', t:'娛樂主播的真實收入', d:''},
+    {no:'1-3', t:'變現的底層邏輯：情緒價值', d:''},
+    {no:'1-4', t:'找到個人定位（上）：最有變現潛力的 6 大直播類型', d:''},
+    {no:'1-5', t:'找到個人定位（下）：打造你的直播變現地圖', d:''},
+    {no:'2-1', t:'引起觀眾興趣：打造吸睛的第一印象', d:''},
+    {no:'2-2', t:'新手的直播設備挑選指南', d:''},
+    {no:'3-1', t:'話題經營力：主播不是陪聊，是控場', d:''},
+    {no:'3-2', t:'跑騷：建立你的直播靈感池', d:''},
+    {no:'3-3', t:'應對酸民的 4 x 4 種回話技巧', d:''},
+    {no:'3-4', t:'TikTok 的直播審查規則與禁忌', d:''},
+    {no:'4-1', t:'流量起飛：破解 TikTok 推流底層公式', d:''},
+    {no:'4-2', t:'延長停留：提升觀眾黏性的 3 種技巧', d:''},
+    {no:'4-3', t:'帶動消費：讓觀眾主動打賞的變現設計', d:''},
+    {no:'4-4', t:'破圈：打造直播圈的社交飛輪', d:''},
+    {no:'4-5', t:'加入公會的自我評估與指南', d:''},
+    {no:'5-1', t:'鐵粉的養成（上）：5 種觀眾的心態與互動策略', d:''},
+    {no:'5-2', t:'鐵粉的養成（下）：大哥大姐的好感度經營法則', d:''},
+    {no:'5-3', t:'鐵粉的流失：自我調節與關係處理的 7 個技巧', d:''},
+    {no:'6-1', t:'30 天直播變現計畫', d:''}
+  ]
+};
+</script>
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const cv = $('#cv'), stage = $('#stage'), slideEl = $('#slide'), capEl = $('#cap');
+  const pv = $('#pv'), ov = $('#ov');
+  const MODE_INFO = {
+    A:{name:'A 主講', color:'var(--mA)', desc:'老師放大佔右側約三分之一。這一版不會自動切到這個構圖，自己按「A 主講」才會看到。'},
+    B:{name:'B 角落', color:'var(--mB)', desc:'老師在右下角圓角框，白底區拉寬放內容。這一版整堂都用這個；所有版面右下角都留空給他。'},
+    C:{name:'C 收起', color:'var(--mC)', desc:'老師縮成小圓頭像，畫面讓給互動題、示範或圖解；聲音照常。'}
+  };
+  const PLAY_ICON = '<svg width="20" height="20" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
+  const PAUSE_ICON = '<svg width="20" height="20" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></svg>';
+  let lock = 'auto', curPage = null, curMode = null, quizState = 'idle', lastT = 0, dur = DATA.duration || 60;
+
+  /* ---- scale canvas to stage ---- */
+  function fit(){ const s = stage.clientWidth / cv.offsetWidth; cv.style.transform = 'scale(' + s + ')'; }
+  new ResizeObserver(fit).observe(stage); fit();
+
+  /* ---- static text ---- */
+  $('#unitTitle').textContent = DATA.unit;
+  $('#introTitle').textContent = DATA.introTitle;
+  $('#introSub').innerHTML = DATA.introSub;
+  $('#foot').innerHTML = DATA.foot;
+  $('#about').innerHTML = DATA.foot;
+  $('#introLegend').innerHTML = ['B','C'].map(m => '<span><i style="background:'+MODE_INFO[m].color+'"></i>'+MODE_INFO[m].name+'</span>').join('');
+
+  const fmt = t => { t = Math.max(0, t); const m = Math.floor(t/60), s = Math.floor(t%60); return m + ':' + String(s).padStart(2,'0'); };
+  const pageAt = t => DATA.pages.find(p => t >= p.start && t < p.end) || DATA.pages[DATA.pages.length-1];
+
+  /* ---- timeline ---- */
+  const segsEl = $('#segs');
+  function buildTimeline(){
+    segsEl.innerHTML = '';
+    DATA.pages.forEach(p => {
+      const d = document.createElement('div'); d.className = 'seg'; d.style.flex = (p.end - p.start);
+      d.innerHTML = '<div class="fill" style="background:'+MODE_INFO[p.mode].color+'"></div><div class="lab">'+p.mode+'・'+p.label+'</div>';
+      p._seg = d; segsEl.appendChild(d);
+    });
+    if (DATA.quiz){ const q = document.createElement('div'); q.className = 'qmark'; q.style.left = (DATA.quiz.t/dur*100)+'%'; q.title = '互動題'; $('#tl').appendChild(q); }
+  }
+  $('#tl').addEventListener('click', e => { const r = e.currentTarget.getBoundingClientRect(); seek((e.clientX - r.left)/r.width*dur); });
+  // 手指拖曳時間軸（滑鼠維持原本的點擊）
+  const tl = $('#tl'); let dragging = false, moved = false, lastDrag = 0;
+  const tlTime = e => { const r = tl.getBoundingClientRect(); return (e.clientX - r.left)/r.width*dur; };
+  tl.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') return; dragging = true; moved = false; tl.setPointerCapture(e.pointerId); });
+  tl.addEventListener('pointermove', e => { if (!dragging) return; moved = true; const n = performance.now(); if (n - lastDrag < 150) return; lastDrag = n; seek(tlTime(e)); });
+  tl.addEventListener('pointerup', e => { if (dragging && moved) seek(tlTime(e)); dragging = false; });
+  tl.addEventListener('pointercancel', () => { dragging = false; });
+
+  /* ---- side panels ---- */
+  const side = $('.side');
+  const PHONE = matchMedia('(max-width:760px) and (orientation:portrait),(max-height:520px) and (orientation:landscape)');
+  PHONE.addEventListener('change', () => { if (!PHONE.matches && $('.tabs button.on').dataset.p === 'about') $('.tabs button[data-p="script"]').click(); });
+  document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+    const again = b.classList.contains('on');
+    document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b));
+    document.querySelectorAll('.pane').forEach(x => x.classList.toggle('on', x.id === 'p-' + b.dataset.p));
+    if (!PHONE.matches) return;
+    side.classList.toggle('folded', again && !side.classList.contains('folded'));
+    if (side.classList.contains('folded')) return;
+    const cur = $('.pane.on .cur');
+    if (cur) { const box = cur.closest('.pane'); box.scrollTop = cur.offsetTop - box.clientHeight/2; }
+    side.scrollIntoView({block:'nearest', behavior:'smooth'});
+  });
+  $('#units').innerHTML = DATA.units.map((u,i) => '<div class="unit'+(u.cur?' cur':'')+'"><span class="no">'+u.no+'</span><span>'+u.t+(u.cur?'<span class="tag">▶ 正在示範這一單元的片段</span>':'')+'</span><span class="d">'+u.d+'</span></div>').join('');
+  $('#lines').innerHTML = DATA.captions.map((c,i) => '<div class="line" data-i="'+i+'"><span class="ts">'+fmt(c.s)+'</span><span>'+c.text+'</span></div>').join('');
+  $('#lines').onclick = e => { const l = e.target.closest('.line'); if (l) seek(DATA.captions[+l.dataset.i].s + .01); };
+  // script view = mode switches + actions + captions merged
+  const SCRIPT = [];
+  DATA.pages.forEach(p => SCRIPT.push({t:p.start, k:'構圖', mode:p.mode, d:'切到 '+MODE_INFO[p.mode].name+'：'+p.label}));
+  DATA.actions.forEach(a => { if (!a.hide) SCRIPT.push({t:a.t, k:a.k || ({show:'顯示',mk:'畫重點',note:'標註',spot:'聚焦',unspot:'取消聚焦',tr:'展開白話'}[a.type]), d:a.d}); });
+  DATA.captions.forEach(c => SCRIPT.push({t:c.s, k:'講話', d:'「'+c.text+'」', say:true}));
+  if (DATA.quiz) SCRIPT.push({t:DATA.quiz.t, k:'互動題', d:'暫停，等學員作答：「'+DATA.quiz.q+'」'});
+  SCRIPT.sort((a,b) => a.t - b.t);
+  $('#acts').innerHTML = SCRIPT.map((s,i) => '<div class="act'+(s.say?' say':'')+'" data-i="'+i+'"><span class="ts">'+fmt(s.t)+'</span><span class="k'+(s.mode?' mode':'')+'"'+(s.mode?' style="background:'+MODE_INFO[s.mode].color+'"':'')+'>'+s.k+'</span><span>'+s.d+'</span></div>').join('');
+  $('#acts').onclick = e => { const l = e.target.closest('.act'); if (l) seek(SCRIPT[+l.dataset.i].t + .01); };
+
+  /* ---- slides ---- */
+  function renderSlide(p){
+    slideEl.className = 'slide enter';
+    slideEl.innerHTML = p.html;
+    void slideEl.offsetWidth;
+    $('#headTxt').textContent = p.head || '';
+    cv.classList.toggle('nohead', !p.head);
+    slideEl.querySelectorAll('.term[data-tr]').forEach(q => {
+      q.title = '點一下展開';
+      q.addEventListener('click', () => { const tr = slideEl.querySelector('#' + q.dataset.tr); if (tr) { tr.dataset.user = '1'; tr.classList.toggle('open'); } });
+    });
+  }
+  function applyActions(p, t){
+    const st = {on:new Set(), spot:null};
+    DATA.actions.forEach(a => {
+      if (a.t > t || a.t < p.start || a.t >= p.end) return;
+      if (a.type === 'spot') st.spot = a.id; else if (a.type === 'unspot') st.spot = null; else st.on.add(a.id);
+    });
+    slideEl.querySelectorAll('[data-reveal]').forEach(el => el.classList.toggle('on', st.on.has(el.dataset.reveal)));
+    slideEl.querySelectorAll('[data-mk]').forEach(el => el.classList.toggle('hl', st.on.has(el.dataset.mk)));
+    slideEl.querySelectorAll('rt[data-id]').forEach(el => el.classList.toggle('on', st.on.has(el.dataset.id)));
+    slideEl.querySelectorAll('.tr[data-id]').forEach(el => { if (!el.dataset.user) el.classList.toggle('open', st.on.has(el.dataset.id)); });
+    slideEl.classList.toggle('spotting', !!st.spot);
+    slideEl.querySelectorAll('[data-el]').forEach(el => el.classList.toggle('spot', el.dataset.el === st.spot));
+  }
+
+  /* ---- mode ---- */
+  function setMode(m){
+    if (m === curMode) return; curMode = m;
+    cv.classList.remove('mode-A','mode-B','mode-C'); cv.classList.add('mode-' + m);
+  }
+  let nowKey = '';
+  function renderNow(p, m){
+    const key = p.id + m + lock; if (key === nowKey) return; nowKey = key;
+    const info = MODE_INFO[m];
+    $('#now').innerHTML = '<span class="mtag" style="background:'+info.color+'">'+info.name+'</span><div><div class="mt">'+p.title+(lock!=='auto'?'<span style="color:var(--mute);font-weight:400">（構圖已鎖定）</span>':'')+'</div><div class="md">'+info.desc+(p.note?' '+p.note:'')+'</div></div>';
+  }
+
+  /* ---- quiz ---- */
+  const qEl = $('#quiz');
+  function buildQuiz(){
+    const q = DATA.quiz; if (!q) return;
+    qEl.innerHTML = '<div class="qk">互動題・想一想再聽老師說</div><div class="qq">'+q.q+'</div><div class="qs">'+q.sub+'</div><div class="opts">'+
+      q.opts.map((o,i) => '<button class="opt" data-i="'+i+'"><span class="l">'+'ABC'[i]+'</span><span>'+o+'</span></button>').join('')+
+      '</div><div class="fb"><p id="qfb"></p><button class="go" id="qgo">聽老師怎麼說 ▶</button></div><button class="skip" id="qskip">先跳過，直接聽</button>';
+    qEl.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+      const i = +b.dataset.i;
+      qEl.querySelectorAll('.opt').forEach((x,j) => { if (j === q.ans) x.classList.add('right'); else if (j === i) x.classList.add('wrong'); });
+      $('#qfb').innerHTML = (i === q.ans ? '<b style="color:#3d8a55">答對了。</b>' : '<b style="color:var(--pur)">不太對。</b>') + q.fb;
+      qEl.classList.add('done');
+    });
+    $('#qgo').onclick = resumeFromQuiz; $('#qskip').onclick = resumeFromQuiz;
+  }
+  function openQuiz(){
+    quizState = 'open'; pv.pause(); cv.classList.add('waiting'); qEl.classList.add('on');
+    if (lock === 'auto') setMode('C');
+  }
+  function closeQuiz(){ qEl.classList.remove('on','done'); cv.classList.remove('waiting'); qEl.querySelectorAll('.opt').forEach(x => x.classList.remove('right','wrong')); }
+  function resumeFromQuiz(){ closeQuiz(); quizState = 'done'; pv.play(); }
+
+  /* ---- captions ---- */
+  let capIdx = -1;
+  function renderCap(t){
+    const i = DATA.captions.findIndex(c => t >= c.s && t < c.e);
+    if (i === capIdx) return; capIdx = i;
+    capEl.textContent = i >= 0 ? DATA.captions[i].text : '';
+    document.querySelectorAll('#lines .line').forEach((l,j) => l.classList.toggle('cur', j === i));
+    const cur = document.querySelector('#lines .line.cur'); if (cur && $('#p-tx').classList.contains('on')) { const box = $('#p-tx'); box.scrollTo({top: cur.offsetTop - box.clientHeight/2, behavior:'smooth'}); }
+  }
+  let lastCi = -2;
+  function renderScript(t){
+    let ci = -1; SCRIPT.forEach((s,i) => { if (s.t <= t + .05) ci = i; });
+    if (ci === lastCi) return; lastCi = ci;
+    document.querySelectorAll('#acts .act').forEach((a,i) => { a.classList.toggle('cur', i === ci); a.classList.toggle('past', i < ci); });
+    const cur = document.querySelector('#acts .act.cur');
+    if (cur && $('#p-script').classList.contains('on')) { const box = $('#p-script'); box.scrollTo({top: cur.offsetTop - box.clientHeight/2, behavior:'smooth'}); }
+  }
+
+  /* ---- main loop ---- */
+  function tick(){
+    const t = pv.currentTime;
+    const p = pageAt(t);
+    if (p !== curPage){ curPage = p; renderSlide(p); }
+    if (quizState !== 'open') setMode(lock === 'auto' ? p.mode : lock);
+    applyActions(p, t);
+    renderCap(t); renderScript(t); renderNow(p, curMode);
+    // quiz trigger: reaching q.t while playing (seek() handles jumps)
+    if (DATA.quiz && quizState === 'idle' && !pv.paused && t >= DATA.quiz.t) openQuiz();
+    lastT = t;
+    // timeline
+    DATA.pages.forEach(pg => { const f = pg._seg.firstChild; f.style.width = Math.max(0, Math.min(1, (t - pg.start)/(pg.end - pg.start)))*100 + '%'; });
+    $('#knob').style.left = (t/dur*100) + '%';
+    $('#time').textContent = fmt(t) + ' / ' + fmt(dur);
+    // compare sync
+    if (cv.classList.contains('compare') && Math.abs(ov.currentTime - t) > .25) ov.currentTime = t;
+    requestAnimationFrame(tick);
+  }
+
+  /* ---- transport ---- */
+  function seek(t){
+    t = Math.max(0, Math.min(dur - .05, t));
+    if (quizState === 'open') closeQuiz();
+    const q = DATA.quiz;
+    if (q && t < q.t) quizState = 'idle';
+    else if (q && quizState !== 'done'){ t = q.t; quizState = 'idle'; }   // 還沒作答就跳過互動題：停在出題那一格
+    lastT = t; pv.currentTime = t; ov.currentTime = t;
+    $('#end').classList.add('hide');
+    if (q && quizState === 'idle' && t >= q.t) openQuiz();
+  }
+  function toggle(){
+    if (quizState === 'open') return;
+    $('#intro').classList.add('hide');
+    if (pv.paused) pv.play(); else pv.pause();
+  }
+  pv.addEventListener('play', () => { $('#play').innerHTML = PAUSE_ICON; cv.classList.add('playing'); if (cv.classList.contains('compare')) ov.play(); });
+  pv.addEventListener('pause', () => { $('#play').innerHTML = PLAY_ICON; cv.classList.remove('playing'); ov.pause(); });
+  pv.addEventListener('ended', () => { $('#end').classList.remove('hide'); });
+  pv.addEventListener('loadedmetadata', () => { if (isFinite(pv.duration)) { dur = pv.duration; } });
+  $('#play').innerHTML = PLAY_ICON;
+  $('#play').onclick = toggle;
+  $('#introPlay').onclick = () => { $('#intro').classList.add('hide'); pv.play(); };
+  $('#replay').onclick = () => { seek(0); pv.play(); };
+  $('#back').onclick = () => seek(pv.currentTime - 5);
+  stage.addEventListener('click', e => { if (e.target.closest('.quiz,.term,.ov,button')) return; toggle(); });
+  $('#lock').onclick = e => { const b = e.target.closest('button'); if (!b) return; lock = b.dataset.m; $('#lock').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); setMode(lock !== 'auto' ? lock : quizState === 'open' ? 'C' : (curPage || DATA.pages[0]).mode); };
+  const SPEEDS = [1, 1.25, 1.5];
+  $('#speed').onclick = () => { const s = SPEEDS[(SPEEDS.indexOf(pv.playbackRate) + 1) % SPEEDS.length] || 1; pv.playbackRate = ov.playbackRate = s; $('#speed').textContent = s + 'x'; $('#speed').classList.toggle('on', s !== 1); };
+  $('#ccBtn').onclick = () => { cv.classList.toggle('nocap'); $('#ccBtn').classList.toggle('on'); };
+  $('#cmpBtn').onclick = () => { const on = cv.classList.toggle('compare'); $('#cmpBtn').classList.toggle('on', on); ov.currentTime = pv.currentTime; if (on && !pv.paused) ov.play(); else ov.pause(); };
+  $('#fs').onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else stage.requestFullscreen(); };
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space'){ e.preventDefault(); toggle(); }
+    else if (e.code === 'ArrowLeft') seek(pv.currentTime - 5);
+    else if (e.code === 'ArrowRight') seek(pv.currentTime + 5);
+    else if ('0123'.includes(e.key)) { const m = ['auto','A','B','C'][+e.key]; $('#lock').querySelector('[data-m="'+m+'"]').click(); }
+  });
+
+  buildTimeline(); buildQuiz(); requestAnimationFrame(tick);
+  // 檢查用：網址加 #t=秒數（可加 &lock=A|B|C、&quiz、&cmp）會直接跳到那一格
+  const hp = new URLSearchParams(location.hash.slice(1));
+  if (hp.has('shot')) document.documentElement.classList.add('noanim');
+  if (hp.has('t')) pv.addEventListener('loadeddata', () => {
+    $('#intro').classList.add('hide');
+    if (hp.has('lock')) $('#lock').querySelector('[data-m="'+hp.get('lock')+'"]').click();
+    if (!hp.has('quiz')) quizState = 'done';   // 截圖檢查用：沒指定 &quiz 就當作已作答
+    seek(+hp.get('t'));
+    if (hp.has('quiz')) openQuiz();
+    if (hp.has('cmp')) $('#cmpBtn').click();
+    if (hp.has('play')) pv.play();
+  }, {once:true});
+})();
+</script>
+</body>
+</html>
